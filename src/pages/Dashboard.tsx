@@ -1,147 +1,129 @@
-import { useEffect, useState } from "react";
-import { FileText, Users, DollarSign, Download, Upload } from "lucide-react";
-import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { getInvoices, getClients, exportData, importData } from "@/lib/store";
-import { Invoice, Client } from "@/types/invoice";
-import { useToast } from "@/hooks/use-toast";
+import AppLayout from '@/components/AppLayout';
+import { useLang } from '@/contexts/LanguageContext';
+import { useInvoice } from '@/contexts/InvoiceContext';
+import { FileText, Users, DollarSign, Download, Upload, Trash2 } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { useToast } from '@/hooks/use-toast';
+import { useRef } from 'react';
+
+function StatCard({ icon: Icon, label, value }: { icon: typeof FileText; label: string; value: string }) {
+  return (
+    <div className="rounded-lg border border-border bg-card p-5">
+      <div className="flex items-center gap-3">
+        <div className="flex h-9 w-9 items-center justify-center rounded-md bg-secondary">
+          <Icon className="h-4 w-4 text-muted-foreground" />
+        </div>
+        <div>
+          <p className="text-xs text-muted-foreground">{label}</p>
+          <p className="text-xl font-semibold text-foreground">{value}</p>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 export default function Dashboard() {
-  const [invoices, setInvoices] = useState<Invoice[]>([]);
-  const [clients, setClients] = useState<Client[]>([]);
+  const { t } = useLang();
+  const { clients, invoicesCreated, seller, isAutoEntrepreneur, invoices, setClients, setInvoicesCreated, setSeller, setIsAutoEntrepreneur, setInvoices } = useInvoice();
   const { toast } = useToast();
+  const fileRef = useRef<HTMLInputElement>(null);
 
-  useEffect(() => {
-    setInvoices(getInvoices());
-    setClients(getClients());
-  }, []);
-
-  const totalFacture = invoices.reduce((sum, inv) => sum + inv.totalTTC, 0);
+  const totalBilled = clients.reduce((sum, c) => sum + c.totalBilled, 0);
 
   const handleExport = () => {
-    const data = exportData();
-    const blob = new Blob([data], { type: "application/json" });
+    const data = JSON.stringify({ seller, clients, invoicesCreated, isAutoEntrepreneur, invoices }, null, 2);
+    const blob = new Blob([data], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
+    const a = document.createElement('a');
     a.href = url;
-    a.download = "facturapro-export.json";
+    a.download = `facturapro-backup-${new Date().toISOString().slice(0, 10)}.json`;
     a.click();
     URL.revokeObjectURL(url);
-    toast({ title: "Données exportées avec succès" });
+    toast({ title: t('exportSuccess') });
   };
 
-  const handleImport = () => {
-    const input = document.createElement("input");
-    input.type = "file";
-    input.accept = ".json";
-    input.onchange = (e) => {
-      const file = (e.target as HTMLInputElement).files?.[0];
-      if (!file) return;
-      const reader = new FileReader();
-      reader.onload = (ev) => {
-        const success = importData(ev.target?.result as string);
-        if (success) {
-          setInvoices(getInvoices());
-          setClients(getClients());
-          toast({ title: "Données importées avec succès" });
-        } else {
-          toast({ title: "Erreur lors de l'importation", variant: "destructive" });
-        }
-      };
-      reader.readAsText(file);
+  const handleImport = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      try {
+        const data = JSON.parse(ev.target?.result as string);
+        if (data.seller) setSeller(data.seller);
+        if (data.clients) setClients(data.clients);
+        if (typeof data.invoicesCreated === 'number') setInvoicesCreated(data.invoicesCreated);
+        if (typeof data.isAutoEntrepreneur === 'boolean') setIsAutoEntrepreneur(data.isAutoEntrepreneur);
+        if (data.invoices) setInvoices(data.invoices);
+        toast({ title: t('importSuccess') });
+      } catch {
+        toast({ title: t('importError'), variant: 'destructive' });
+      }
     };
-    input.click();
+    reader.readAsText(file);
+    e.target.value = '';
   };
 
   return (
-    <div className="p-6 animate-fade-in">
-      <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-semibold text-foreground">Tableau de bord</h1>
-        <div className="flex gap-2">
-          <Button variant="outline" size="sm" onClick={handleExport}>
-            <Download className="mr-2 h-4 w-4" />
-            Exporter les données
-          </Button>
-          <Button variant="outline" size="sm" onClick={handleImport}>
-            <Upload className="mr-2 h-4 w-4" />
-            Importer les données
-          </Button>
+    <AppLayout>
+      <div className="p-8">
+        <div className="flex items-center justify-between mb-6">
+          <h1 className="text-xl font-semibold text-foreground">{t('dashboard')}</h1>
+          <div className="flex gap-2">
+            <Button size="sm" variant="outline" onClick={handleExport}>
+              <Download className="h-3.5 w-3.5 me-1.5" />
+              {t('exportData')}
+            </Button>
+            <Button size="sm" variant="outline" onClick={() => fileRef.current?.click()}>
+              <Upload className="h-3.5 w-3.5 me-1.5" />
+              {t('importData')}
+            </Button>
+            <input ref={fileRef} type="file" accept=".json" className="hidden" onChange={handleImport} />
+          </div>
         </div>
-      </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-        <Card className="p-5">
-          <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-secondary">
-              <FileText className="h-5 w-5 text-muted-foreground" />
-            </div>
-            <div>
-              <p className="text-sm text-muted-foreground">Nombre de factures</p>
-              <p className="text-2xl font-semibold font-mono">{invoices.length}</p>
-            </div>
+        <div className="grid grid-cols-3 gap-4 mb-8">
+          <StatCard icon={FileText} label={t('invoicesCount')} value={String(invoicesCreated)} />
+          <StatCard icon={Users} label={t('clients')} value={String(clients.length)} />
+          <StatCard icon={DollarSign} label={t('totalBilled')} value={`${totalBilled.toFixed(2)} ${t('dh')}`} />
+        </div>
+
+        {/* Clients list */}
+        <div className="rounded-lg border border-border bg-card">
+          <div className="border-b border-border px-5 py-3">
+            <h2 className="text-sm font-semibold text-foreground">{t('clients')}</h2>
           </div>
-        </Card>
-
-        <Card className="p-5">
-          <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-secondary">
-              <Users className="h-5 w-5 text-muted-foreground" />
-            </div>
-            <div>
-              <p className="text-sm text-muted-foreground">Clients</p>
-              <p className="text-2xl font-semibold font-mono">{clients.length}</p>
-            </div>
-          </div>
-        </Card>
-
-        <Card className="p-5">
-          <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-secondary">
-              <DollarSign className="h-5 w-5 text-muted-foreground" />
-            </div>
-            <div>
-              <p className="text-sm text-muted-foreground">Total facturé</p>
-              <p className="text-2xl font-semibold font-mono">
-                {totalFacture.toFixed(2)} DH
-              </p>
-            </div>
-          </div>
-        </Card>
-      </div>
-
-      <Card className="p-5">
-        <h2 className="text-lg font-semibold mb-4">Clients</h2>
-        {clients.length === 0 ? (
-          <p className="text-center text-muted-foreground py-8">
-            Aucun client enregistré
-          </p>
-        ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm">
+          {clients.length === 0 ? (
+            <div className="p-8 text-center text-sm text-muted-foreground">{t('noClients')}</div>
+          ) : (
+            <table className="w-full">
               <thead>
-                <tr className="border-b">
-                  <th className="text-left py-2 px-3 font-medium text-muted-foreground">Nom</th>
-                  <th className="text-left py-2 px-3 font-medium text-muted-foreground">ICE</th>
-                  <th className="text-left py-2 px-3 font-medium text-muted-foreground">Adresse</th>
-                  <th className="text-right py-2 px-3 font-medium text-muted-foreground">Factures</th>
-                  <th className="text-right py-2 px-3 font-medium text-muted-foreground">Total</th>
+                <tr className="border-b border-border text-xs text-muted-foreground">
+                  <th className="px-5 py-2.5 text-start font-medium">{t('clientName')}</th>
+                  <th className="px-5 py-2.5 text-start font-medium">ICE</th>
+                  <th className="px-5 py-2.5 text-end font-medium">{t('invoicesCount')}</th>
+                  <th className="px-5 py-2.5 text-end font-medium">{t('totalBilled')}</th>
+                  <th className="px-5 py-2.5 text-end font-medium"></th>
                 </tr>
               </thead>
               <tbody>
-                {clients.map((client) => (
-                  <tr key={client.id} className="border-b last:border-0 hover:bg-muted/50">
-                    <td className="py-2 px-3">{client.name}</td>
-                    <td className="py-2 px-3 font-mono text-xs">{client.ice || "—"}</td>
-                    <td className="py-2 px-3">{client.adresse || "—"}</td>
-                    <td className="py-2 px-3 text-right font-mono">{client.invoiceCount}</td>
-                    <td className="py-2 px-3 text-right font-mono">{client.totalAmount.toFixed(2)} DH</td>
+                {clients.map(client => (
+                  <tr key={client.id} className="border-b border-border last:border-b-0">
+                    <td className="px-5 py-3 text-sm text-foreground">{client.name}</td>
+                    <td className="px-5 py-3 text-sm text-muted-foreground">{client.ice || '—'}</td>
+                    <td className="px-5 py-3 text-end text-sm text-foreground">{client.invoiceCount}</td>
+                    <td className="px-5 py-3 text-end text-sm font-medium text-foreground">{client.totalBilled.toFixed(2)} {t('dh')}</td>
+                    <td className="px-5 py-3 text-end">
+                      <Button size="sm" variant="ghost" onClick={() => setClients(prev => prev.filter(c => c.id !== client.id))}>
+                        <Trash2 className="h-3.5 w-3.5 text-destructive" />
+                      </Button>
+                    </td>
                   </tr>
                 ))}
               </tbody>
             </table>
-          </div>
-        )}
-      </Card>
-    </div>
+          )}
+        </div>
+      </div>
+    </AppLayout>
   );
 }
