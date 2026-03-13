@@ -1,5 +1,5 @@
 import { NavLink, useLocation } from 'react-router-dom';
-import { LayoutDashboard, FilePlus, Globe, Settings, History, Menu, X, Users } from 'lucide-react';
+import { LayoutDashboard, FilePlus, Globe, Settings, History, Menu, X, Users, Package } from 'lucide-react';
 import { useLang } from '@/contexts/LanguageContext';
 import { cn } from '@/lib/utils';
 import ActivationDialog from './ActivationDialog';
