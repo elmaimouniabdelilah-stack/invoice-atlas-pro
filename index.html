@@ -1,29 +1,82 @@
 <!doctype html>
-<html lang="en">
+<html lang="ar" dir="rtl">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <!-- TODO: Set the document title to the name of your application -->
-    <title>Lovable App</title>
-    <meta name="description" content="Lovable Generated Project">
-    <meta name="author" content="Lovable" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>FacturaPro - إنشاء الفواتير</title>
+    <meta name="description" content="تطبيق احترافي لإنشاء وإدارة الفواتير بسهولة">
+    <meta name="author" content="FacturaPro" />
+    <meta name="theme-color" content="#0a0a1a" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <link rel="icon" href="/pwa-icon-512.png" type="image/png" />
+    <link rel="apple-touch-icon" href="/pwa-icon-512.png" />
 
-    <!-- TODO: Update og:title to match your application name -->
-    
-    
     <meta property="og:type" content="website" />
+    <meta property="og:title" content="FacturaPro - إنشاء الفواتير" />
+    <meta property="og:description" content="تطبيق احترافي لإنشاء وإدارة الفواتير بسهولة" />
     <meta property="og:image" content="https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/f9b51e03-b1bf-4d68-acd6-56506501dff8/id-preview-e1782609--f61feca0-6630-4617-a640-7ea5b218309a.lovable.app-1773423388994.png">
-
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:site" content="@Lovable" />
-    <meta name="twitter:image" content="https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/f9b51e03-b1bf-4d68-acd6-56506501dff8/id-preview-e1782609--f61feca0-6630-4617-a640-7ea5b218309a.lovable.app-1773423388994.png">
-    <meta property="og:title" content="Lovable App">
-  <meta name="twitter:title" content="Lovable App">
-  <meta property="og:description" content="Lovable Generated Project">
-  <meta name="twitter:description" content="Lovable Generated Project">
-</head>
+    <meta name="twitter:title" content="FacturaPro - إنشاء الفواتير" />
+    <meta name="twitter:description" content="تطبيق احترافي لإنشاء وإدارة الفواتير بسهولة" />
+
+    <style>
+      #splash {
+        position: fixed;
+        inset: 0;
+        z-index: 9999;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        background: #0a0a1a;
+        transition: opacity 0.5s ease;
+      }
+      #splash img {
+        width: 80px;
+        height: 80px;
+        animation: splash-pulse 1.5s ease-in-out infinite;
+      }
+      #splash .splash-name {
+        margin-top: 20px;
+        font-family: system-ui, -apple-system, sans-serif;
+        font-size: 22px;
+        font-weight: 700;
+        color: #ffffff;
+        letter-spacing: 1px;
+      }
+      #splash .splash-bar-wrap {
+        margin-top: 28px;
+        width: 120px;
+        height: 3px;
+        border-radius: 3px;
+        background: rgba(255,255,255,0.1);
+        overflow: hidden;
+      }
+      #splash .splash-bar {
+        width: 40%;
+        height: 100%;
+        border-radius: 3px;
+        background: linear-gradient(90deg, #3b82f6, #60a5fa);
+        animation: splash-load 1.2s ease-in-out infinite;
+      }
+      @keyframes splash-pulse {
+        0%, 100% { transform: scale(1); opacity: 1; }
+        50% { transform: scale(1.06); opacity: 0.85; }
+      }
+      @keyframes splash-load {
+        0% { transform: translateX(-100%); }
+        100% { transform: translateX(350%); }
+      }
+    </style>
+  </head>
 
   <body>
+    <div id="splash">
+      <img src="/pwa-icon-512.png" alt="FacturaPro" />
+      <div class="splash-name">FacturaPro</div>
+      <div class="splash-bar-wrap"><div class="splash-bar"></div></div>
+    </div>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
