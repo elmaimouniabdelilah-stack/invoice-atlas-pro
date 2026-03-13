@@ -1,5 +1,5 @@
 import { NavLink, useLocation } from 'react-router-dom';
-import { LayoutDashboard, FilePlus, Globe, Settings, History, Menu, X, Users } from 'lucide-react';
+import { LayoutDashboard, FilePlus, Globe, Settings, History, Menu, X, Users, Package } from 'lucide-react';
 import { useLang } from '@/contexts/LanguageContext';
 import { cn } from '@/lib/utils';
 import ActivationDialog from './ActivationDialog';
@@ -16,6 +16,7 @@ export default function AppSidebar() {
     { to: '/', icon: LayoutDashboard, label: t('dashboard') },
     { to: '/invoice', icon: FilePlus, label: t('newInvoice') },
     { to: '/clients', icon: Users, label: t('clients') },
+    { to: '/products', icon: Package, label: t('products') },
     { to: '/history', icon: History, label: t('invoiceHistory') },
     { to: '/settings', icon: Settings, label: t('settings') },
   ];

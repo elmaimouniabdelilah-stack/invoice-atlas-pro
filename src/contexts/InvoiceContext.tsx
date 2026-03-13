@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { SellerInfo, BuyerInfo, InvoiceItem, Client, Invoice, generateInvoiceNumber } from '@/lib/invoiceTypes';
+import { SellerInfo, BuyerInfo, InvoiceItem, Client, Invoice, SavedProduct, generateInvoiceNumber } from '@/lib/invoiceTypes';
 
 const STORAGE_KEY = 'facturapro-data';
 
@@ -32,6 +32,7 @@ interface StoredData {
   isAutoEntrepreneur: boolean;
   invoices: Invoice[];
   invoiceTexts: InvoiceTexts;
+  savedProducts: SavedProduct[];
 }
 
 function loadStored(): Partial<StoredData> {
@@ -79,6 +80,8 @@ interface InvoiceContextType {
   setDiscountType: React.Dispatch<React.SetStateAction<'percentage' | 'fixed'>>;
   discountValue: number;
   setDiscountValue: React.Dispatch<React.SetStateAction<number>>;
+  savedProducts: SavedProduct[];
+  setSavedProducts: React.Dispatch<React.SetStateAction<SavedProduct[]>>;
 }
 
 const InvoiceContext = createContext<InvoiceContextType | undefined>(undefined);
@@ -114,6 +117,7 @@ export function InvoiceProvider({ children }: { children: React.ReactNode }) {
   const [editingInvoiceId, setEditingInvoiceId] = useState<string | null>(null);
   const [discountType, setDiscountType] = useState<'percentage' | 'fixed'>('percentage');
   const [discountValue, setDiscountValue] = useState(0);
+  const [savedProducts, setSavedProducts] = useState<SavedProduct[]>(stored.savedProducts || []);
 
   const loadInvoice = (invoice: Invoice) => {
     setBuyer(invoice.buyer);
@@ -126,8 +130,8 @@ export function InvoiceProvider({ children }: { children: React.ReactNode }) {
   };
 
   useEffect(() => {
-    saveStored({ seller, clients, invoicesCreated, isAutoEntrepreneur, invoices, invoiceTexts });
-  }, [seller, clients, invoicesCreated, isAutoEntrepreneur, invoices, invoiceTexts]);
+    saveStored({ seller, clients, invoicesCreated, isAutoEntrepreneur, invoices, invoiceTexts, savedProducts });
+  }, [seller, clients, invoicesCreated, isAutoEntrepreneur, invoices, invoiceTexts, savedProducts]);
 
   return (
     <InvoiceContext.Provider value={{
@@ -146,6 +150,7 @@ export function InvoiceProvider({ children }: { children: React.ReactNode }) {
       editingInvoiceId, setEditingInvoiceId,
       discountType, setDiscountType,
       discountValue, setDiscountValue,
+      savedProducts, setSavedProducts,
     }}>
       {children}
     </InvoiceContext.Provider>
