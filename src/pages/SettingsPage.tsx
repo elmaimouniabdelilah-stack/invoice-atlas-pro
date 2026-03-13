@@ -1,12 +1,13 @@
 import AppLayout from '@/components/AppLayout';
 import { useLang } from '@/contexts/LanguageContext';
+import { useTheme } from '@/contexts/ThemeContext';
 import { useInvoice } from '@/contexts/InvoiceContext';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
-import { Upload } from 'lucide-react';
+import { Upload, Moon, Sun, Globe } from 'lucide-react';
 import { useRef } from 'react';
 
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
@@ -19,7 +20,8 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
 }
 
 export default function SettingsPage() {
-  const { t } = useLang();
+  const { t, lang, setLang } = useLang();
+  const { theme, toggleTheme } = useTheme();
   const { seller, setSeller, isAutoEntrepreneur, setIsAutoEntrepreneur, invoiceTexts, setInvoiceTexts } = useInvoice();
   const fileRef = useRef<HTMLInputElement>(null);
 
@@ -39,6 +41,24 @@ export default function SettingsPage() {
     <AppLayout>
       <div className="p-4 sm:p-8 max-w-2xl space-y-4 sm:space-y-6">
         <h1 className="text-lg sm:text-xl font-semibold text-foreground">{t('settings')}</h1>
+
+        {/* Theme & Language */}
+        <div className="flex gap-3">
+          <button
+            onClick={toggleTheme}
+            className="flex flex-1 items-center gap-3 rounded-lg border border-border bg-card p-3 sm:p-4 text-sm font-medium text-foreground transition-colors hover:bg-secondary"
+          >
+            {theme === 'light' ? <Moon className="h-5 w-5 text-muted-foreground" /> : <Sun className="h-5 w-5 text-muted-foreground" />}
+            {theme === 'light' ? t('darkMode') : t('lightMode')}
+          </button>
+          <button
+            onClick={() => setLang(lang === 'fr' ? 'ar' : 'fr')}
+            className="flex flex-1 items-center gap-3 rounded-lg border border-border bg-card p-3 sm:p-4 text-sm font-medium text-foreground transition-colors hover:bg-secondary"
+          >
+            <Globe className="h-5 w-5 text-muted-foreground" />
+            {lang === 'fr' ? 'العربية' : 'Français'}
+          </button>
+        </div>
 
         {/* Auto-entrepreneur */}
         <div className="flex items-center justify-between rounded-lg border border-border bg-card p-3 sm:p-4">

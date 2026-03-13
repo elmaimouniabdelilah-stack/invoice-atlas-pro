@@ -24,13 +24,21 @@ export default function AppSidebar() {
     { to: '/settings', icon: Settings, label: t('settings') },
   ];
 
+  const mobileLinks = [
+    { to: '/', icon: LayoutDashboard, label: t('dashboard') },
+    { to: '/invoice', icon: FilePlus, label: t('newInvoice') },
+    { to: '/clients', icon: Users, label: t('clients') },
+    { to: '/history', icon: History, label: t('invoiceHistory') },
+    { to: '/settings', icon: Settings, label: t('settings') },
+  ];
+
   // Mobile: bottom navigation bar
   if (isMobile) {
     return (
       <>
         {/* Bottom nav */}
-        <nav className="fixed bottom-0 left-0 right-0 z-40 flex items-center justify-around border-t border-border bg-card px-2 py-1.5 safe-area-bottom">
-          {links.map(({ to, icon: Icon, label }) => (
+        <nav className="fixed bottom-0 left-0 right-0 z-40 flex items-center justify-around border-t border-border bg-card px-1 py-1.5 safe-area-bottom">
+          {mobileLinks.map(({ to, icon: Icon, label }) => (
             <NavLink
               key={to}
               to={to}
@@ -42,16 +50,9 @@ export default function AppSidebar() {
               )}
             >
               <Icon className="h-5 w-5" />
-              <span className="truncate max-w-[60px]">{label}</span>
+              <span className="truncate max-w-[56px]">{label}</span>
             </NavLink>
           ))}
-          <button
-            onClick={() => setMobileOpen(true)}
-            className="flex flex-col items-center gap-0.5 rounded-md px-2 py-1.5 text-[10px] font-medium text-muted-foreground"
-          >
-            <Menu className="h-5 w-5" />
-            <span>{t('settings')}</span>
-          </button>
         </nav>
 
         {/* Mobile menu overlay */}
