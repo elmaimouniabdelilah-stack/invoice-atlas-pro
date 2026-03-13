@@ -58,40 +58,7 @@ export default function InvoicePage() {
   };
 
   const handlePrint = () => {
-    const printContent = document.getElementById('invoice-preview');
-    if (!printContent) return;
-
-    const styles = Array.from(document.querySelectorAll('style, link[rel="stylesheet"]'))
-      .map(el => el.outerHTML)
-      .join('\n');
-
-    const win = window.open('', '_blank');
-    if (!win) return;
-    win.document.write(`
-      <!DOCTYPE html>
-      <html>
-      <head>
-        <title>Facture ${invoiceNumber}</title>
-        ${styles}
-        <style>
-          @page { size: A4; margin: 0; }
-          body { margin: 0; padding: 0; background: white; }
-          #invoice-preview {
-            width: 210mm;
-            min-height: 297mm;
-            margin: 0 auto;
-            padding: 40px;
-            font-size: 11px;
-            background: white !important;
-            box-shadow: none !important;
-          }
-        </style>
-      </head>
-      <body>${printContent.outerHTML}</body>
-      </html>
-    `);
-    win.document.close();
-    setTimeout(() => { win.print(); win.close(); }, 500);
+    window.print();
   };
 
   const handleSaveAndExport = async () => {
