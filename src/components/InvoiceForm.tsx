@@ -267,10 +267,44 @@ export default function InvoiceForm() {
             </div>
           ))}
         </div>
-        <Button variant="outline" size="sm" onClick={addItem}>
-          <Plus className="h-3.5 w-3.5" />
-          {t('addItem')}
-        </Button>
+        <div className="flex gap-2">
+          <Button variant="outline" size="sm" onClick={addItem}>
+            <Plus className="h-3.5 w-3.5" />
+            {t('addItem')}
+          </Button>
+          {savedProducts.length > 0 && (
+            <div className="relative">
+              <Button variant="outline" size="sm" onClick={() => setShowProductPicker(!showProductPicker)}>
+                <Package className="h-3.5 w-3.5" />
+                {t('addFromSaved')}
+              </Button>
+              {showProductPicker && (
+                <div className="absolute z-50 mt-1 w-64 rounded-md border border-border bg-popover shadow-lg max-h-48 overflow-y-auto">
+                  {savedProducts.map(p => (
+                    <button
+                      key={p.id}
+                      type="button"
+                      className="flex w-full items-center justify-between px-3 py-2 text-start text-sm hover:bg-accent transition-colors"
+                      onClick={() => {
+                        setItems(prev => [...prev, {
+                          id: crypto.randomUUID(),
+                          description: p.description,
+                          quantity: p.defaultQuantity,
+                          unitPrice: p.unitPrice,
+                          tvaRate: isAutoEntrepreneur ? 0 : p.tvaRate,
+                        }]);
+                        setShowProductPicker(false);
+                      }}
+                    >
+                      <span className="font-medium text-foreground truncate">{p.description}</span>
+                      <span className="text-xs text-muted-foreground shrink-0 ms-2">{p.unitPrice.toFixed(2)} {t('dh')}</span>
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+        </div>
       </section>
 
       {/* Discount */}
