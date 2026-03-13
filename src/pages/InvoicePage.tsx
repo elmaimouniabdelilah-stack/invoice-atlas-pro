@@ -95,7 +95,10 @@ export default function InvoicePage() {
   };
 
   const handleSaveAndExport = async () => {
-    if (!buyer.clientName) return;
+    if (!buyer.clientName) {
+      toast({ title: 'يرجى إدخال اسم العميل', variant: 'destructive' });
+      return;
+    }
     const totalTTC = calculateTotalTTCWithDiscount(items, isAutoEntrepreneur, discountType, discountValue);
 
     // Export PDF first (before resetting the form)
