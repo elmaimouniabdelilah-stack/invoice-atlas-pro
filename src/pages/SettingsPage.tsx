@@ -37,11 +37,11 @@ export default function SettingsPage() {
 
   return (
     <AppLayout>
-      <div className="p-8 max-w-2xl space-y-6">
-        <h1 className="text-xl font-semibold text-foreground">{t('settings')}</h1>
+      <div className="p-4 sm:p-8 max-w-2xl space-y-4 sm:space-y-6">
+        <h1 className="text-lg sm:text-xl font-semibold text-foreground">{t('settings')}</h1>
 
         {/* Auto-entrepreneur */}
-        <div className="flex items-center justify-between rounded-lg border border-border bg-card p-4">
+        <div className="flex items-center justify-between rounded-lg border border-border bg-card p-3 sm:p-4">
           <div>
             <p className="text-sm font-medium text-foreground">{t('autoEntrepreneur')}</p>
             <p className="text-xs text-muted-foreground">TVA 0%</p>
@@ -50,14 +50,14 @@ export default function SettingsPage() {
         </div>
 
         {/* Seller info */}
-        <div className="rounded-lg border border-border bg-card p-6 space-y-4">
+        <div className="rounded-lg border border-border bg-card p-4 sm:p-6 space-y-4">
           <h2 className="text-sm font-semibold text-foreground">{t('sellerInfo')}</h2>
 
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-3 sm:gap-4">
             {seller.logo ? (
-              <img src={seller.logo} alt="Logo" className="h-16 w-16 rounded-md object-contain border border-border" />
+              <img src={seller.logo} alt="Logo" className="h-12 w-12 sm:h-16 sm:w-16 rounded-md object-contain border border-border" />
             ) : (
-              <div className="flex h-16 w-16 items-center justify-center rounded-md border border-dashed border-border bg-secondary text-xs text-muted-foreground">Logo</div>
+              <div className="flex h-12 w-12 sm:h-16 sm:w-16 items-center justify-center rounded-md border border-dashed border-border bg-secondary text-xs text-muted-foreground">Logo</div>
             )}
             <div className="space-y-1">
               <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={handleLogo} />
@@ -73,7 +73,7 @@ export default function SettingsPage() {
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
             <Field label={t('businessName')}>
               <Input value={seller.businessName} onChange={e => setSeller(p => ({ ...p, businessName: e.target.value }))} className="h-9 text-sm" />
             </Field>
@@ -86,7 +86,7 @@ export default function SettingsPage() {
             <Input value={seller.address} onChange={e => setSeller(p => ({ ...p, address: e.target.value }))} className="h-9 text-sm" />
           </Field>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
             <Field label={t('phone')}>
               <Input value={seller.phone} onChange={e => setSeller(p => ({ ...p, phone: e.target.value }))} className="h-9 text-sm" />
             </Field>
@@ -95,7 +95,7 @@ export default function SettingsPage() {
             </Field>
           </div>
 
-          <div className="grid grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
             <Field label={t('ifLabel')}>
               <Input value={seller.ifCode} onChange={e => setSeller(p => ({ ...p, ifCode: e.target.value }))} className="h-9 text-sm" />
             </Field>
@@ -109,7 +109,7 @@ export default function SettingsPage() {
         </div>
 
         {/* Invoice Texts */}
-        <div className="rounded-lg border border-border bg-card p-6 space-y-4">
+        <div className="rounded-lg border border-border bg-card p-4 sm:p-6 space-y-4">
           <h2 className="text-sm font-semibold text-foreground">{t('invoiceTexts')}</h2>
 
           <Field label={t('invoiceTitleLabel')}>
@@ -172,9 +172,9 @@ export default function SettingsPage() {
         </div>
 
         {/* Bank Info */}
-        <div className="rounded-lg border border-border bg-card p-6 space-y-4">
+        <div className="rounded-lg border border-border bg-card p-4 sm:p-6 space-y-4">
           <h2 className="text-sm font-semibold text-foreground">{t('bankInfo')}</h2>
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
             <Field label={t('bankName')}>
               <Input value={invoiceTexts.bankName} onChange={e => updateText('bankName', e.target.value)} placeholder="Attijariwafa Bank" className="h-9 text-sm" />
             </Field>
@@ -195,7 +195,7 @@ export default function SettingsPage() {
         </p>
 
         {/* Admin access */}
-        <div className="pt-6 border-t border-border">
+        <div className="pt-4 sm:pt-6 border-t border-border pb-8">
           <button
             onClick={() => window.location.href = '/admin/login'}
             className="text-xs text-muted-foreground/50 hover:text-muted-foreground transition-colors"
