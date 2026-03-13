@@ -70,6 +70,56 @@ export default function InvoicePage() {
     window.print();
   };
 
+  const getInvoiceCanvas = async () => {
+    const element = document.getElementById('invoice-preview');
+    if (!element) return null;
+    return html2canvas(element, { scale: 2, useCORS: true, backgroundColor: '#ffffff' });
+  };
+
+  const handleShareImage = async () => {
+    if (!navigator.share) {
+      toast({ title: t('shareNotSupported'), variant: 'destructive' });
+      return;
+    }
+    setExporting(true);
+    try {
+      const canvas = await getInvoiceCanvas();
+      if (!canvas) return;
+      const blob = await new Promise<Blob | null>(r => canvas.toBlob(r, 'image/png'));
+      if (!blob) return;
+      const file = new File([blob], `${invoiceNumber}.png`, { type: 'image/png' });
+      await navigator.share({ title: invoiceNumber, files: [file] });
+    } catch (e: any) {
+      if (e?.name !== 'AbortError') toast({ title: t('shareError'), variant: 'destructive' });
+    } finally {
+      setExporting(false);
+    }
+  };
+
+  const handleSharePdf = async () => {
+    if (!navigator.share) {
+      toast({ title: t('shareNotSupported'), variant: 'destructive' });
+      return;
+    }
+    setExporting(true);
+    try {
+      const canvas = await getInvoiceCanvas();
+      if (!canvas) return;
+      const imgData = canvas.toDataURL('image/png');
+      const pdf = new jsPDF('p', 'mm', 'a4');
+      const pdfWidth = 210;
+      const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+      pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+      const pdfBlob = pdf.output('blob');
+      const file = new File([pdfBlob], `${invoiceNumber}.pdf`, { type: 'application/pdf' });
+      await navigator.share({ title: invoiceNumber, files: [file] });
+    } catch (e: any) {
+      if (e?.name !== 'AbortError') toast({ title: t('shareError'), variant: 'destructive' });
+    } finally {
+      setExporting(false);
+    }
+  };
+
   const handleSaveAndExport = async () => {
     if (!buyer.clientName) {
       toast({ title: 'يرجى إدخال اسم العميل', variant: 'destructive' });
