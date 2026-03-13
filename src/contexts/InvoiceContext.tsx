@@ -150,6 +150,7 @@ export function InvoiceProvider({ children }: { children: React.ReactNode }) {
       editingInvoiceId, setEditingInvoiceId,
       discountType, setDiscountType,
       discountValue, setDiscountValue,
+      savedProducts, setSavedProducts,
     }}>
       {children}
     </InvoiceContext.Provider>

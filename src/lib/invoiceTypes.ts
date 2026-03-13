@@ -46,6 +46,14 @@ export interface Client {
   invoiceCount: number;
 }
 
+export interface SavedProduct {
+  id: string;
+  description: string;
+  unitPrice: number;
+  tvaRate: number;
+  defaultQuantity: number;
+}
+
 export const TVA_RATES = [0, 7, 10, 14, 20];
 
 export function calculateItemTotal(item: InvoiceItem): number {
