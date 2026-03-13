@@ -241,7 +241,16 @@ export default function InvoiceForm() {
                 </div>
                 <div>
                   <Label className="text-xs text-muted-foreground">{t('unitPrice')}</Label>
-                  <Input type="number" min={0} step={0.01} value={item.unitPrice} onChange={e => updateItem(item.id, 'unitPrice', Number(e.target.value))} className="h-8 text-sm" />
+                  <Input
+                    type="number"
+                    min={0}
+                    step={0.01}
+                    value={item.unitPrice || ''}
+                    onFocus={e => { if (item.unitPrice === 0) e.currentTarget.value = ''; }}
+                    onBlur={e => { if (e.currentTarget.value === '') updateItem(item.id, 'unitPrice', 0); }}
+                    onChange={e => updateItem(item.id, 'unitPrice', Number(e.target.value))}
+                    className="h-8 text-sm"
+                  />
                 </div>
                 <div>
                   <Label className="text-xs text-muted-foreground">{t('tvaRate')}</Label>
