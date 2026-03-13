@@ -99,6 +99,8 @@ export const translations = {
     noProducts: 'Aucun produit enregistré',
     defaultQuantity: 'Quantité par défaut',
     addFromSaved: 'Produits enregistrés',
+    darkMode: 'Mode sombre',
+    lightMode: 'Mode clair',
   },
   ar: {
     appName: 'فاتورة برو',
@@ -198,6 +200,8 @@ export const translations = {
     noProducts: 'لا توجد منتجات مسجلة',
     defaultQuantity: 'الكمية الافتراضية',
     addFromSaved: 'منتجات محفوظة',
+    darkMode: 'الوضع المظلم',
+    lightMode: 'الوضع الفاتح',
   },
 } as const;
 

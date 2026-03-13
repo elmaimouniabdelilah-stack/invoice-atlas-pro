@@ -6,6 +6,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 import { InvoiceProvider } from "@/contexts/InvoiceContext";
+import { ThemeProvider } from "@/contexts/ThemeContext";
 import Dashboard from "./pages/Dashboard";
 import InvoicePage from "./pages/InvoicePage";
 import ClientsPage from "./pages/ClientsPage";
@@ -22,29 +23,31 @@ const queryClient = new QueryClient();
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <LanguageProvider>
-        <InvoiceProvider>
-          <PWAInstallPrompt />
-          <BrowserRouter>
-            <Routes>
-              <Route path="/" element={<Dashboard />} />
-              <Route path="/invoice" element={<InvoicePage />} />
-              <Route path="/clients" element={<ClientsPage />} />
-              <Route path="/products" element={<ProductsPage />} />
-              <Route path="/settings" element={<SettingsPage />} />
-              <Route path="/history" element={<HistoryPage />} />
-              <Route path="/admin/login" element={<AdminLoginPage />} />
-              <Route path="/admin" element={<AdminDashboard />} />
-              <Route path="/reset-password" element={<ResetPasswordPage />} />
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </BrowserRouter>
-        </InvoiceProvider>
-      </LanguageProvider>
-    </TooltipProvider>
+    <ThemeProvider>
+      <TooltipProvider>
+        <Toaster />
+        <Sonner />
+        <LanguageProvider>
+          <InvoiceProvider>
+            <PWAInstallPrompt />
+            <BrowserRouter>
+              <Routes>
+                <Route path="/" element={<Dashboard />} />
+                <Route path="/invoice" element={<InvoicePage />} />
+                <Route path="/clients" element={<ClientsPage />} />
+                <Route path="/products" element={<ProductsPage />} />
+                <Route path="/settings" element={<SettingsPage />} />
+                <Route path="/history" element={<HistoryPage />} />
+                <Route path="/admin/login" element={<AdminLoginPage />} />
+                <Route path="/admin" element={<AdminDashboard />} />
+                <Route path="/reset-password" element={<ResetPasswordPage />} />
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </BrowserRouter>
+          </InvoiceProvider>
+        </LanguageProvider>
+      </TooltipProvider>
+    </ThemeProvider>
   </QueryClientProvider>
 );
 

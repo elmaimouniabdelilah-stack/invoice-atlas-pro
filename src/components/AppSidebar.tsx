@@ -1,6 +1,7 @@
 import { NavLink, useLocation } from 'react-router-dom';
-import { LayoutDashboard, FilePlus, Globe, Settings, History, Menu, X, Users, Package } from 'lucide-react';
+import { LayoutDashboard, FilePlus, Globe, Settings, History, Menu, X, Users, Package, Moon, Sun } from 'lucide-react';
 import { useLang } from '@/contexts/LanguageContext';
+import { useTheme } from '@/contexts/ThemeContext';
 import { cn } from '@/lib/utils';
 import ActivationDialog from './ActivationDialog';
 import { useIsMobile } from '@/hooks/use-mobile';
@@ -8,6 +9,7 @@ import { useState } from 'react';
 
 export default function AppSidebar() {
   const { t, lang, setLang } = useLang();
+  const { theme, toggleTheme } = useTheme();
   const location = useLocation();
   const isMobile = useIsMobile();
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -67,6 +69,13 @@ export default function AppSidebar() {
               <div className="space-y-1">
                 <ActivationDialog />
                 <button
+                  onClick={() => { toggleTheme(); setMobileOpen(false); }}
+                  className="flex w-full items-center gap-3 rounded-md px-3 py-2.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
+                >
+                  {theme === 'light' ? <Moon className="h-4 w-4" /> : <Sun className="h-4 w-4" />}
+                  {theme === 'light' ? t('darkMode') : t('lightMode')}
+                </button>
+                <button
                   onClick={() => { setLang(lang === 'fr' ? 'ar' : 'fr'); setMobileOpen(false); }}
                   className="flex w-full items-center gap-3 rounded-md px-3 py-2.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
                 >
@@ -114,6 +123,13 @@ export default function AppSidebar() {
 
       <div className="space-y-1 border-t border-border px-3 py-4">
         <ActivationDialog />
+        <button
+          onClick={toggleTheme}
+          className="flex w-full items-center gap-3 rounded-md px-3 py-2.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
+        >
+          {theme === 'light' ? <Moon className="h-4 w-4" /> : <Sun className="h-4 w-4" />}
+          {theme === 'light' ? t('darkMode') : t('lightMode')}
+        </button>
         <button
           onClick={() => setLang(lang === 'fr' ? 'ar' : 'fr')}
           className="flex w-full items-center gap-3 rounded-md px-3 py-2.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
