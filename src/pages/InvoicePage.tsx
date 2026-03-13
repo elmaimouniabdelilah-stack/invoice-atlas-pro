@@ -217,13 +217,12 @@ export default function InvoicePage() {
 
           {/* Content area */}
           <div className="flex-1 overflow-y-auto">
-            {mobileTab === 'form' ? (
+            <div className={mobileTab === 'form' ? '' : 'hidden'}>
               <InvoiceForm />
-            ) : (
-              <div className="p-3">
-                <InvoicePreview mobileView />
-              </div>
-            )}
+            </div>
+            <div className={mobileTab === 'preview' ? 'p-3' : 'absolute -left-[9999px] top-0'}>
+              <InvoicePreview mobileView />
+            </div>
           </div>
 
           {/* Fixed bottom action bar */}
