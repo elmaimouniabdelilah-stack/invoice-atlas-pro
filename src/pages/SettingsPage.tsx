@@ -23,7 +23,7 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
 export default function SettingsPage() {
   const { t, lang, setLang } = useLang();
   const { theme, toggleTheme } = useTheme();
-  const { seller, setSeller, isAutoEntrepreneur, setIsAutoEntrepreneur, invoiceTexts, setInvoiceTexts } = useInvoice();
+  const { seller, setSeller, isAutoEntrepreneur, setIsAutoEntrepreneur, invoiceTexts, setInvoiceTexts, defaultTvaRate, setDefaultTvaRate } = useInvoice();
   const fileRef = useRef<HTMLInputElement>(null);
 
   const handleLogo = (e: React.ChangeEvent<HTMLInputElement>) => {
