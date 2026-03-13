@@ -32,6 +32,7 @@ export default function InvoiceForm() {
     discountValue, setDiscountValue,
     savedProducts,
     defaultTvaRate,
+    detailedMode, setDetailedMode,
   } = useInvoice();
 
   const [showAdminFields, setShowAdminFields] = useState(false);
@@ -86,7 +87,7 @@ export default function InvoiceForm() {
 
   return (
     <div className="space-y-6 p-4 sm:p-6">
-      {/* Auto-entrepreneur + TVA Control */}
+      {/* Auto-entrepreneur + TVA + Detailed Mode */}
       <div className="rounded-lg border border-border bg-card p-3 sm:p-4 space-y-3">
         <div className="flex items-center justify-between">
           <div>
@@ -104,7 +105,16 @@ export default function InvoiceForm() {
           />
         </div>
 
-        {/* TVA Rate Control - always visible */}
+        {/* Detailed Mode Toggle */}
+        <div className="flex items-center justify-between pt-2 border-t border-border">
+          <div>
+            <p className="text-sm font-medium text-foreground">Mode détaillé</p>
+            <p className="text-xs text-muted-foreground">Réf, Longueur, Hauteur, M²</p>
+          </div>
+          <Switch checked={detailedMode} onCheckedChange={setDetailedMode} />
+        </div>
+
+        {/* TVA Rate Control */}
         <div className="pt-2 border-t border-border space-y-2">
           <p className="text-sm font-medium text-foreground">
             {isAutoEntrepreneur ? 'TVA verrouillée à 0% (Auto-entrepreneur)' : `${t('tvaRate')} — ${t('items')}`}
@@ -270,12 +280,53 @@ export default function InvoiceForm() {
         <div className="space-y-2">
           {items.map((item) => (
             <div key={item.id} className="rounded-md border border-border bg-card p-3 space-y-2">
-              {/* Description - full width */}
-              <div>
-                <Label className="text-xs text-muted-foreground">{t('description')}</Label>
-                <Input value={item.description} onChange={e => updateItem(item.id, 'description', e.target.value)} className="h-8 text-sm" />
+              {/* Reference (detailed mode) + Description */}
+              <div className={detailedMode ? 'grid grid-cols-3 gap-2' : ''}>
+                {detailedMode && (
+                  <div>
+                    <Label className="text-xs text-muted-foreground">Réf</Label>
+                    <Input value={item.reference || ''} onChange={e => updateItem(item.id, 'reference', e.target.value)} placeholder="Réf" className="h-8 text-sm" />
+                  </div>
+                )}
+                <div className={detailedMode ? 'col-span-2' : ''}>
+                  <Label className="text-xs text-muted-foreground">{t('description')}</Label>
+                  <Input value={item.description} onChange={e => updateItem(item.id, 'description', e.target.value)} className="h-8 text-sm" />
+                </div>
               </div>
-              {/* Quantity, Price, TVA, Total in a responsive grid */}
+              {/* Dimensions (detailed mode) */}
+              {detailedMode && (
+                <div className="grid grid-cols-3 gap-2">
+                  <div>
+                    <Label className="text-xs text-muted-foreground">L (m)</Label>
+                    <Input type="number" min={0} step={0.001} value={item.length || ''} 
+                      onFocus={e => { if (!item.length) e.currentTarget.value = ''; }}
+                      onChange={e => {
+                        const l = Number(e.target.value);
+                        const h = item.height || 0;
+                        updateItem(item.id, 'length', l);
+                        setItems(prev => prev.map(i => i.id === item.id ? { ...i, length: l, totalM2: parseFloat((l * h).toFixed(3)) } : i));
+                      }} className="h-8 text-sm" />
+                  </div>
+                  <div>
+                    <Label className="text-xs text-muted-foreground">H (m)</Label>
+                    <Input type="number" min={0} step={0.001} value={item.height || ''} 
+                      onFocus={e => { if (!item.height) e.currentTarget.value = ''; }}
+                      onChange={e => {
+                        const h = Number(e.target.value);
+                        const l = item.length || 0;
+                        updateItem(item.id, 'height', h);
+                        setItems(prev => prev.map(i => i.id === item.id ? { ...i, height: h, totalM2: parseFloat((l * h).toFixed(3)) } : i));
+                      }} className="h-8 text-sm" />
+                  </div>
+                  <div>
+                    <Label className="text-xs text-muted-foreground">Tot M²</Label>
+                    <Input type="number" min={0} step={0.01} value={item.totalM2 || ''} 
+                      onChange={e => updateItem(item.id, 'totalM2', Number(e.target.value))}
+                      className="h-8 text-sm bg-muted/50" />
+                  </div>
+                </div>
+              )}
+              {/* Quantity, Price, TVA, Total */}
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 items-end">
                 <div>
                   <Label className="text-xs text-muted-foreground">{t('quantity')}</Label>

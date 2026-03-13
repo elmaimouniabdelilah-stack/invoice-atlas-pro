@@ -85,6 +85,8 @@ interface InvoiceContextType {
   setSavedProducts: React.Dispatch<React.SetStateAction<SavedProduct[]>>;
   defaultTvaRate: number;
   setDefaultTvaRate: React.Dispatch<React.SetStateAction<number>>;
+  detailedMode: boolean;
+  setDetailedMode: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const InvoiceContext = createContext<InvoiceContextType | undefined>(undefined);
@@ -122,6 +124,7 @@ export function InvoiceProvider({ children }: { children: React.ReactNode }) {
   const [discountValue, setDiscountValue] = useState(0);
   const [savedProducts, setSavedProducts] = useState<SavedProduct[]>(stored.savedProducts || []);
   const [defaultTvaRate, setDefaultTvaRate] = useState<number>(stored.defaultTvaRate ?? 20);
+  const [detailedMode, setDetailedMode] = useState(false);
 
   const loadInvoice = (invoice: Invoice) => {
     setBuyer(invoice.buyer);
@@ -156,6 +159,7 @@ export function InvoiceProvider({ children }: { children: React.ReactNode }) {
       discountValue, setDiscountValue,
       savedProducts, setSavedProducts,
       defaultTvaRate, setDefaultTvaRate,
+      detailedMode, setDetailedMode,
     }}>
       {children}
     </InvoiceContext.Provider>

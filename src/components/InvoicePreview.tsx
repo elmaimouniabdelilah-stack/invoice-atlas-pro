@@ -9,7 +9,7 @@ interface InvoicePreviewProps {
 
 export default function InvoicePreview({ mobileView = false }: InvoicePreviewProps) {
   const { t, lang } = useLang();
-  const { seller, buyer, items, isAutoEntrepreneur, invoiceNumber, invoiceDate, dueDate, invoiceTexts, discountType, discountValue } = useInvoice();
+  const { seller, buyer, items, isAutoEntrepreneur, invoiceNumber, invoiceDate, dueDate, invoiceTexts, discountType, discountValue, detailedMode } = useInvoice();
 
   const totalHT = calculateTotalHT(items);
   const discount = calculateDiscount(totalHT, discountType, discountValue);
@@ -67,7 +67,19 @@ export default function InvoicePreview({ mobileView = false }: InvoicePreviewPro
           <h3 className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">{t('items')}</h3>
           {items.map((item) => (
             <div key={item.id} className="rounded-md border border-border p-2.5">
-              <p className="text-xs font-medium text-foreground mb-1">{item.description || '—'}</p>
+              <div className="flex items-start justify-between mb-1">
+                <p className="text-xs font-medium text-foreground">{item.description || '—'}</p>
+                {detailedMode && item.reference && (
+                  <span className="text-[10px] text-muted-foreground bg-muted px-1.5 py-0.5 rounded shrink-0 ms-2">Réf: {item.reference}</span>
+                )}
+              </div>
+              {detailedMode && (item.length || item.height || item.totalM2) && (
+                <div className="flex gap-2 text-[10px] text-muted-foreground mb-1">
+                  {item.length ? <span>L: {item.length}m</span> : null}
+                  {item.height ? <span>H: {item.height}m</span> : null}
+                  {item.totalM2 ? <span className="font-medium">M²: {item.totalM2}</span> : null}
+                </div>
+              )}
               <div className="flex items-center justify-between text-[11px] text-muted-foreground">
                 <span>{item.quantity} × {item.unitPrice.toFixed(2)}</span>
                 {!isAutoEntrepreneur && <span>TVA {item.tvaRate}%</span>}
@@ -183,20 +195,36 @@ export default function InvoicePreview({ mobileView = false }: InvoicePreviewPro
       <table className="w-full mb-6">
         <thead>
           <tr className="border-b border-foreground/20">
+            {detailedMode && <th className="pb-2 text-start text-xs font-semibold text-muted-foreground uppercase tracking-wider w-20">Réf</th>}
             <th className="pb-2 text-start text-xs font-semibold text-muted-foreground uppercase tracking-wider">{t('description')}</th>
-            <th className="pb-2 text-end text-xs font-semibold text-muted-foreground uppercase tracking-wider w-20">{t('quantity')}</th>
-            <th className="pb-2 text-end text-xs font-semibold text-muted-foreground uppercase tracking-wider w-28">{t('unitPrice')}</th>
-            {!isAutoEntrepreneur && (
-              <th className="pb-2 text-end text-xs font-semibold text-muted-foreground uppercase tracking-wider w-20">{t('tvaRate')}</th>
+            <th className="pb-2 text-end text-xs font-semibold text-muted-foreground uppercase tracking-wider w-16">{t('quantity')}</th>
+            {detailedMode && (
+              <>
+                <th className="pb-2 text-end text-xs font-semibold text-muted-foreground uppercase tracking-wider w-16">L</th>
+                <th className="pb-2 text-end text-xs font-semibold text-muted-foreground uppercase tracking-wider w-16">H</th>
+                <th className="pb-2 text-end text-xs font-semibold text-muted-foreground uppercase tracking-wider w-16">Tot M²</th>
+              </>
             )}
-            <th className="pb-2 text-end text-xs font-semibold text-muted-foreground uppercase tracking-wider w-28">{t('total')}</th>
+            <th className="pb-2 text-end text-xs font-semibold text-muted-foreground uppercase tracking-wider w-24">{t('unitPrice')}</th>
+            {!isAutoEntrepreneur && (
+              <th className="pb-2 text-end text-xs font-semibold text-muted-foreground uppercase tracking-wider w-16">{t('tvaRate')}</th>
+            )}
+            <th className="pb-2 text-end text-xs font-semibold text-muted-foreground uppercase tracking-wider w-24">{t('total')}</th>
           </tr>
         </thead>
         <tbody>
           {items.map((item) => (
             <tr key={item.id} className="border-b border-border">
+              {detailedMode && <td className="py-3 text-foreground text-xs">{item.reference || '—'}</td>}
               <td className="py-3 text-foreground">{item.description || '—'}</td>
               <td className="py-3 text-end text-foreground">{item.quantity}</td>
+              {detailedMode && (
+                <>
+                  <td className="py-3 text-end text-foreground">{item.length || '—'}</td>
+                  <td className="py-3 text-end text-foreground">{item.height || '—'}</td>
+                  <td className="py-3 text-end text-foreground">{item.totalM2 || '—'}</td>
+                </>
+              )}
               <td className="py-3 text-end text-foreground">{item.unitPrice.toFixed(2)}</td>
               {!isAutoEntrepreneur && (
                 <td className="py-3 text-end text-foreground">{item.tvaRate}%</td>
