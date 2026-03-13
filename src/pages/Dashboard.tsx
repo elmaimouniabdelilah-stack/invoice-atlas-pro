@@ -65,8 +65,8 @@ export default function Dashboard() {
 
   return (
     <AppLayout>
-      <div className="p-8">
-        <div className="flex items-center justify-between mb-6">
+      <div className="p-4 sm:p-8">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6">
           <h1 className="text-xl font-semibold text-foreground">{t('dashboard')}</h1>
           <div className="flex gap-2">
             <Button size="sm" variant="outline" onClick={handleExport}>
@@ -81,7 +81,7 @@ export default function Dashboard() {
           </div>
         </div>
 
-        <div className="grid grid-cols-3 gap-4 mb-8">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
           <StatCard icon={FileText} label={t('invoicesCount')} value={String(invoicesCreated)} />
           <StatCard icon={Users} label={t('clients')} value={String(clients.length)} />
           <StatCard icon={DollarSign} label={t('totalBilled')} value={`${totalBilled.toFixed(2)} ${t('dh')}`} />
