@@ -6,11 +6,17 @@ import { Button } from '@/components/ui/button';
 import { useLang } from '@/contexts/LanguageContext';
 import { useInvoice } from '@/contexts/InvoiceContext';
 import { calculateTotalTTCWithDiscount, generateInvoiceNumber } from '@/lib/invoiceTypes';
-import { Download, Printer, FileDown, Eye, Edit3 } from 'lucide-react';
+import { Download, Printer, FileDown, Eye, Edit3, Share2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import { useState } from 'react';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import { useIsMobile } from '@/hooks/use-mobile';
 
 const TRIAL_LIMIT = 3;
@@ -62,6 +68,56 @@ export default function InvoicePage() {
 
   const handlePrint = () => {
     window.print();
+  };
+
+  const getInvoiceCanvas = async () => {
+    const element = document.getElementById('invoice-preview');
+    if (!element) return null;
+    return html2canvas(element, { scale: 2, useCORS: true, backgroundColor: '#ffffff' });
+  };
+
+  const handleShareImage = async () => {
+    if (!navigator.share) {
+      toast({ title: t('shareNotSupported'), variant: 'destructive' });
+      return;
+    }
+    setExporting(true);
+    try {
+      const canvas = await getInvoiceCanvas();
+      if (!canvas) return;
+      const blob = await new Promise<Blob | null>(r => canvas.toBlob(r, 'image/png'));
+      if (!blob) return;
+      const file = new File([blob], `${invoiceNumber}.png`, { type: 'image/png' });
+      await navigator.share({ title: invoiceNumber, files: [file] });
+    } catch (e: any) {
+      if (e?.name !== 'AbortError') toast({ title: t('shareError'), variant: 'destructive' });
+    } finally {
+      setExporting(false);
+    }
+  };
+
+  const handleSharePdf = async () => {
+    if (!navigator.share) {
+      toast({ title: t('shareNotSupported'), variant: 'destructive' });
+      return;
+    }
+    setExporting(true);
+    try {
+      const canvas = await getInvoiceCanvas();
+      if (!canvas) return;
+      const imgData = canvas.toDataURL('image/png');
+      const pdf = new jsPDF('p', 'mm', 'a4');
+      const pdfWidth = 210;
+      const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+      pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+      const pdfBlob = pdf.output('blob');
+      const file = new File([pdfBlob], `${invoiceNumber}.pdf`, { type: 'application/pdf' });
+      await navigator.share({ title: invoiceNumber, files: [file] });
+    } catch (e: any) {
+      if (e?.name !== 'AbortError') toast({ title: t('shareError'), variant: 'destructive' });
+    } finally {
+      setExporting(false);
+    }
   };
 
   const handleSaveAndExport = async () => {
@@ -179,6 +235,21 @@ export default function InvoicePage() {
               <FileDown className="h-4 w-4" />
               PDF
             </Button>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" disabled={exporting || trialExceeded} className="h-10 w-10 p-0 shrink-0">
+                  <Share2 className="h-4.5 w-4.5" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem onClick={handleShareImage}>
+                  {t('shareAsImage')}
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={handleSharePdf}>
+                  {t('shareAsPdf')}
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
             <Button onClick={handleSaveAndExport} disabled={exporting || trialExceeded} className="h-10 flex-1 text-sm font-semibold">
               <Download className="h-4 w-4" />
               {editingInvoiceId ? t('updateInvoice') : t('exportPdf')}
@@ -206,6 +277,21 @@ export default function InvoicePage() {
                 <FileDown className="h-3.5 w-3.5" />
                 PDF
               </Button>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button size="sm" variant="outline" disabled={exporting || trialExceeded}>
+                    <Share2 className="h-3.5 w-3.5" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuItem onClick={handleShareImage}>
+                    {t('shareAsImage')}
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={handleSharePdf}>
+                    {t('shareAsPdf')}
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
               <Button size="sm" onClick={handleSaveAndExport} disabled={exporting || trialExceeded}>
                 <Download className="h-3.5 w-3.5" />
                 {editingInvoiceId ? t('updateInvoice') : t('exportPdf')}
