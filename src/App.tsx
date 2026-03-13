@@ -9,6 +9,7 @@ import { InvoiceProvider } from "@/contexts/InvoiceContext";
 import Dashboard from "./pages/Dashboard";
 import InvoicePage from "./pages/InvoicePage";
 import ClientsPage from "./pages/ClientsPage";
+import ProductsPage from "./pages/ProductsPage";
 import SettingsPage from "./pages/SettingsPage";
 import HistoryPage from "./pages/HistoryPage";
 import NotFound from "./pages/NotFound";
