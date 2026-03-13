@@ -25,7 +25,7 @@ export default function AppSidebar() {
   ];
 
   const mobileLinks = [
-    { to: '/', icon: LayoutDashboard, label: t('dashboard') },
+    { to: '/', icon: LayoutDashboard, label: t('dashboard'), adminShortcut: true },
     { to: '/invoice', icon: FilePlus, label: t('newInvoice') },
     { to: '/clients', icon: Users, label: t('clients') },
     { to: '/history', icon: History, label: t('invoiceHistory') },
@@ -38,10 +38,11 @@ export default function AppSidebar() {
       <>
         {/* Bottom nav */}
         <nav className="fixed bottom-0 left-0 right-0 z-40 flex items-center justify-around border-t border-border bg-card px-1 py-1.5 safe-area-bottom">
-          {mobileLinks.map(({ to, icon: Icon, label }) => (
+          {mobileLinks.map(({ to, icon: Icon, label, adminShortcut }) => (
             <NavLink
               key={to}
               to={to}
+              onDoubleClick={adminShortcut ? () => window.location.href = '/admin/login' : undefined}
               className={cn(
                 'flex flex-col items-center gap-0.5 rounded-md px-2 py-1.5 text-[10px] font-medium transition-colors',
                 location.pathname === to
