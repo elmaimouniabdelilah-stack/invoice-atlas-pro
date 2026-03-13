@@ -268,6 +268,7 @@ export default function AdminDashboard() {
                           غير مُستعمل
                         </Badge>
                       )}
+                    </TableCell>
                     <TableCell>
                       <div className="flex items-center gap-2">
                         <Badge variant={code.device_count! >= code.max_devices ? 'destructive' : 'secondary'}>
