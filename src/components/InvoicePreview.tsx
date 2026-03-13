@@ -67,7 +67,19 @@ export default function InvoicePreview({ mobileView = false }: InvoicePreviewPro
           <h3 className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">{t('items')}</h3>
           {items.map((item) => (
             <div key={item.id} className="rounded-md border border-border p-2.5">
-              <p className="text-xs font-medium text-foreground mb-1">{item.description || '—'}</p>
+              <div className="flex items-start justify-between mb-1">
+                <p className="text-xs font-medium text-foreground">{item.description || '—'}</p>
+                {detailedMode && item.reference && (
+                  <span className="text-[10px] text-muted-foreground bg-muted px-1.5 py-0.5 rounded shrink-0 ms-2">Réf: {item.reference}</span>
+                )}
+              </div>
+              {detailedMode && (item.length || item.height || item.totalM2) && (
+                <div className="flex gap-2 text-[10px] text-muted-foreground mb-1">
+                  {item.length ? <span>L: {item.length}m</span> : null}
+                  {item.height ? <span>H: {item.height}m</span> : null}
+                  {item.totalM2 ? <span className="font-medium">M²: {item.totalM2}</span> : null}
+                </div>
+              )}
               <div className="flex items-center justify-between text-[11px] text-muted-foreground">
                 <span>{item.quantity} × {item.unitPrice.toFixed(2)}</span>
                 {!isAutoEntrepreneur && <span>TVA {item.tvaRate}%</span>}
