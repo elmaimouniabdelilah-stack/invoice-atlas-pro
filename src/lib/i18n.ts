@@ -167,6 +167,7 @@ export const translations = {
     totalAfterDiscount: 'المجموع بدون ضريبة بعد الخصم',
     footerNotesLabel: 'ملاحظات أسفل الفاتورة',
     taxExemptionLabel: 'نص الإعفاء الضريبي',
+    preview: 'معاينة',
   },
 } as const;
 
