@@ -32,6 +32,7 @@ interface StoredData {
   isAutoEntrepreneur: boolean;
   invoices: Invoice[];
   invoiceTexts: InvoiceTexts;
+  savedProducts: SavedProduct[];
 }
 
 function loadStored(): Partial<StoredData> {
