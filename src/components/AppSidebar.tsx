@@ -1,6 +1,7 @@
 import { NavLink, useLocation } from 'react-router-dom';
-import { LayoutDashboard, FilePlus, Globe, Settings, History, Menu, X, Users, Package } from 'lucide-react';
+import { LayoutDashboard, FilePlus, Globe, Settings, History, Menu, X, Users, Package, Moon, Sun } from 'lucide-react';
 import { useLang } from '@/contexts/LanguageContext';
+import { useTheme } from '@/contexts/ThemeContext';
 import { cn } from '@/lib/utils';
 import ActivationDialog from './ActivationDialog';
 import { useIsMobile } from '@/hooks/use-mobile';
