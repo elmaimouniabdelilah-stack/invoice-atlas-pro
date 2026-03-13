@@ -223,6 +223,15 @@ export const translations = {
     shareSuccess: 'تمت المشاركة بنجاح',
     shareError: 'خطأ أثناء المشاركة',
     shareNotSupported: 'المشاركة غير مدعومة في هذا المتصفح',
+    monthlyRevenue: 'الإيرادات الشهرية',
+    invoicesPerMonth: 'الفواتير شهرياً',
+    topClients: 'أهم العملاء',
+    revenue: 'الإيرادات',
+    count: 'العدد',
+    month1: 'يناير', month2: 'فبراير', month3: 'مارس', month4: 'أبريل', month5: 'ماي', month6: 'يونيو',
+    month7: 'يوليوز', month8: 'غشت', month9: 'شتنبر', month10: 'أكتوبر', month11: 'نونبر', month12: 'دجنبر',
+    noData: 'لا توجد بيانات',
+    averageInvoice: 'متوسط الفاتورة',
   },
 } as const;
 
