@@ -47,7 +47,7 @@ function amountInWords(amount: number): string {
 
 export function InvoicePreview({ invoice }: InvoicePreviewProps) {
   return (
-    <div className="bg-card rounded-lg shadow-sm border max-w-3xl mx-auto print:shadow-none print:border-none">
+    <div id="invoice-preview" className="bg-card rounded-lg shadow-sm border max-w-3xl mx-auto print:shadow-none print:border-none">
       <div className="p-8">
         {/* Header */}
         <div className="flex justify-between items-start mb-8">
