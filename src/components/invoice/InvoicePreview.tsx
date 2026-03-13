@@ -44,96 +44,97 @@ function amountInWords(amount: number): string {
 }
 
 export function InvoicePreview({ invoice }: InvoicePreviewProps) {
-  const hasVendorAdmin = invoice.vendor.ifNumber || invoice.vendor.rc || invoice.vendor.cnss;
-
   return (
-    <div id="invoice-preview" className="bg-white max-w-4xl mx-auto print:shadow-none" style={{ fontFamily: "Arial, Helvetica, sans-serif", color: "#000" }}>
-      <div className="p-10">
+    <div id="invoice-preview" className="bg-white max-w-4xl mx-auto print:shadow-none" style={{ fontFamily: "Arial, Helvetica, sans-serif", color: "#222" }}>
+      <div className="px-12 py-10">
 
-        {/* Header */}
-        <div className="flex justify-between items-start mb-8">
+        {/* Header: Company name left, Invoice info right */}
+        <div className="flex justify-between items-start mb-6">
           <div className="flex-1">
             {invoice.logo && (
-              <img src={invoice.logo} alt="Logo" className="h-14 mb-3 object-contain" />
+              <img src={invoice.logo} alt="Logo" className="h-12 mb-2 object-contain" />
             )}
-            <p className="text-lg font-bold">{invoice.vendor.raisonSociale || "Nom de l'entreprise"}</p>
-            {invoice.vendor.adresse && <p className="text-sm mt-1">{invoice.vendor.adresse}</p>}
-            {invoice.vendor.telephone && <p className="text-sm">Tél: {invoice.vendor.telephone}</p>}
-            {invoice.vendor.email && <p className="text-sm">{invoice.vendor.email}</p>}
-            {invoice.vendor.ice && <p className="text-sm mt-1">ICE: {invoice.vendor.ice}</p>}
-            {invoice.vendor.ifNumber && <p className="text-sm">IF: {invoice.vendor.ifNumber}</p>}
-            {invoice.vendor.rc && <p className="text-sm">RC: {invoice.vendor.rc}</p>}
-            {invoice.vendor.cnss && <p className="text-sm">CNSS: {invoice.vendor.cnss}</p>}
+            <p className="text-lg font-bold" style={{ color: "#111" }}>
+              {invoice.vendor.raisonSociale || "Nom de l'entreprise"}
+            </p>
+            {invoice.vendor.adresse && <p className="text-xs mt-0.5" style={{ color: "#555" }}>{invoice.vendor.adresse}</p>}
+            {invoice.vendor.telephone && <p className="text-xs" style={{ color: "#555" }}>Tél: {invoice.vendor.telephone}</p>}
+            {invoice.vendor.email && <p className="text-xs" style={{ color: "#555" }}>{invoice.vendor.email}</p>}
+            {invoice.vendor.ice && <p className="text-xs mt-1" style={{ color: "#555" }}>ICE: {invoice.vendor.ice}</p>}
+            {invoice.vendor.ifNumber && <p className="text-xs" style={{ color: "#555" }}>IF: {invoice.vendor.ifNumber}</p>}
+            {invoice.vendor.rc && <p className="text-xs" style={{ color: "#555" }}>RC: {invoice.vendor.rc}</p>}
+            {invoice.vendor.cnss && <p className="text-xs" style={{ color: "#555" }}>CNSS: {invoice.vendor.cnss}</p>}
           </div>
 
-          <div className="text-right">
-            <p className="text-2xl font-bold tracking-tight">FACTURE</p>
-            <p className="text-sm mt-2">N° <span className="font-bold">{invoice.number}</span></p>
-            <p className="text-sm mt-1">Date: {invoice.date}</p>
+          <div className="text-right flex-shrink-0">
+            <p className="text-sm font-medium" style={{ color: "#555" }}>Facture N°</p>
+            <p className="text-xl font-bold" style={{ color: "#111" }}>{invoice.number}</p>
+            <p className="text-xs mt-1" style={{ color: "#888" }}>Date: {invoice.date}</p>
             {invoice.dueDate && invoice.dueDate !== invoice.date && (
-              <p className="text-sm">Échéance: {invoice.dueDate}</p>
+              <p className="text-xs" style={{ color: "#888" }}>Échéance: {invoice.dueDate}</p>
             )}
             {invoice.isAutoEntrepreneur && (
-              <p className="text-xs mt-2 font-semibold">Auto-entrepreneur</p>
+              <p className="text-xs mt-1 font-medium" style={{ color: "#555" }}>Auto-entrepreneur · TVA 0%</p>
             )}
           </div>
         </div>
 
-        {/* Separator */}
-        <div className="border-t border-black mb-6" />
-
-        {/* Buyer */}
-        <div className="mb-8">
-          <div className="border border-black p-4">
-            <p className="text-xs font-bold uppercase mb-2">Facturé à</p>
-            <p className="text-base font-bold">{invoice.buyer.nomClient || "—"}</p>
-            {invoice.buyer.ice && <p className="text-sm">ICE: {invoice.buyer.ice}</p>}
-            {invoice.buyer.adresse && <p className="text-sm">{invoice.buyer.adresse}</p>}
-          </div>
+        {/* Buyer info box */}
+        <div className="mb-6 border rounded px-5 py-4" style={{ borderColor: "#ddd" }}>
+          <p className="text-[10px] font-semibold uppercase tracking-widest mb-2" style={{ color: "#888" }}>
+            Informations de l'acheteur
+          </p>
+          <p className="text-sm font-semibold" style={{ color: "#111" }}>
+            {invoice.buyer.nomClient || "—"}
+          </p>
+          {invoice.buyer.ice && <p className="text-xs" style={{ color: "#555" }}>ICE: {invoice.buyer.ice}</p>}
+          {invoice.buyer.adresse && <p className="text-xs" style={{ color: "#555" }}>{invoice.buyer.adresse}</p>}
         </div>
 
-        {/* Articles table */}
-        <table className="w-full mb-8 border-collapse" style={{ borderColor: "#000" }}>
-          <thead>
-            <tr>
-              <th className="border border-black py-2 px-3 text-left text-xs font-bold uppercase bg-gray-100">Description</th>
-              <th className="border border-black py-2 px-3 text-center text-xs font-bold uppercase w-16 bg-gray-100">Qté</th>
-              <th className="border border-black py-2 px-3 text-right text-xs font-bold uppercase w-24 bg-gray-100">P.U. (DH)</th>
-              <th className="border border-black py-2 px-3 text-right text-xs font-bold uppercase w-16 bg-gray-100">TVA</th>
-              <th className="border border-black py-2 px-3 text-right text-xs font-bold uppercase w-24 bg-gray-100">Total (DH)</th>
-            </tr>
-          </thead>
-          <tbody>
-            {invoice.articles.map((article) => (
-              <tr key={article.id}>
-                <td className="border border-black py-2 px-3 text-sm">{article.description || "—"}</td>
-                <td className="border border-black py-2 px-3 text-center text-sm">{article.quantity}</td>
-                <td className="border border-black py-2 px-3 text-right text-sm">{article.unitPrice.toFixed(2)}</td>
-                <td className="border border-black py-2 px-3 text-right text-sm">{invoice.isAutoEntrepreneur ? "0" : article.tvaRate}%</td>
-                <td className="border border-black py-2 px-3 text-right text-sm font-bold">{(article.quantity * article.unitPrice).toFixed(2)}</td>
+        {/* Articles table - clean, no borders, just lines */}
+        <div className="mb-6">
+          <table className="w-full">
+            <thead>
+              <tr style={{ borderBottom: "2px solid #ddd" }}>
+                <th className="text-left py-2.5 text-[11px] font-semibold uppercase tracking-wider" style={{ color: "#555" }}>Description</th>
+                <th className="text-center py-2.5 text-[11px] font-semibold uppercase tracking-wider w-20" style={{ color: "#555" }}>Quantité</th>
+                <th className="text-right py-2.5 text-[11px] font-semibold uppercase tracking-wider w-24" style={{ color: "#555" }}>Prix unitaire</th>
+                <th className="text-right py-2.5 text-[11px] font-semibold uppercase tracking-wider w-20" style={{ color: "#555" }}>Taux TVA</th>
+                <th className="text-right py-2.5 text-[11px] font-semibold uppercase tracking-wider w-24" style={{ color: "#555" }}>Total</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {invoice.articles.map((article) => (
+                <tr key={article.id} style={{ borderBottom: "1px solid #eee" }}>
+                  <td className="py-3 text-sm" style={{ color: "#222" }}>{article.description || "—"}</td>
+                  <td className="py-3 text-center text-sm" style={{ color: "#222" }}>{article.quantity}</td>
+                  <td className="py-3 text-right text-sm" style={{ color: "#222" }}>{article.unitPrice.toFixed(2)}</td>
+                  <td className="py-3 text-right text-sm" style={{ color: "#222" }}>{invoice.isAutoEntrepreneur ? "0" : article.tvaRate}%</td>
+                  <td className="py-3 text-right text-sm font-semibold" style={{ color: "#111" }}>{(article.quantity * article.unitPrice).toFixed(2)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
 
-        {/* Totals */}
+        {/* Totals - right aligned, simple */}
         <div className="flex justify-end mb-8">
-          <div className="w-72">
+          <div className="w-64">
             <div className="flex justify-between py-1.5 text-sm">
-              <span>Total HT</span>
-              <span>{invoice.totalHT.toFixed(2)} DH</span>
+              <span style={{ color: "#555" }}>Total HT</span>
+              <span style={{ color: "#222" }}>{invoice.totalHT.toFixed(2)} DH</span>
             </div>
             <div className="flex justify-between py-1.5 text-sm">
-              <span>Total TVA</span>
-              <span>{invoice.totalTVA.toFixed(2)} DH</span>
+              <span style={{ color: "#555" }}>Total TVA</span>
+              <span style={{ color: "#222" }}>{invoice.totalTVA.toFixed(2)} DH</span>
             </div>
             {invoice.discountValue > 0 && (
               <div className="flex justify-between py-1.5 text-sm">
-                <span>Remise</span>
-                <span>-{invoice.discountType === "percentage" ? `${invoice.discountValue}%` : `${invoice.discountValue.toFixed(2)} DH`}</span>
+                <span style={{ color: "#555" }}>Remise</span>
+                <span style={{ color: "#222" }}>-{invoice.discountType === "percentage" ? `${invoice.discountValue}%` : `${invoice.discountValue.toFixed(2)} DH`}</span>
               </div>
             )}
-            <div className="flex justify-between py-2 text-base font-bold border-t-2 border-black mt-1">
+            <div className="flex justify-between py-2 text-sm font-bold" style={{ borderTop: "2px solid #222", marginTop: "4px", color: "#111" }}>
               <span>Total TTC</span>
               <span>{invoice.totalTTC.toFixed(2)} DH</span>
             </div>
@@ -141,13 +142,14 @@ export function InvoicePreview({ invoice }: InvoicePreviewProps) {
         </div>
 
         {/* Amount in words */}
-        <div className="border border-black p-3 mb-8">
-          <p className="text-xs font-bold uppercase mb-1">Arrêtée la présente facture à la somme de</p>
-          <p className="text-sm italic">{amountInWords(invoice.totalTTC)}</p>
+        <div className="rounded px-4 py-3 mb-6" style={{ backgroundColor: "#f7f7f7" }}>
+          <p className="text-sm italic" style={{ color: "#444" }}>
+            Arrêtée la présente facture à la somme de: <span className="font-bold" style={{ color: "#111" }}>{amountInWords(invoice.totalTTC)}</span>
+          </p>
         </div>
 
         {/* Footer */}
-        <div className="mt-10 pt-4 border-t border-black text-center text-xs">
+        <div className="mt-8 pt-4 text-center text-[10px]" style={{ borderTop: "1px solid #ddd", color: "#888" }}>
           <p>
             {invoice.vendor.raisonSociale}
             {invoice.vendor.ice && ` · ICE: ${invoice.vendor.ice}`}
