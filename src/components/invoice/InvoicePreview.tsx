@@ -15,9 +15,7 @@ function numberToWords(n: number): string {
   if (n < 100) {
     const t = Math.floor(n / 10);
     const u = n % 10;
-    if (t === 7 || t === 9) {
-      return tens[t - 1] + "-" + teens[u];
-    }
+    if (t === 7 || t === 9) return tens[t - 1] + "-" + teens[u];
     return tens[t] + (u ? "-" + units[u] : "");
   }
   if (n < 1000) {
@@ -46,172 +44,116 @@ function amountInWords(amount: number): string {
 }
 
 export function InvoicePreview({ invoice }: InvoicePreviewProps) {
-  const hasVendorContact = invoice.vendor.telephone || invoice.vendor.email;
   const hasVendorAdmin = invoice.vendor.ifNumber || invoice.vendor.rc || invoice.vendor.cnss;
 
   return (
-    <div id="invoice-preview" className="bg-card max-w-4xl mx-auto print:shadow-none print:border-none" style={{ fontFamily: "'Inter', 'Helvetica Neue', Arial, sans-serif" }}>
-      {/* Top accent bar */}
-      <div className="h-1.5 bg-primary rounded-t-lg print:rounded-none" />
-
+    <div id="invoice-preview" className="bg-white max-w-4xl mx-auto print:shadow-none" style={{ fontFamily: "Arial, Helvetica, sans-serif", color: "#000" }}>
       <div className="p-10">
-        {/* Header: Logo/Company + Invoice Info */}
-        <div className="flex justify-between items-start mb-10">
-          {/* Left: Company */}
+
+        {/* Header */}
+        <div className="flex justify-between items-start mb-8">
           <div className="flex-1">
             {invoice.logo && (
-              <img src={invoice.logo} alt="Logo" className="h-16 mb-4 object-contain" />
+              <img src={invoice.logo} alt="Logo" className="h-14 mb-3 object-contain" />
             )}
-            <h2 className="text-xl font-bold tracking-tight" style={{ color: "hsl(var(--foreground))" }}>
-              {invoice.vendor.raisonSociale || "Nom de l'entreprise"}
-            </h2>
-            {invoice.vendor.adresse && (
-              <p className="text-sm mt-1" style={{ color: "hsl(var(--muted-foreground))" }}>{invoice.vendor.adresse}</p>
-            )}
-            {hasVendorContact && (
-              <p className="text-sm" style={{ color: "hsl(var(--muted-foreground))" }}>
-                {invoice.vendor.telephone}
-                {invoice.vendor.telephone && invoice.vendor.email ? " · " : ""}
-                {invoice.vendor.email}
-              </p>
-            )}
-            {(invoice.vendor.ice || hasVendorAdmin) && (
-              <div className="mt-2 text-xs space-y-0.5" style={{ color: "hsl(var(--muted-foreground))" }}>
-                {invoice.vendor.ice && <p>ICE: <span className="font-mono">{invoice.vendor.ice}</span></p>}
-                {invoice.vendor.ifNumber && <p>IF: <span className="font-mono">{invoice.vendor.ifNumber}</span></p>}
-                {invoice.vendor.rc && <p>RC: <span className="font-mono">{invoice.vendor.rc}</span></p>}
-                {invoice.vendor.cnss && <p>CNSS: <span className="font-mono">{invoice.vendor.cnss}</span></p>}
-              </div>
-            )}
+            <p className="text-lg font-bold">{invoice.vendor.raisonSociale || "Nom de l'entreprise"}</p>
+            {invoice.vendor.adresse && <p className="text-sm mt-1">{invoice.vendor.adresse}</p>}
+            {invoice.vendor.telephone && <p className="text-sm">Tél: {invoice.vendor.telephone}</p>}
+            {invoice.vendor.email && <p className="text-sm">{invoice.vendor.email}</p>}
+            {invoice.vendor.ice && <p className="text-sm mt-1">ICE: {invoice.vendor.ice}</p>}
+            {invoice.vendor.ifNumber && <p className="text-sm">IF: {invoice.vendor.ifNumber}</p>}
+            {invoice.vendor.rc && <p className="text-sm">RC: {invoice.vendor.rc}</p>}
+            {invoice.vendor.cnss && <p className="text-sm">CNSS: {invoice.vendor.cnss}</p>}
           </div>
 
-          {/* Right: Invoice details */}
-          <div className="text-right flex-shrink-0 ml-8">
-            <div className="inline-block text-left rounded-lg p-5" style={{ backgroundColor: "hsl(var(--primary))", color: "hsl(var(--primary-foreground))" }}>
-              <p className="text-xs uppercase tracking-widest font-medium opacity-80 mb-1">Facture</p>
-              <p className="text-lg font-bold font-mono tracking-tight">{invoice.number}</p>
-            </div>
-            <div className="mt-4 space-y-1 text-sm">
-              <div className="flex justify-between gap-6">
-                <span style={{ color: "hsl(var(--muted-foreground))" }}>Date</span>
-                <span className="font-mono font-medium">{invoice.date}</span>
-              </div>
-              {invoice.dueDate && invoice.dueDate !== invoice.date && (
-                <div className="flex justify-between gap-6">
-                  <span style={{ color: "hsl(var(--muted-foreground))" }}>Échéance</span>
-                  <span className="font-mono font-medium">{invoice.dueDate}</span>
-                </div>
-              )}
-              {invoice.isAutoEntrepreneur && (
-                <div className="mt-2">
-                  <span className="text-xs px-2 py-0.5 rounded-full font-medium" style={{ backgroundColor: "hsl(var(--warning) / 0.15)", color: "hsl(var(--warning))" }}>
-                    Auto-entrepreneur
-                  </span>
-                </div>
-              )}
-            </div>
+          <div className="text-right">
+            <p className="text-2xl font-bold tracking-tight">FACTURE</p>
+            <p className="text-sm mt-2">N° <span className="font-bold">{invoice.number}</span></p>
+            <p className="text-sm mt-1">Date: {invoice.date}</p>
+            {invoice.dueDate && invoice.dueDate !== invoice.date && (
+              <p className="text-sm">Échéance: {invoice.dueDate}</p>
+            )}
+            {invoice.isAutoEntrepreneur && (
+              <p className="text-xs mt-2 font-semibold">Auto-entrepreneur</p>
+            )}
           </div>
         </div>
 
-        {/* Divider */}
-        <div className="h-px mb-8" style={{ backgroundColor: "hsl(var(--border))" }} />
+        {/* Separator */}
+        <div className="border-t border-black mb-6" />
 
-        {/* Buyer info */}
+        {/* Buyer */}
         <div className="mb-8">
-          <div className="rounded-lg border p-5" style={{ borderColor: "hsl(var(--border))" }}>
-            <p className="text-[10px] font-semibold uppercase tracking-[0.15em] mb-2" style={{ color: "hsl(var(--muted-foreground))" }}>
-              Facturé à
-            </p>
-            <p className="text-base font-semibold" style={{ color: "hsl(var(--foreground))" }}>
-              {invoice.buyer.nomClient || "—"}
-            </p>
-            {invoice.buyer.ice && (
-              <p className="text-sm mt-0.5" style={{ color: "hsl(var(--muted-foreground))" }}>
-                ICE: <span className="font-mono">{invoice.buyer.ice}</span>
-              </p>
-            )}
-            {invoice.buyer.adresse && (
-              <p className="text-sm" style={{ color: "hsl(var(--muted-foreground))" }}>{invoice.buyer.adresse}</p>
-            )}
+          <div className="border border-black p-4">
+            <p className="text-xs font-bold uppercase mb-2">Facturé à</p>
+            <p className="text-base font-bold">{invoice.buyer.nomClient || "—"}</p>
+            {invoice.buyer.ice && <p className="text-sm">ICE: {invoice.buyer.ice}</p>}
+            {invoice.buyer.adresse && <p className="text-sm">{invoice.buyer.adresse}</p>}
           </div>
         </div>
 
         {/* Articles table */}
-        <div className="mb-8 rounded-lg overflow-hidden border" style={{ borderColor: "hsl(var(--border))" }}>
-          <table className="w-full">
-            <thead>
-              <tr style={{ backgroundColor: "hsl(var(--muted))" }}>
-                <th className="text-left py-3 px-4 font-semibold text-[11px] uppercase tracking-wider" style={{ color: "hsl(var(--muted-foreground))" }}>Description</th>
-                <th className="text-center py-3 px-3 font-semibold text-[11px] uppercase tracking-wider w-20" style={{ color: "hsl(var(--muted-foreground))" }}>Qté</th>
-                <th className="text-right py-3 px-4 font-semibold text-[11px] uppercase tracking-wider w-28" style={{ color: "hsl(var(--muted-foreground))" }}>P.U.</th>
-                <th className="text-right py-3 px-3 font-semibold text-[11px] uppercase tracking-wider w-20" style={{ color: "hsl(var(--muted-foreground))" }}>TVA</th>
-                <th className="text-right py-3 px-4 font-semibold text-[11px] uppercase tracking-wider w-28" style={{ color: "hsl(var(--muted-foreground))" }}>Total</th>
+        <table className="w-full mb-8 border-collapse" style={{ borderColor: "#000" }}>
+          <thead>
+            <tr>
+              <th className="border border-black py-2 px-3 text-left text-xs font-bold uppercase bg-gray-100">Description</th>
+              <th className="border border-black py-2 px-3 text-center text-xs font-bold uppercase w-16 bg-gray-100">Qté</th>
+              <th className="border border-black py-2 px-3 text-right text-xs font-bold uppercase w-24 bg-gray-100">P.U. (DH)</th>
+              <th className="border border-black py-2 px-3 text-right text-xs font-bold uppercase w-16 bg-gray-100">TVA</th>
+              <th className="border border-black py-2 px-3 text-right text-xs font-bold uppercase w-24 bg-gray-100">Total (DH)</th>
+            </tr>
+          </thead>
+          <tbody>
+            {invoice.articles.map((article) => (
+              <tr key={article.id}>
+                <td className="border border-black py-2 px-3 text-sm">{article.description || "—"}</td>
+                <td className="border border-black py-2 px-3 text-center text-sm">{article.quantity}</td>
+                <td className="border border-black py-2 px-3 text-right text-sm">{article.unitPrice.toFixed(2)}</td>
+                <td className="border border-black py-2 px-3 text-right text-sm">{invoice.isAutoEntrepreneur ? "0" : article.tvaRate}%</td>
+                <td className="border border-black py-2 px-3 text-right text-sm font-bold">{(article.quantity * article.unitPrice).toFixed(2)}</td>
               </tr>
-            </thead>
-            <tbody>
-              {invoice.articles.map((article, i) => (
-                <tr key={article.id} style={{ backgroundColor: i % 2 === 1 ? "hsl(var(--muted) / 0.3)" : "transparent", borderTop: "1px solid hsl(var(--border) / 0.5)" }}>
-                  <td className="py-3.5 px-4 text-sm" style={{ color: "hsl(var(--foreground))" }}>{article.description || "—"}</td>
-                  <td className="py-3.5 px-3 text-center font-mono text-sm">{article.quantity}</td>
-                  <td className="py-3.5 px-4 text-right font-mono text-sm">{article.unitPrice.toFixed(2)}</td>
-                  <td className="py-3.5 px-3 text-right font-mono text-sm">{invoice.isAutoEntrepreneur ? "0" : article.tvaRate}%</td>
-                  <td className="py-3.5 px-4 text-right font-mono text-sm font-semibold">{(article.quantity * article.unitPrice).toFixed(2)}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+            ))}
+          </tbody>
+        </table>
 
         {/* Totals */}
         <div className="flex justify-end mb-8">
-          <div className="w-80">
-            <div className="space-y-2 text-sm">
-              <div className="flex justify-between py-1.5 px-4">
-                <span style={{ color: "hsl(var(--muted-foreground))" }}>Total HT</span>
-                <span className="font-mono font-medium">{invoice.totalHT.toFixed(2)} DH</span>
+          <div className="w-72">
+            <div className="flex justify-between py-1.5 text-sm">
+              <span>Total HT</span>
+              <span>{invoice.totalHT.toFixed(2)} DH</span>
+            </div>
+            <div className="flex justify-between py-1.5 text-sm">
+              <span>Total TVA</span>
+              <span>{invoice.totalTVA.toFixed(2)} DH</span>
+            </div>
+            {invoice.discountValue > 0 && (
+              <div className="flex justify-between py-1.5 text-sm">
+                <span>Remise</span>
+                <span>-{invoice.discountType === "percentage" ? `${invoice.discountValue}%` : `${invoice.discountValue.toFixed(2)} DH`}</span>
               </div>
-              <div className="flex justify-between py-1.5 px-4">
-                <span style={{ color: "hsl(var(--muted-foreground))" }}>Total TVA</span>
-                <span className="font-mono">{invoice.totalTVA.toFixed(2)} DH</span>
-              </div>
-              {invoice.discountValue > 0 && (
-                <div className="flex justify-between py-1.5 px-4">
-                  <span style={{ color: "hsl(var(--muted-foreground))" }}>Remise</span>
-                  <span className="font-mono" style={{ color: "hsl(var(--destructive))" }}>
-                    -{invoice.discountType === "percentage" ? `${invoice.discountValue}%` : `${invoice.discountValue.toFixed(2)} DH`}
-                  </span>
-                </div>
-              )}
-              <div className="flex justify-between py-3 px-4 rounded-lg text-base font-bold" style={{ backgroundColor: "hsl(var(--primary))", color: "hsl(var(--primary-foreground))" }}>
-                <span>Total TTC</span>
-                <span className="font-mono">{invoice.totalTTC.toFixed(2)} DH</span>
-              </div>
+            )}
+            <div className="flex justify-between py-2 text-base font-bold border-t-2 border-black mt-1">
+              <span>Total TTC</span>
+              <span>{invoice.totalTTC.toFixed(2)} DH</span>
             </div>
           </div>
         </div>
 
         {/* Amount in words */}
-        <div className="rounded-lg p-4 border" style={{ borderColor: "hsl(var(--border))", backgroundColor: "hsl(var(--muted) / 0.3)" }}>
-          <p className="text-[10px] uppercase tracking-widest font-semibold mb-1" style={{ color: "hsl(var(--muted-foreground))" }}>
-            Arrêtée la présente facture à la somme de
-          </p>
-          <p className="text-sm font-semibold italic" style={{ color: "hsl(var(--foreground))" }}>
-            {amountInWords(invoice.totalTTC)}
-          </p>
+        <div className="border border-black p-3 mb-8">
+          <p className="text-xs font-bold uppercase mb-1">Arrêtée la présente facture à la somme de</p>
+          <p className="text-sm italic">{amountInWords(invoice.totalTTC)}</p>
         </div>
 
         {/* Footer */}
-        <div className="mt-10 pt-6 text-center" style={{ borderTop: "1px solid hsl(var(--border))" }}>
-          <p className="text-[10px] tracking-wide" style={{ color: "hsl(var(--muted-foreground))" }}>
-            {invoice.vendor.raisonSociale && `${invoice.vendor.raisonSociale}`}
+        <div className="mt-10 pt-4 border-t border-black text-center text-xs">
+          <p>
+            {invoice.vendor.raisonSociale}
             {invoice.vendor.ice && ` · ICE: ${invoice.vendor.ice}`}
             {invoice.vendor.telephone && ` · Tél: ${invoice.vendor.telephone}`}
           </p>
-          {invoice.vendor.adresse && (
-            <p className="text-[10px] tracking-wide" style={{ color: "hsl(var(--muted-foreground))" }}>
-              {invoice.vendor.adresse}
-            </p>
-          )}
+          {invoice.vendor.adresse && <p>{invoice.vendor.adresse}</p>}
         </div>
       </div>
     </div>
