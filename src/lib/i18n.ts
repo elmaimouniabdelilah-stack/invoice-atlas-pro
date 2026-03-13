@@ -101,6 +101,12 @@ export const translations = {
     addFromSaved: 'Produits enregistrés',
     darkMode: 'Mode sombre',
     lightMode: 'Mode clair',
+    share: 'Partager',
+    shareAsImage: 'Partager comme image',
+    shareAsPdf: 'Partager comme PDF',
+    shareSuccess: 'Partagé avec succès',
+    shareError: 'Erreur lors du partage',
+    shareNotSupported: 'Le partage n\'est pas supporté sur ce navigateur',
   },
   ar: {
     appName: 'فاتورة برو',
