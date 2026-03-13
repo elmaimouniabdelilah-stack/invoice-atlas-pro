@@ -83,13 +83,6 @@ export default function AppSidebar() {
                 </button>
                 <ActivationDialog />
                 <button
-                  onClick={() => { toggleTheme(); setMobileOpen(false); }}
-                  className="flex w-full items-center gap-3 rounded-md px-3 py-2.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
-                >
-                  {theme === 'light' ? <Moon className="h-4 w-4" /> : <Sun className="h-4 w-4" />}
-                  {theme === 'light' ? t('darkMode') : t('lightMode')}
-                </button>
-                <button
                   onClick={() => { setLang(lang === 'fr' ? 'ar' : 'fr'); setMobileOpen(false); }}
                   className="flex w-full items-center gap-3 rounded-md px-3 py-2.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
                 >
