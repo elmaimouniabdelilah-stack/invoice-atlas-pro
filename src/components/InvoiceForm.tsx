@@ -87,7 +87,7 @@ export default function InvoiceForm() {
 
   return (
     <div className="space-y-6 p-4 sm:p-6">
-      {/* Auto-entrepreneur + TVA Control */}
+      {/* Auto-entrepreneur + TVA + Detailed Mode */}
       <div className="rounded-lg border border-border bg-card p-3 sm:p-4 space-y-3">
         <div className="flex items-center justify-between">
           <div>
@@ -105,7 +105,16 @@ export default function InvoiceForm() {
           />
         </div>
 
-        {/* TVA Rate Control - always visible */}
+        {/* Detailed Mode Toggle */}
+        <div className="flex items-center justify-between pt-2 border-t border-border">
+          <div>
+            <p className="text-sm font-medium text-foreground">Mode détaillé</p>
+            <p className="text-xs text-muted-foreground">Réf, Longueur, Hauteur, M²</p>
+          </div>
+          <Switch checked={detailedMode} onCheckedChange={setDetailedMode} />
+        </div>
+
+        {/* TVA Rate Control */}
         <div className="pt-2 border-t border-border space-y-2">
           <p className="text-sm font-medium text-foreground">
             {isAutoEntrepreneur ? 'TVA verrouillée à 0% (Auto-entrepreneur)' : `${t('tvaRate')} — ${t('items')}`}
