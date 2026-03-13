@@ -25,9 +25,9 @@ const App = () => (
     <TooltipProvider>
       <Toaster />
       <Sonner />
-      <PWAInstallPrompt />
       <LanguageProvider>
         <InvoiceProvider>
+          <PWAInstallPrompt />
           <BrowserRouter>
             <Routes>
               <Route path="/" element={<Dashboard />} />
