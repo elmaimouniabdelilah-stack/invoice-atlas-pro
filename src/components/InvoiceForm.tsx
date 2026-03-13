@@ -227,21 +227,31 @@ export default function InvoiceForm() {
         <div className="flex items-center justify-between">
           <h3 className="text-sm font-semibold text-foreground">{t('items')}</h3>
           {!isAutoEntrepreneur && (
-            <div className="flex items-center gap-2">
-              <Label className="text-xs text-muted-foreground">{t('tvaRate')}</Label>
-              <select
-                value=""
+            <div className="flex items-center gap-1.5">
+              <div className="flex gap-1">
+                {TVA_RATES.map(rate => (
+                  <button
+                    key={rate}
+                    type="button"
+                    onClick={() => setItems(prev => prev.map(item => ({ ...item, tvaRate: rate })))}
+                    className="h-6 px-1.5 rounded border border-input bg-background text-[10px] font-medium text-muted-foreground hover:bg-accent hover:text-foreground transition-colors"
+                  >
+                    {rate}%
+                  </button>
+                ))}
+              </div>
+              <Input
+                type="number"
+                min={0}
+                max={100}
+                step={0.1}
+                placeholder="%"
+                className="h-6 w-14 text-[10px] px-1.5"
                 onChange={e => {
                   const rate = Number(e.target.value);
-                  setItems(prev => prev.map(item => ({ ...item, tvaRate: rate })));
+                  if (rate >= 0 && rate <= 100) setItems(prev => prev.map(item => ({ ...item, tvaRate: rate })));
                 }}
-                className="h-7 rounded-md border border-input bg-background px-2 text-xs"
-              >
-                <option value="" disabled>{t('tvaRate')}</option>
-                {TVA_RATES.map(rate => (
-                  <option key={rate} value={rate}>{rate}%</option>
-                ))}
-              </select>
+              />
             </div>
           )}
         </div>
@@ -274,16 +284,19 @@ export default function InvoiceForm() {
                 </div>
                 <div>
                   <Label className="text-xs text-muted-foreground">{t('tvaRate')}</Label>
-                  <select
-                    value={item.tvaRate}
-                    onChange={e => updateItem(item.id, 'tvaRate', Number(e.target.value))}
-                    disabled={isAutoEntrepreneur}
-                    className="h-8 w-full rounded-md border border-input bg-background px-2 text-sm"
-                  >
-                    {TVA_RATES.map(rate => (
-                      <option key={rate} value={rate}>{rate}%</option>
-                    ))}
-                  </select>
+                  <div className="flex gap-1">
+                    <Input
+                      type="number"
+                      min={0}
+                      max={100}
+                      step={0.1}
+                      value={item.tvaRate}
+                      onChange={e => updateItem(item.id, 'tvaRate', Number(e.target.value))}
+                      disabled={isAutoEntrepreneur}
+                      className="h-8 text-sm"
+                    />
+                    <span className="flex items-center text-xs text-muted-foreground">%</span>
+                  </div>
                 </div>
                 <div className="flex items-end justify-between gap-1">
                   <span className="pb-1 text-sm font-medium text-foreground">
