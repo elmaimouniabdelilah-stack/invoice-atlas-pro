@@ -30,6 +30,7 @@ export default function InvoiceForm() {
     clients,
     discountType, setDiscountType,
     discountValue, setDiscountValue,
+    savedProducts,
   } = useInvoice();
 
   const [showAdminFields, setShowAdminFields] = useState(false);
