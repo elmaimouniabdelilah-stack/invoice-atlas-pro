@@ -23,6 +23,7 @@ export default function InvoicePage() {
     invoicesCreated, setInvoicesCreated,
     invoices, setInvoices,
     setBuyer, setItems, setInvoiceNumber, setInvoiceDate,
+    dueDate, setDueDate,
     editingInvoiceId, setEditingInvoiceId,
     discountType, discountValue, setDiscountType, setDiscountValue,
   } = useInvoice();
