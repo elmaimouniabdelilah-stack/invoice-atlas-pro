@@ -224,7 +224,27 @@ export default function InvoiceForm() {
 
       {/* Items */}
       <section className="space-y-3">
-        <h3 className="text-sm font-semibold text-foreground">{t('items')}</h3>
+        <div className="flex items-center justify-between">
+          <h3 className="text-sm font-semibold text-foreground">{t('items')}</h3>
+          {!isAutoEntrepreneur && (
+            <div className="flex items-center gap-2">
+              <Label className="text-xs text-muted-foreground">{t('tvaRate')}</Label>
+              <select
+                value=""
+                onChange={e => {
+                  const rate = Number(e.target.value);
+                  setItems(prev => prev.map(item => ({ ...item, tvaRate: rate })));
+                }}
+                className="h-7 rounded-md border border-input bg-background px-2 text-xs"
+              >
+                <option value="" disabled>{t('tvaRate')}</option>
+                {TVA_RATES.map(rate => (
+                  <option key={rate} value={rate}>{rate}%</option>
+                ))}
+              </select>
+            </div>
+          )}
+        </div>
         <div className="space-y-2">
           {items.map((item) => (
             <div key={item.id} className="rounded-md border border-border bg-card p-3 space-y-2">
