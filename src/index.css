@@ -101,15 +101,23 @@
       left: 0 !important;
       top: 0 !important;
       width: 210mm !important;
-      min-height: 297mm !important;
-      padding: 10mm !important;
+      height: 297mm !important;
+      max-height: 297mm !important;
+      overflow: hidden !important;
+      padding: 8mm !important;
       margin: 0 !important;
       background: white !important;
       box-shadow: none !important;
-      font-size: 11px !important;
+      font-size: 10px !important;
       -webkit-print-color-adjust: exact !important;
       print-color-adjust: exact !important;
     }
+    #invoice-preview * {
+      font-size: inherit !important;
+    }
+    #invoice-preview h1 { font-size: 16px !important; }
+    #invoice-preview h2 { font-size: 14px !important; }
+    #invoice-preview h3 { font-size: 11px !important; }
     @page {
       size: A4;
       margin: 0;
