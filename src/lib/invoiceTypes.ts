@@ -22,6 +22,10 @@ export interface InvoiceItem {
   quantity: number;
   unitPrice: number;
   tvaRate: number;
+  reference?: string;
+  length?: number;
+  height?: number;
+  totalM2?: number;
 }
 
 export interface Invoice {
