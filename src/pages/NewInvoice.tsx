@@ -6,6 +6,7 @@ import { InvoiceForm } from "@/components/invoice/InvoiceForm";
 import { InvoicePreview } from "@/components/invoice/InvoicePreview";
 import { Invoice, Article, VendorInfo, BuyerInfo } from "@/types/invoice";
 import { saveInvoice, generateInvoiceNumber, getVendorInfo } from "@/lib/store";
+import { generatePDF } from "@/lib/pdf";
 import { useToast } from "@/hooks/use-toast";
 
 function createEmptyInvoice(): Invoice {
@@ -123,7 +124,7 @@ export default function NewInvoice() {
           <Button variant="outline" size="sm" onClick={handlePrint}>
             <Printer className="mr-2 h-4 w-4" />
           </Button>
-          <Button variant="outline" size="sm">
+          <Button variant="outline" size="sm" onClick={() => generatePDF("invoice-preview", `${invoice.number}.pdf`)}>
             <FileDown className="mr-2 h-4 w-4" />
             PDF
           </Button>
