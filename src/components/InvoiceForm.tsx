@@ -36,6 +36,7 @@ export default function InvoiceForm() {
   const [showAdminFields, setShowAdminFields] = useState(false);
   const [clientQuery, setClientQuery] = useState('');
   const [showSuggestions, setShowSuggestions] = useState(false);
+  const [showProductPicker, setShowProductPicker] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const filteredClients = useMemo(() => {
