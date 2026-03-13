@@ -200,6 +200,8 @@ export const translations = {
     noProducts: 'لا توجد منتجات مسجلة',
     defaultQuantity: 'الكمية الافتراضية',
     addFromSaved: 'منتجات محفوظة',
+    darkMode: 'الوضع المظلم',
+    lightMode: 'الوضع الفاتح',
   },
 } as const;
 

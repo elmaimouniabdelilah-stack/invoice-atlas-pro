@@ -9,6 +9,7 @@ import { useState } from 'react';
 
 export default function AppSidebar() {
   const { t, lang, setLang } = useLang();
+  const { theme, toggleTheme } = useTheme();
   const location = useLocation();
   const isMobile = useIsMobile();
   const [mobileOpen, setMobileOpen] = useState(false);
