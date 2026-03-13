@@ -6,6 +6,7 @@ import { InvoiceForm } from "@/components/invoice/InvoiceForm";
 import { InvoicePreview } from "@/components/invoice/InvoicePreview";
 import { Invoice, Article, VendorInfo, BuyerInfo } from "@/types/invoice";
 import { saveInvoice, generateInvoiceNumber, getVendorInfo } from "@/lib/store";
+import { generatePDF } from "@/lib/pdf";
 import { useToast } from "@/hooks/use-toast";
 
 function createEmptyInvoice(): Invoice {
