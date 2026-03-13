@@ -258,6 +258,17 @@ export default function AdminDashboard() {
                       </div>
                     </TableCell>
                     <TableCell>
+                      {code.device_count! > 0 ? (
+                        <Badge variant="default" className="bg-green-600 hover:bg-green-700 text-white gap-1">
+                          <Monitor className="h-3 w-3" />
+                          مُستعمل ({code.device_count} جهاز)
+                        </Badge>
+                      ) : (
+                        <Badge variant="outline" className="text-muted-foreground gap-1">
+                          غير مُستعمل
+                        </Badge>
+                      )}
+                    <TableCell>
                       <div className="flex items-center gap-2">
                         <Badge variant={code.device_count! >= code.max_devices ? 'destructive' : 'secondary'}>
                           {code.device_count} / {code.max_devices}
