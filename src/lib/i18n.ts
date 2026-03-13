@@ -174,6 +174,12 @@ export const translations = {
     footerNotesLabel: 'ملاحظات أسفل الفاتورة',
     taxExemptionLabel: 'نص الإعفاء الضريبي',
     preview: 'معاينة',
+    addClient: 'إضافة عميل',
+    editClient: 'تعديل العميل',
+    updateClient: 'تحديث',
+    cancel: 'إلغاء',
+    searchClients: 'البحث عن عميل...',
+    createInvoice: 'إنشاء فاتورة',
   },
 } as const;
 
