@@ -63,7 +63,7 @@ export default function InvoiceForm() {
       description: '',
       quantity: 1,
       unitPrice: 0,
-      tvaRate: isAutoEntrepreneur ? 0 : 20,
+      tvaRate: isAutoEntrepreneur ? 0 : defaultTvaRate,
     }]);
   };
 
