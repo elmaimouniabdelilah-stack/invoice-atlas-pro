@@ -84,6 +84,12 @@ export const translations = {
     footerNotesLabel: 'Notes de bas de page',
     taxExemptionLabel: 'Mention d\'exonération fiscale',
     preview: 'Aperçu',
+    addClient: 'Ajouter un client',
+    editClient: 'Modifier le client',
+    updateClient: 'Mettre à jour',
+    cancel: 'Annuler',
+    searchClients: 'Rechercher un client...',
+    createInvoice: 'Créer une facture',
   },
   ar: {
     appName: 'فاتورة برو',
@@ -168,6 +174,12 @@ export const translations = {
     footerNotesLabel: 'ملاحظات أسفل الفاتورة',
     taxExemptionLabel: 'نص الإعفاء الضريبي',
     preview: 'معاينة',
+    addClient: 'إضافة عميل',
+    editClient: 'تعديل العميل',
+    updateClient: 'تحديث',
+    cancel: 'إلغاء',
+    searchClients: 'البحث عن عميل...',
+    createInvoice: 'إنشاء فاتورة',
   },
 } as const;
 

@@ -8,6 +8,7 @@ import { LanguageProvider } from "@/contexts/LanguageContext";
 import { InvoiceProvider } from "@/contexts/InvoiceContext";
 import Dashboard from "./pages/Dashboard";
 import InvoicePage from "./pages/InvoicePage";
+import ClientsPage from "./pages/ClientsPage";
 import SettingsPage from "./pages/SettingsPage";
 import HistoryPage from "./pages/HistoryPage";
 import NotFound from "./pages/NotFound";
@@ -30,6 +31,7 @@ const App = () => (
             <Routes>
               <Route path="/" element={<Dashboard />} />
               <Route path="/invoice" element={<InvoicePage />} />
+              <Route path="/clients" element={<ClientsPage />} />
               <Route path="/settings" element={<SettingsPage />} />
               <Route path="/history" element={<HistoryPage />} />
               <Route path="/admin/login" element={<AdminLoginPage />} />
