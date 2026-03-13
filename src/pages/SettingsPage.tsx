@@ -1,4 +1,5 @@
 import AppLayout from '@/components/AppLayout';
+import { TVA_RATES } from '@/lib/invoiceTypes';
 import { useLang } from '@/contexts/LanguageContext';
 import { useTheme } from '@/contexts/ThemeContext';
 import { useInvoice } from '@/contexts/InvoiceContext';
