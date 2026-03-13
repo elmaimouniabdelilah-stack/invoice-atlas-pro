@@ -6,6 +6,7 @@ import { cn } from '@/lib/utils';
 import ActivationDialog from './ActivationDialog';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useState } from 'react';
+import logoImg from '@/assets/logo.png';
 
 export default function AppSidebar() {
   const { t, lang, setLang } = useLang();
