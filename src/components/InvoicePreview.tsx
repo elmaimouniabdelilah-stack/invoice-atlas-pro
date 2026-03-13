@@ -9,7 +9,7 @@ interface InvoicePreviewProps {
 
 export default function InvoicePreview({ mobileView = false }: InvoicePreviewProps) {
   const { t, lang } = useLang();
-  const { seller, buyer, items, isAutoEntrepreneur, invoiceNumber, invoiceDate, dueDate, invoiceTexts, discountType, discountValue } = useInvoice();
+  const { seller, buyer, items, isAutoEntrepreneur, invoiceNumber, invoiceDate, dueDate, invoiceTexts, discountType, discountValue, detailedMode } = useInvoice();
 
   const totalHT = calculateTotalHT(items);
   const discount = calculateDiscount(totalHT, discountType, discountValue);
