@@ -274,18 +274,19 @@ export default function InvoiceForm() {
           </Button>
           {savedProducts.length > 0 && (
             <div className="relative">
-              <Button variant="outline" size="sm" onClick={() => setShowProductPicker(!showProductPicker)}>
+              <Button variant="outline" size="sm" onClick={() => setShowProductPicker(!showProductPicker)} onBlur={() => setTimeout(() => setShowProductPicker(false), 200)}>
                 <Package className="h-3.5 w-3.5" />
                 {t('addFromSaved')}
               </Button>
               {showProductPicker && (
-                <div className="absolute z-50 mt-1 w-64 rounded-md border border-border bg-popover shadow-lg max-h-48 overflow-y-auto">
+                <div className="absolute z-[100] mt-1 w-64 rounded-md border border-border bg-popover shadow-lg max-h-48 overflow-y-auto">
                   {savedProducts.map(p => (
                     <button
                       key={p.id}
                       type="button"
                       className="flex w-full items-center justify-between px-3 py-2 text-start text-sm hover:bg-accent transition-colors"
-                      onClick={() => {
+                      onMouseDown={(e) => {
+                        e.preventDefault();
                         setItems(prev => [...prev, {
                           id: crypto.randomUUID(),
                           description: p.description,
