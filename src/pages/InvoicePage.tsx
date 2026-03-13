@@ -235,6 +235,21 @@ export default function InvoicePage() {
               <FileDown className="h-4 w-4" />
               PDF
             </Button>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" disabled={exporting || trialExceeded} className="h-10 w-10 p-0 shrink-0">
+                  <Share2 className="h-4.5 w-4.5" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem onClick={handleShareImage}>
+                  {t('shareAsImage')}
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={handleSharePdf}>
+                  {t('shareAsPdf')}
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
             <Button onClick={handleSaveAndExport} disabled={exporting || trialExceeded} className="h-10 flex-1 text-sm font-semibold">
               <Download className="h-4 w-4" />
               {editingInvoiceId ? t('updateInvoice') : t('exportPdf')}
