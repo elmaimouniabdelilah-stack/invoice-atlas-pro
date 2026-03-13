@@ -25,7 +25,7 @@ export default function AppSidebar() {
   ];
 
   const mobileLinks = [
-    { to: '/', icon: LayoutDashboard, label: t('dashboard') },
+    { to: '/', icon: LayoutDashboard, label: t('dashboard'), adminShortcut: true },
     { to: '/invoice', icon: FilePlus, label: t('newInvoice') },
     { to: '/clients', icon: Users, label: t('clients') },
     { to: '/history', icon: History, label: t('invoiceHistory') },
