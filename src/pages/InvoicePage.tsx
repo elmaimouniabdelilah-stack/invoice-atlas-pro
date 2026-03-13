@@ -135,40 +135,27 @@ export default function InvoicePage() {
       <AppLayout>
         {trialExceeded && <TrialLimitModal />}
         <div className="flex flex-col h-full">
-          {/* Mobile header with tabs and actions */}
-          <div className="flex items-center justify-between border-b border-border px-4 py-3">
-            <div className="flex gap-1 rounded-lg border border-border p-0.5 bg-muted/50">
+          {/* Mobile tab switcher */}
+          <div className="flex items-center justify-center border-b border-border px-4 py-2.5">
+            <div className="flex gap-1 rounded-lg border border-border p-0.5 bg-muted/50 w-full max-w-xs">
               <button
                 onClick={() => setMobileTab('form')}
-                className={`flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-medium transition-colors ${
+                className={`flex flex-1 items-center justify-center gap-1.5 rounded-md px-3 py-2 text-sm font-medium transition-colors ${
                   mobileTab === 'form' ? 'bg-background text-foreground shadow-sm' : 'text-muted-foreground'
                 }`}
               >
-                <Edit3 className="h-3.5 w-3.5" />
+                <Edit3 className="h-4 w-4" />
                 {editingInvoiceId ? t('editInvoice') : t('newInvoice')}
               </button>
               <button
                 onClick={() => setMobileTab('preview')}
-                className={`flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-medium transition-colors ${
+                className={`flex flex-1 items-center justify-center gap-1.5 rounded-md px-3 py-2 text-sm font-medium transition-colors ${
                   mobileTab === 'preview' ? 'bg-background text-foreground shadow-sm' : 'text-muted-foreground'
                 }`}
               >
-                <Eye className="h-3.5 w-3.5" />
+                <Eye className="h-4 w-4" />
                 {t('preview')}
               </button>
-            </div>
-            <div className="flex gap-1.5">
-              <Button size="sm" variant="outline" onClick={handlePrint} disabled={trialExceeded} className="h-8 w-8 p-0">
-                <Printer className="h-3.5 w-3.5" />
-              </Button>
-              <Button size="sm" variant="outline" onClick={handleExportPdf} disabled={exporting || trialExceeded} className="h-8 px-2 text-xs">
-                <FileDown className="h-3.5 w-3.5" />
-                PDF
-              </Button>
-              <Button size="sm" onClick={handleSaveAndExport} disabled={exporting || trialExceeded} className="h-8 px-2 text-xs">
-                <Download className="h-3.5 w-3.5" />
-                {editingInvoiceId ? t('updateInvoice') : t('exportPdf')}
-              </Button>
             </div>
           </div>
 
@@ -177,12 +164,25 @@ export default function InvoicePage() {
             {mobileTab === 'form' ? (
               <InvoiceForm />
             ) : (
-              <div className="overflow-x-auto p-4">
-                <div className="min-w-[210mm]">
-                  <InvoicePreview />
-                </div>
+              <div className="p-3">
+                <InvoicePreview mobileView />
               </div>
             )}
+          </div>
+
+          {/* Fixed bottom action bar */}
+          <div className="flex items-center gap-2 border-t border-border bg-card px-4 py-3 safe-area-bottom">
+            <Button variant="outline" onClick={handlePrint} disabled={trialExceeded} className="h-10 w-10 p-0 shrink-0">
+              <Printer className="h-4.5 w-4.5" />
+            </Button>
+            <Button variant="outline" onClick={handleExportPdf} disabled={exporting || trialExceeded} className="h-10 px-3 text-sm">
+              <FileDown className="h-4 w-4" />
+              PDF
+            </Button>
+            <Button onClick={handleSaveAndExport} disabled={exporting || trialExceeded} className="h-10 flex-1 text-sm font-semibold">
+              <Download className="h-4 w-4" />
+              {editingInvoiceId ? t('updateInvoice') : t('exportPdf')}
+            </Button>
           </div>
         </div>
       </AppLayout>
