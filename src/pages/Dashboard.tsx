@@ -88,39 +88,62 @@ export default function Dashboard() {
         </div>
 
         {/* Clients list */}
-        <div className="rounded-lg border border-border bg-card">
+        <div className="rounded-lg border border-border bg-card overflow-hidden">
           <div className="border-b border-border px-5 py-3">
             <h2 className="text-sm font-semibold text-foreground">{t('clients')}</h2>
           </div>
           {clients.length === 0 ? (
             <div className="p-8 text-center text-sm text-muted-foreground">{t('noClients')}</div>
           ) : (
-            <table className="w-full">
-              <thead>
-                <tr className="border-b border-border text-xs text-muted-foreground">
-                  <th className="px-5 py-2.5 text-start font-medium">{t('clientName')}</th>
-                  <th className="px-5 py-2.5 text-start font-medium">ICE</th>
-                  <th className="px-5 py-2.5 text-end font-medium">{t('invoicesCount')}</th>
-                  <th className="px-5 py-2.5 text-end font-medium">{t('totalBilled')}</th>
-                  <th className="px-5 py-2.5 text-end font-medium"></th>
-                </tr>
-              </thead>
-              <tbody>
+            <>
+              {/* Desktop table */}
+              <div className="hidden sm:block overflow-x-auto">
+                <table className="w-full">
+                  <thead>
+                    <tr className="border-b border-border text-xs text-muted-foreground">
+                      <th className="px-5 py-2.5 text-start font-medium">{t('clientName')}</th>
+                      <th className="px-5 py-2.5 text-start font-medium">ICE</th>
+                      <th className="px-5 py-2.5 text-end font-medium">{t('invoicesCount')}</th>
+                      <th className="px-5 py-2.5 text-end font-medium">{t('totalBilled')}</th>
+                      <th className="px-5 py-2.5 text-end font-medium"></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {clients.map(client => (
+                      <tr key={client.id} className="border-b border-border last:border-b-0">
+                        <td className="px-5 py-3 text-sm text-foreground">{client.name}</td>
+                        <td className="px-5 py-3 text-sm text-muted-foreground">{client.ice || '—'}</td>
+                        <td className="px-5 py-3 text-end text-sm text-foreground">{client.invoiceCount}</td>
+                        <td className="px-5 py-3 text-end text-sm font-medium text-foreground">{client.totalBilled.toFixed(2)} {t('dh')}</td>
+                        <td className="px-5 py-3 text-end">
+                          <Button size="sm" variant="ghost" onClick={() => setClients(prev => prev.filter(c => c.id !== client.id))}>
+                            <Trash2 className="h-3.5 w-3.5 text-destructive" />
+                          </Button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+
+              {/* Mobile cards */}
+              <div className="sm:hidden divide-y divide-border">
                 {clients.map(client => (
-                  <tr key={client.id} className="border-b border-border last:border-b-0">
-                    <td className="px-5 py-3 text-sm text-foreground">{client.name}</td>
-                    <td className="px-5 py-3 text-sm text-muted-foreground">{client.ice || '—'}</td>
-                    <td className="px-5 py-3 text-end text-sm text-foreground">{client.invoiceCount}</td>
-                    <td className="px-5 py-3 text-end text-sm font-medium text-foreground">{client.totalBilled.toFixed(2)} {t('dh')}</td>
-                    <td className="px-5 py-3 text-end">
-                      <Button size="sm" variant="ghost" onClick={() => setClients(prev => prev.filter(c => c.id !== client.id))}>
+                  <div key={client.id} className="p-4 flex items-center justify-between">
+                    <div>
+                      <p className="text-sm font-medium text-foreground">{client.name}</p>
+                      <p className="text-xs text-muted-foreground">{client.ice || '—'} · {client.invoiceCount} {t('invoicesCount')}</p>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm font-medium text-foreground">{client.totalBilled.toFixed(2)}</span>
+                      <Button size="sm" variant="ghost" className="h-7 w-7 p-0" onClick={() => setClients(prev => prev.filter(c => c.id !== client.id))}>
                         <Trash2 className="h-3.5 w-3.5 text-destructive" />
                       </Button>
-                    </td>
-                  </tr>
+                    </div>
+                  </div>
                 ))}
-              </tbody>
-            </table>
+              </div>
+            </>
           )}
         </div>
       </div>
