@@ -6,11 +6,12 @@ import { Button } from '@/components/ui/button';
 import { useLang } from '@/contexts/LanguageContext';
 import { useInvoice } from '@/contexts/InvoiceContext';
 import { calculateTotalTTCWithDiscount, generateInvoiceNumber } from '@/lib/invoiceTypes';
-import { Download, Printer, FileDown } from 'lucide-react';
+import { Download, Printer, FileDown, Eye, Edit3 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import { useState } from 'react';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 const TRIAL_LIMIT = 3;
 
@@ -29,6 +30,8 @@ export default function InvoicePage() {
   } = useInvoice();
   const { toast } = useToast();
   const [exporting, setExporting] = useState(false);
+  const isMobile = useIsMobile();
+  const [mobileTab, setMobileTab] = useState<'form' | 'preview'>('form');
 
   const handleExportPdf = async () => {
     const element = document.getElementById('invoice-preview');
@@ -68,7 +71,6 @@ export default function InvoicePage() {
     }
     const totalTTC = calculateTotalTTCWithDiscount(items, isAutoEntrepreneur, discountType, discountValue);
 
-    // Export PDF first (before resetting the form)
     await handleExportPdf();
 
     if (editingInvoiceId) {
@@ -117,7 +119,6 @@ export default function InvoicePage() {
       toast({ title: t('invoiceSaved') });
     }
 
-    // Reset form completely for a new invoice
     setBuyer({ clientName: '', address: '', ice: '' });
     setItems([{ id: crypto.randomUUID(), description: '', quantity: 1, unitPrice: 0, tvaRate: isAutoEntrepreneur ? 0 : 20 }]);
     setInvoiceNumber(generateInvoiceNumber());
@@ -128,6 +129,65 @@ export default function InvoicePage() {
   };
 
   const trialExceeded = invoicesCreated >= TRIAL_LIMIT && !editingInvoiceId && !isActivated();
+
+  if (isMobile) {
+    return (
+      <AppLayout>
+        {trialExceeded && <TrialLimitModal />}
+        <div className="flex flex-col h-full">
+          {/* Mobile header with tabs and actions */}
+          <div className="flex items-center justify-between border-b border-border px-4 py-3">
+            <div className="flex gap-1 rounded-lg border border-border p-0.5 bg-muted/50">
+              <button
+                onClick={() => setMobileTab('form')}
+                className={`flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-medium transition-colors ${
+                  mobileTab === 'form' ? 'bg-background text-foreground shadow-sm' : 'text-muted-foreground'
+                }`}
+              >
+                <Edit3 className="h-3.5 w-3.5" />
+                {editingInvoiceId ? t('editInvoice') : t('newInvoice')}
+              </button>
+              <button
+                onClick={() => setMobileTab('preview')}
+                className={`flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-medium transition-colors ${
+                  mobileTab === 'preview' ? 'bg-background text-foreground shadow-sm' : 'text-muted-foreground'
+                }`}
+              >
+                <Eye className="h-3.5 w-3.5" />
+                {t('preview')}
+              </button>
+            </div>
+            <div className="flex gap-1.5">
+              <Button size="sm" variant="outline" onClick={handlePrint} disabled={trialExceeded} className="h-8 w-8 p-0">
+                <Printer className="h-3.5 w-3.5" />
+              </Button>
+              <Button size="sm" variant="outline" onClick={handleExportPdf} disabled={exporting || trialExceeded} className="h-8 px-2 text-xs">
+                <FileDown className="h-3.5 w-3.5" />
+                PDF
+              </Button>
+              <Button size="sm" onClick={handleSaveAndExport} disabled={exporting || trialExceeded} className="h-8 px-2 text-xs">
+                <Download className="h-3.5 w-3.5" />
+                {editingInvoiceId ? t('updateInvoice') : t('exportPdf')}
+              </Button>
+            </div>
+          </div>
+
+          {/* Content area */}
+          <div className="flex-1 overflow-y-auto">
+            {mobileTab === 'form' ? (
+              <InvoiceForm />
+            ) : (
+              <div className="overflow-x-auto p-4">
+                <div className="min-w-[210mm]">
+                  <InvoicePreview />
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      </AppLayout>
+    );
+  }
 
   return (
     <AppLayout>

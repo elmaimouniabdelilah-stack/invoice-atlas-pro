@@ -82,9 +82,9 @@ export default function InvoiceForm() {
   const totalTTC = calculateTotalTTCWithDiscount(items, isAutoEntrepreneur, discountType, discountValue);
 
   return (
-    <div className="space-y-6 p-6">
+    <div className="space-y-6 p-4 sm:p-6">
       {/* Auto-entrepreneur toggle */}
-      <div className="flex items-center justify-between rounded-lg border border-border bg-card p-4">
+      <div className="flex items-center justify-between rounded-lg border border-border bg-card p-3 sm:p-4">
         <div>
           <p className="text-sm font-medium text-foreground">{t('autoEntrepreneur')}</p>
           <p className="text-xs text-muted-foreground">TVA 0%</p>
@@ -101,7 +101,7 @@ export default function InvoiceForm() {
       </div>
 
       {/* Invoice meta */}
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-2 gap-3 sm:gap-4">
         <FieldGroup label={t('invoiceNumber')}>
           <Input value={invoiceNumber} onChange={e => setInvoiceNumber(e.target.value)} className="h-9 text-sm" />
         </FieldGroup>
@@ -128,7 +128,7 @@ export default function InvoiceForm() {
       {/* Seller Info */}
       <section className="space-y-3">
         <h3 className="text-sm font-semibold text-foreground">{t('sellerInfo')}</h3>
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <FieldGroup label={t('businessName')}>
             <Input value={seller.businessName} onChange={e => setSeller(p => ({ ...p, businessName: e.target.value }))} className="h-9 text-sm" />
           </FieldGroup>
@@ -139,7 +139,7 @@ export default function InvoiceForm() {
         <FieldGroup label={t('address')}>
           <Input value={seller.address} onChange={e => setSeller(p => ({ ...p, address: e.target.value }))} className="h-9 text-sm" />
         </FieldGroup>
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <FieldGroup label={t('phone')}>
             <Input value={seller.phone} onChange={e => setSeller(p => ({ ...p, phone: e.target.value }))} className="h-9 text-sm" />
           </FieldGroup>
@@ -157,7 +157,7 @@ export default function InvoiceForm() {
           {t('adminFields')} (IF, RC, CNSS)
         </button>
         {showAdminFields && (
-          <div className="grid grid-cols-3 gap-3 animate-fade-in">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 animate-fade-in">
             <FieldGroup label={t('ifLabel')}>
               <Input value={seller.ifCode} onChange={e => setSeller(p => ({ ...p, ifCode: e.target.value }))} className="h-9 text-sm" />
             </FieldGroup>
@@ -174,7 +174,7 @@ export default function InvoiceForm() {
       {/* Buyer Info */}
       <section className="space-y-3">
         <h3 className="text-sm font-semibold text-foreground">{t('buyerInfo')}</h3>
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <FieldGroup label={t('clientName')}>
             <div className="relative">
               <Input
@@ -219,44 +219,48 @@ export default function InvoiceForm() {
         </FieldGroup>
       </section>
 
-      {/* Items Table */}
+      {/* Items */}
       <section className="space-y-3">
         <h3 className="text-sm font-semibold text-foreground">{t('items')}</h3>
         <div className="space-y-2">
           {items.map((item) => (
-            <div key={item.id} className="grid grid-cols-12 gap-2 items-end rounded-md border border-border bg-card p-3">
-              <div className="col-span-4">
+            <div key={item.id} className="rounded-md border border-border bg-card p-3 space-y-2">
+              {/* Description - full width */}
+              <div>
                 <Label className="text-xs text-muted-foreground">{t('description')}</Label>
                 <Input value={item.description} onChange={e => updateItem(item.id, 'description', e.target.value)} className="h-8 text-sm" />
               </div>
-              <div className="col-span-2">
-                <Label className="text-xs text-muted-foreground">{t('quantity')}</Label>
-                <Input type="number" min={1} value={item.quantity} onChange={e => updateItem(item.id, 'quantity', Number(e.target.value))} className="h-8 text-sm" />
-              </div>
-              <div className="col-span-2">
-                <Label className="text-xs text-muted-foreground">{t('unitPrice')}</Label>
-                <Input type="number" min={0} step={0.01} value={item.unitPrice} onChange={e => updateItem(item.id, 'unitPrice', Number(e.target.value))} className="h-8 text-sm" />
-              </div>
-              <div className="col-span-2">
-                <Label className="text-xs text-muted-foreground">{t('tvaRate')}</Label>
-                <select
-                  value={item.tvaRate}
-                  onChange={e => updateItem(item.id, 'tvaRate', Number(e.target.value))}
-                  disabled={isAutoEntrepreneur}
-                  className="h-8 w-full rounded-md border border-input bg-background px-2 text-sm"
-                >
-                  {TVA_RATES.map(rate => (
-                    <option key={rate} value={rate}>{rate}%</option>
-                  ))}
-                </select>
-              </div>
-              <div className="col-span-2 flex items-end justify-end gap-1">
-                <span className="pb-1 text-sm font-medium text-foreground">
-                  {(item.quantity * item.unitPrice).toFixed(2)}
-                </span>
-                <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => removeItem(item.id)}>
-                  <Trash2 className="h-3.5 w-3.5 text-muted-foreground" />
-                </Button>
+              {/* Quantity, Price, TVA, Total in a responsive grid */}
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 items-end">
+                <div>
+                  <Label className="text-xs text-muted-foreground">{t('quantity')}</Label>
+                  <Input type="number" min={1} value={item.quantity} onChange={e => updateItem(item.id, 'quantity', Number(e.target.value))} className="h-8 text-sm" />
+                </div>
+                <div>
+                  <Label className="text-xs text-muted-foreground">{t('unitPrice')}</Label>
+                  <Input type="number" min={0} step={0.01} value={item.unitPrice} onChange={e => updateItem(item.id, 'unitPrice', Number(e.target.value))} className="h-8 text-sm" />
+                </div>
+                <div>
+                  <Label className="text-xs text-muted-foreground">{t('tvaRate')}</Label>
+                  <select
+                    value={item.tvaRate}
+                    onChange={e => updateItem(item.id, 'tvaRate', Number(e.target.value))}
+                    disabled={isAutoEntrepreneur}
+                    className="h-8 w-full rounded-md border border-input bg-background px-2 text-sm"
+                  >
+                    {TVA_RATES.map(rate => (
+                      <option key={rate} value={rate}>{rate}%</option>
+                    ))}
+                  </select>
+                </div>
+                <div className="flex items-end justify-between gap-1">
+                  <span className="pb-1 text-sm font-medium text-foreground">
+                    {(item.quantity * item.unitPrice).toFixed(2)}
+                  </span>
+                  <Button variant="ghost" size="icon" className="h-8 w-8 shrink-0" onClick={() => removeItem(item.id)}>
+                    <Trash2 className="h-3.5 w-3.5 text-muted-foreground" />
+                  </Button>
+                </div>
               </div>
             </div>
           ))}
@@ -268,7 +272,7 @@ export default function InvoiceForm() {
       </section>
 
       {/* Discount */}
-      <div className="flex items-end gap-3 rounded-lg border border-border bg-card p-4">
+      <div className="flex flex-col sm:flex-row sm:items-end gap-3 rounded-lg border border-border bg-card p-3 sm:p-4">
         <div className="flex-1 space-y-1.5">
           <Label className="text-xs font-medium text-muted-foreground">{t('discount')}</Label>
           <div className="flex gap-2">
@@ -297,7 +301,7 @@ export default function InvoiceForm() {
       </div>
 
       {/* Totals */}
-      <div className="space-y-2 rounded-lg border border-border bg-card p-4">
+      <div className="space-y-2 rounded-lg border border-border bg-card p-3 sm:p-4">
         <div className="flex justify-between text-sm">
           <span className="text-muted-foreground">{t('totalHT')}</span>
           <span className="font-medium text-foreground">{totalHT.toFixed(2)} {t('dh')}</span>
