@@ -124,6 +124,7 @@ export function InvoiceProvider({ children }: { children: React.ReactNode }) {
   const [discountValue, setDiscountValue] = useState(0);
   const [savedProducts, setSavedProducts] = useState<SavedProduct[]>(stored.savedProducts || []);
   const [defaultTvaRate, setDefaultTvaRate] = useState<number>(stored.defaultTvaRate ?? 20);
+  const [detailedMode, setDetailedMode] = useState(false);
 
   const loadInvoice = (invoice: Invoice) => {
     setBuyer(invoice.buyer);
