@@ -83,6 +83,7 @@ export const translations = {
     totalAfterDiscount: 'Total HT après remise',
     footerNotesLabel: 'Notes de bas de page',
     taxExemptionLabel: 'Mention d\'exonération fiscale',
+    preview: 'Aperçu',
   },
   ar: {
     appName: 'فاتورة برو',
