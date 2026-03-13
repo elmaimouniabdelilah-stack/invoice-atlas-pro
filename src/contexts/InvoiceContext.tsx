@@ -159,6 +159,7 @@ export function InvoiceProvider({ children }: { children: React.ReactNode }) {
       discountValue, setDiscountValue,
       savedProducts, setSavedProducts,
       defaultTvaRate, setDefaultTvaRate,
+      detailedMode, setDetailedMode,
     }}>
       {children}
     </InvoiceContext.Provider>
