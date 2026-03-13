@@ -107,7 +107,7 @@ export function InvoiceProvider({ children }: { children: React.ReactNode }) {
   const [seller, setSeller] = useState<SellerInfo>(stored.seller || defaultSeller);
   const [buyer, setBuyer] = useState<BuyerInfo>({ clientName: '', address: '', ice: '' });
   const [items, setItems] = useState<InvoiceItem[]>([
-    { id: crypto.randomUUID(), description: '', quantity: 1, unitPrice: 0, tvaRate: 20 },
+    { id: crypto.randomUUID(), description: '', quantity: 1, unitPrice: 0, tvaRate: stored.defaultTvaRate ?? 20 },
   ]);
   const [isAutoEntrepreneur, setIsAutoEntrepreneur] = useState(stored.isAutoEntrepreneur ?? false);
   const [invoiceNumber, setInvoiceNumber] = useState(generateInvoiceNumber());
