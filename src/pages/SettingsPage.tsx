@@ -1,91 +1,209 @@
-import { useState, useEffect } from "react";
-import { Card } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Button } from "@/components/ui/button";
-import { getVendorInfo, saveVendorInfo } from "@/lib/store";
-import { VendorInfo } from "@/types/invoice";
-import { useToast } from "@/hooks/use-toast";
+import AppLayout from '@/components/AppLayout';
+import { useLang } from '@/contexts/LanguageContext';
+import { useInvoice } from '@/contexts/InvoiceContext';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Switch } from '@/components/ui/switch';
+import { Button } from '@/components/ui/button';
+import { Textarea } from '@/components/ui/textarea';
+import { Upload } from 'lucide-react';
+import { useRef } from 'react';
+
+function Field({ label, children }: { label: string; children: React.ReactNode }) {
+  return (
+    <div className="space-y-1.5">
+      <Label className="text-xs font-medium text-muted-foreground">{label}</Label>
+      {children}
+    </div>
+  );
+}
 
 export default function SettingsPage() {
-  const { toast } = useToast();
-  const [vendor, setVendor] = useState<VendorInfo>({
-    raisonSociale: "",
-    ice: "",
-    adresse: "",
-    telephone: "",
-    email: "",
-    ifNumber: "",
-    rc: "",
-    cnss: "",
-  });
+  const { t } = useLang();
+  const { seller, setSeller, isAutoEntrepreneur, setIsAutoEntrepreneur, invoiceTexts, setInvoiceTexts } = useInvoice();
+  const fileRef = useRef<HTMLInputElement>(null);
 
-  useEffect(() => {
-    const saved = getVendorInfo();
-    if (saved) setVendor(saved);
-  }, []);
+  const handleLogo = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onloadend = () => setSeller(p => ({ ...p, logo: reader.result as string }));
+    reader.readAsDataURL(file);
+  };
 
-  const handleSave = () => {
-    saveVendorInfo(vendor);
-    toast({ title: "Paramètres sauvegardés" });
+  const updateText = (key: keyof typeof invoiceTexts, value: string) => {
+    setInvoiceTexts(p => ({ ...p, [key]: value }));
   };
 
   return (
-    <div className="p-6 max-w-2xl animate-fade-in">
-      <h1 className="text-2xl font-semibold mb-6">Paramètres</h1>
+    <AppLayout>
+      <div className="p-8 max-w-2xl space-y-6">
+        <h1 className="text-xl font-semibold text-foreground">{t('settings')}</h1>
 
-      <Card className="p-6">
-        <h2 className="text-lg font-semibold mb-4">Informations du vendeur</h2>
-        <p className="text-sm text-muted-foreground mb-6">
-          Ces informations seront pré-remplies dans chaque nouvelle facture.
-        </p>
-
-        <div className="space-y-4">
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <Label>Raison sociale</Label>
-              <Input value={vendor.raisonSociale} onChange={(e) => setVendor({ ...vendor, raisonSociale: e.target.value })} />
-            </div>
-            <div>
-              <Label>ICE</Label>
-              <Input value={vendor.ice} onChange={(e) => setVendor({ ...vendor, ice: e.target.value })} />
-            </div>
-          </div>
-
+        {/* Auto-entrepreneur */}
+        <div className="flex items-center justify-between rounded-lg border border-border bg-card p-4">
           <div>
-            <Label>Adresse</Label>
-            <Input value={vendor.adresse} onChange={(e) => setVendor({ ...vendor, adresse: e.target.value })} />
+            <p className="text-sm font-medium text-foreground">{t('autoEntrepreneur')}</p>
+            <p className="text-xs text-muted-foreground">TVA 0%</p>
+          </div>
+          <Switch checked={isAutoEntrepreneur} onCheckedChange={setIsAutoEntrepreneur} />
+        </div>
+
+        {/* Seller info */}
+        <div className="rounded-lg border border-border bg-card p-6 space-y-4">
+          <h2 className="text-sm font-semibold text-foreground">{t('sellerInfo')}</h2>
+
+          <div className="flex items-center gap-4">
+            {seller.logo ? (
+              <img src={seller.logo} alt="Logo" className="h-16 w-16 rounded-md object-contain border border-border" />
+            ) : (
+              <div className="flex h-16 w-16 items-center justify-center rounded-md border border-dashed border-border bg-secondary text-xs text-muted-foreground">Logo</div>
+            )}
+            <div className="space-y-1">
+              <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={handleLogo} />
+              <Button variant="outline" size="sm" onClick={() => fileRef.current?.click()}>
+                <Upload className="h-3.5 w-3.5 me-1.5" />
+                {t('uploadLogo')}
+              </Button>
+              {seller.logo && (
+                <Button variant="ghost" size="sm" className="text-xs" onClick={() => setSeller(p => ({ ...p, logo: null }))}>
+                  {t('deleteItem')}
+                </Button>
+              )}
+            </div>
           </div>
 
           <div className="grid grid-cols-2 gap-4">
-            <div>
-              <Label>Téléphone</Label>
-              <Input value={vendor.telephone} onChange={(e) => setVendor({ ...vendor, telephone: e.target.value })} />
-            </div>
-            <div>
-              <Label>Email</Label>
-              <Input type="email" value={vendor.email} onChange={(e) => setVendor({ ...vendor, email: e.target.value })} />
-            </div>
+            <Field label={t('businessName')}>
+              <Input value={seller.businessName} onChange={e => setSeller(p => ({ ...p, businessName: e.target.value }))} className="h-9 text-sm" />
+            </Field>
+            <Field label={t('ice')}>
+              <Input value={seller.ice} onChange={e => setSeller(p => ({ ...p, ice: e.target.value }))} className="h-9 text-sm" />
+            </Field>
+          </div>
+
+          <Field label={t('address')}>
+            <Input value={seller.address} onChange={e => setSeller(p => ({ ...p, address: e.target.value }))} className="h-9 text-sm" />
+          </Field>
+
+          <div className="grid grid-cols-2 gap-4">
+            <Field label={t('phone')}>
+              <Input value={seller.phone} onChange={e => setSeller(p => ({ ...p, phone: e.target.value }))} className="h-9 text-sm" />
+            </Field>
+            <Field label={t('email')}>
+              <Input value={seller.email} onChange={e => setSeller(p => ({ ...p, email: e.target.value }))} className="h-9 text-sm" />
+            </Field>
           </div>
 
           <div className="grid grid-cols-3 gap-4">
-            <div>
-              <Label>IF</Label>
-              <Input value={vendor.ifNumber} onChange={(e) => setVendor({ ...vendor, ifNumber: e.target.value })} />
-            </div>
-            <div>
-              <Label>RC</Label>
-              <Input value={vendor.rc} onChange={(e) => setVendor({ ...vendor, rc: e.target.value })} />
-            </div>
-            <div>
-              <Label>CNSS</Label>
-              <Input value={vendor.cnss} onChange={(e) => setVendor({ ...vendor, cnss: e.target.value })} />
-            </div>
+            <Field label={t('ifLabel')}>
+              <Input value={seller.ifCode} onChange={e => setSeller(p => ({ ...p, ifCode: e.target.value }))} className="h-9 text-sm" />
+            </Field>
+            <Field label={t('rc')}>
+              <Input value={seller.rc} onChange={e => setSeller(p => ({ ...p, rc: e.target.value }))} className="h-9 text-sm" />
+            </Field>
+            <Field label={t('cnss')}>
+              <Input value={seller.cnss} onChange={e => setSeller(p => ({ ...p, cnss: e.target.value }))} className="h-9 text-sm" />
+            </Field>
           </div>
-
-          <Button onClick={handleSave} className="mt-2">Sauvegarder</Button>
         </div>
-      </Card>
-    </div>
+
+        {/* Invoice Texts */}
+        <div className="rounded-lg border border-border bg-card p-6 space-y-4">
+          <h2 className="text-sm font-semibold text-foreground">{t('invoiceTexts')}</h2>
+
+          <Field label={t('invoiceTitleLabel')}>
+            <div className="space-y-2">
+              <select
+                value={['Facture N°', 'Devis N°', 'Bon de commande N°', 'Bon de livraison N°'].includes(invoiceTexts.invoiceTitle) ? invoiceTexts.invoiceTitle : '__custom__'}
+                onChange={e => {
+                  const val = e.target.value;
+                  if (val === '__custom__') {
+                    updateText('invoiceTitle', '');
+                  } else {
+                    updateText('invoiceTitle', val);
+                  }
+                }}
+                className="h-9 w-full rounded-md border border-input bg-background px-3 text-sm"
+              >
+                <option value="Facture N°">{t('docTypeInvoice')} — Facture N°</option>
+                <option value="Devis N°">{t('docTypeQuote')} — Devis N°</option>
+                <option value="Bon de commande N°">{t('docTypePurchaseOrder')} — Bon de commande N°</option>
+                <option value="Bon de livraison N°">{t('docTypeDelivery')} — Bon de livraison N°</option>
+                <option value="__custom__">{t('docTypeCustom')}</option>
+              </select>
+              {!['Facture N°', 'Devis N°', 'Bon de commande N°', 'Bon de livraison N°'].includes(invoiceTexts.invoiceTitle) && (
+                <Input
+                  value={invoiceTexts.invoiceTitle}
+                  onChange={e => updateText('invoiceTitle', e.target.value)}
+                  placeholder={t('invoiceTitleLabel')}
+                  className="h-9 text-sm"
+                />
+              )}
+            </div>
+          </Field>
+
+          <Field label={t('amountInWordsLabel')}>
+            <Input
+              value={invoiceTexts.amountInWordsPhrase}
+              onChange={e => updateText('amountInWordsPhrase', e.target.value)}
+              placeholder="Arrêtée la présente facture à la somme de"
+              className="h-9 text-sm"
+            />
+          </Field>
+
+          <Field label={t('taxExemptionLabel')}>
+            <Input
+              value={invoiceTexts.taxExemption}
+              onChange={e => updateText('taxExemption', e.target.value)}
+              placeholder="TVA non applicable, article 89-I-12°..."
+              className="h-9 text-sm"
+            />
+          </Field>
+
+          <Field label={t('footerNotesLabel')}>
+            <Textarea
+              value={invoiceTexts.footerNotes}
+              onChange={e => updateText('footerNotes', e.target.value)}
+              placeholder="Conditions de paiement, coordonnées bancaires..."
+              className="text-sm min-h-[80px]"
+            />
+          </Field>
+        </div>
+
+        {/* Bank Info */}
+        <div className="rounded-lg border border-border bg-card p-6 space-y-4">
+          <h2 className="text-sm font-semibold text-foreground">{t('bankInfo')}</h2>
+          <div className="grid grid-cols-2 gap-4">
+            <Field label={t('bankName')}>
+              <Input value={invoiceTexts.bankName} onChange={e => updateText('bankName', e.target.value)} placeholder="Attijariwafa Bank" className="h-9 text-sm" />
+            </Field>
+            <Field label={t('swift')}>
+              <Input value={invoiceTexts.swift} onChange={e => updateText('swift', e.target.value)} className="h-9 text-sm" />
+            </Field>
+          </div>
+          <Field label={t('rib')}>
+            <Input value={invoiceTexts.rib} onChange={e => updateText('rib', e.target.value)} placeholder="000 000 0000000000000000 00" className="h-9 text-sm font-mono" />
+          </Field>
+          <Field label={t('iban')}>
+            <Input value={invoiceTexts.iban} onChange={e => updateText('iban', e.target.value)} placeholder="MA00 0000 0000 0000 0000 0000 000" className="h-9 text-sm font-mono" />
+          </Field>
+        </div>
+
+        <p className="text-xs text-muted-foreground">
+          {t('settingsSaved')}
+        </p>
+
+        {/* Admin access */}
+        <div className="pt-6 border-t border-border">
+          <button
+            onClick={() => window.location.href = '/admin/login'}
+            className="text-xs text-muted-foreground/50 hover:text-muted-foreground transition-colors"
+          >
+            لوحة الإدارة
+          </button>
+        </div>
+      </div>
+    </AppLayout>
   );
 }
