@@ -1,5 +1,6 @@
 import { ReactNode } from 'react';
 import AppSidebar from './AppSidebar';
+import DeveloperFooter from './DeveloperFooter';
 import { useIsMobile } from '@/hooks/use-mobile';
 
 export default function AppLayout({ children }: { children: ReactNode }) {
@@ -8,9 +9,12 @@ export default function AppLayout({ children }: { children: ReactNode }) {
   return (
     <div className="flex h-screen overflow-hidden">
       <AppSidebar />
-      <main className={cn("flex-1 overflow-y-auto bg-background", isMobile && "pb-16")}>
-        {children}
-      </main>
+      <div className={cn("flex flex-1 flex-col overflow-hidden", isMobile && "pb-16")}>
+        <main className="flex-1 overflow-y-auto bg-background">
+          {children}
+        </main>
+        <DeveloperFooter />
+      </div>
     </div>
   );
 }
