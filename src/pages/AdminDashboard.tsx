@@ -239,6 +239,7 @@ export default function AdminDashboard() {
               <TableHeader>
                 <TableRow>
                   <TableHead className="text-right">الكود</TableHead>
+                  <TableHead className="text-right">الاستعمال</TableHead>
                   <TableHead className="text-right">الأجهزة</TableHead>
                   <TableHead className="text-right">الحالة</TableHead>
                   <TableHead className="text-right">التاريخ</TableHead>
@@ -255,6 +256,18 @@ export default function AdminDashboard() {
                           <Copy className="h-3.5 w-3.5" />
                         </button>
                       </div>
+                    </TableCell>
+                    <TableCell>
+                      {code.device_count! > 0 ? (
+                        <Badge variant="default" className="bg-green-600 hover:bg-green-700 text-white gap-1">
+                          <Monitor className="h-3 w-3" />
+                          مُستعمل ({code.device_count} جهاز)
+                        </Badge>
+                      ) : (
+                        <Badge variant="outline" className="text-muted-foreground gap-1">
+                          غير مُستعمل
+                        </Badge>
+                      )}
                     </TableCell>
                     <TableCell>
                       <div className="flex items-center gap-2">
