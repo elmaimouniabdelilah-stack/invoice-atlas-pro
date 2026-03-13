@@ -80,6 +80,8 @@ interface InvoiceContextType {
   setDiscountType: React.Dispatch<React.SetStateAction<'percentage' | 'fixed'>>;
   discountValue: number;
   setDiscountValue: React.Dispatch<React.SetStateAction<number>>;
+  savedProducts: SavedProduct[];
+  setSavedProducts: React.Dispatch<React.SetStateAction<SavedProduct[]>>;
 }
 
 const InvoiceContext = createContext<InvoiceContextType | undefined>(undefined);
