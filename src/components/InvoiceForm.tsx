@@ -86,28 +86,30 @@ export default function InvoiceForm() {
 
   return (
     <div className="space-y-6 p-4 sm:p-6">
-      {/* Auto-entrepreneur toggle */}
-      <div className="flex items-center justify-between rounded-lg border border-border bg-card p-3 sm:p-4">
-        <div>
-          <p className="text-sm font-medium text-foreground">{t('autoEntrepreneur')}</p>
-          <p className="text-xs text-muted-foreground">TVA 0%</p>
+      {/* Auto-entrepreneur + TVA Control */}
+      <div className="rounded-lg border border-border bg-card p-3 sm:p-4 space-y-3">
+        <div className="flex items-center justify-between">
+          <div>
+            <p className="text-sm font-medium text-foreground">{t('autoEntrepreneur')}</p>
+            <p className="text-xs text-muted-foreground">TVA 0%</p>
+          </div>
+          <Switch
+            checked={isAutoEntrepreneur}
+            onCheckedChange={(checked) => {
+              setIsAutoEntrepreneur(checked);
+              if (checked) {
+                setItems(prev => prev.map(item => ({ ...item, tvaRate: 0 })));
+              }
+            }}
+          />
         </div>
-        <Switch
-          checked={isAutoEntrepreneur}
-          onCheckedChange={(checked) => {
-            setIsAutoEntrepreneur(checked);
-            if (checked) {
-              setItems(prev => prev.map(item => ({ ...item, tvaRate: 0 })));
-            }
-          }}
-        />
-      </div>
 
-      {/* TVA Rate Control */}
-      {!isAutoEntrepreneur && (
-        <div className="rounded-lg border border-border bg-card p-3 sm:p-4 space-y-2">
-          <p className="text-sm font-medium text-foreground">{t('tvaRate')} — {t('items')}</p>
-          <div className="flex flex-wrap items-center gap-2">
+        {/* TVA Rate Control - always visible */}
+        <div className="pt-2 border-t border-border space-y-2">
+          <p className="text-sm font-medium text-foreground">
+            {isAutoEntrepreneur ? 'TVA verrouillée à 0% (Auto-entrepreneur)' : `${t('tvaRate')} — ${t('items')}`}
+          </p>
+          <div className={`flex flex-wrap items-center gap-2 ${isAutoEntrepreneur ? 'opacity-50 pointer-events-none' : ''}`}>
             {TVA_RATES.map(rate => (
               <button
                 key={rate}
@@ -130,13 +132,18 @@ export default function InvoiceForm() {
                   const rate = Number(e.target.value);
                   if (rate >= 0 && rate <= 100) setItems(prev => prev.map(item => ({ ...item, tvaRate: rate })));
                 }}
+                disabled={isAutoEntrepreneur}
               />
               <span className="text-xs text-muted-foreground">%</span>
             </div>
           </div>
-          <p className="text-[10px] text-muted-foreground">{t('tvaRate')} appliqué à tous les articles</p>
+          <p className="text-[10px] text-muted-foreground">
+            {isAutoEntrepreneur 
+              ? 'Désactivez Auto-entrepreneur pour modifier le taux TVA' 
+              : `${t('tvaRate')} appliqué à tous les articles`}
+          </p>
         </div>
-      )}
+      </div>
 
       {/* Invoice meta */}
       <div className="grid grid-cols-2 gap-3 sm:gap-4">
