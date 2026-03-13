@@ -259,37 +259,7 @@ export default function InvoiceForm() {
 
       {/* Items */}
       <section className="space-y-3">
-        <div className="flex items-center justify-between">
-          <h3 className="text-sm font-semibold text-foreground">{t('items')}</h3>
-          {!isAutoEntrepreneur && (
-            <div className="flex items-center gap-1.5">
-              <div className="flex gap-1">
-                {TVA_RATES.map(rate => (
-                  <button
-                    key={rate}
-                    type="button"
-                    onClick={() => setItems(prev => prev.map(item => ({ ...item, tvaRate: rate })))}
-                    className="h-6 px-1.5 rounded border border-input bg-background text-[10px] font-medium text-muted-foreground hover:bg-accent hover:text-foreground transition-colors"
-                  >
-                    {rate}%
-                  </button>
-                ))}
-              </div>
-              <Input
-                type="number"
-                min={0}
-                max={100}
-                step={0.1}
-                placeholder="%"
-                className="h-6 w-14 text-[10px] px-1.5"
-                onChange={e => {
-                  const rate = Number(e.target.value);
-                  if (rate >= 0 && rate <= 100) setItems(prev => prev.map(item => ({ ...item, tvaRate: rate })));
-                }}
-              />
-            </div>
-          )}
-        </div>
+        <h3 className="text-sm font-semibold text-foreground">{t('items')}</h3>
         <div className="space-y-2">
           {items.map((item) => (
             <div key={item.id} className="rounded-md border border-border bg-card p-3 space-y-2">
