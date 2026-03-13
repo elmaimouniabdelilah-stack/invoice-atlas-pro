@@ -37,8 +37,8 @@ export default function AppSidebar() {
     return (
       <>
         {/* Bottom nav */}
-        <nav className="fixed bottom-0 left-0 right-0 z-40 flex items-center justify-around border-t border-border bg-card px-2 py-1.5 safe-area-bottom">
-          {links.map(({ to, icon: Icon, label }) => (
+        <nav className="fixed bottom-0 left-0 right-0 z-40 flex items-center justify-around border-t border-border bg-card px-1 py-1.5 safe-area-bottom">
+          {mobileLinks.map(({ to, icon: Icon, label }) => (
             <NavLink
               key={to}
               to={to}
@@ -50,16 +50,9 @@ export default function AppSidebar() {
               )}
             >
               <Icon className="h-5 w-5" />
-              <span className="truncate max-w-[60px]">{label}</span>
+              <span className="truncate max-w-[56px]">{label}</span>
             </NavLink>
           ))}
-          <button
-            onClick={() => setMobileOpen(true)}
-            className="flex flex-col items-center gap-0.5 rounded-md px-2 py-1.5 text-[10px] font-medium text-muted-foreground"
-          >
-            <Menu className="h-5 w-5" />
-            <span>{t('settings')}</span>
-          </button>
         </nav>
 
         {/* Mobile menu overlay */}
