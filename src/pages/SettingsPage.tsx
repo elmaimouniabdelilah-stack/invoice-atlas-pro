@@ -1,12 +1,13 @@
 import AppLayout from '@/components/AppLayout';
 import { useLang } from '@/contexts/LanguageContext';
+import { useTheme } from '@/contexts/ThemeContext';
 import { useInvoice } from '@/contexts/InvoiceContext';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
-import { Upload } from 'lucide-react';
+import { Upload, Moon, Sun, Globe } from 'lucide-react';
 import { useRef } from 'react';
 
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
