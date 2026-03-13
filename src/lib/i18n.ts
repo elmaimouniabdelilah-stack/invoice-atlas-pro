@@ -208,6 +208,12 @@ export const translations = {
     addFromSaved: 'منتجات محفوظة',
     darkMode: 'الوضع المظلم',
     lightMode: 'الوضع الفاتح',
+    share: 'مشاركة',
+    shareAsImage: 'مشاركة كصورة',
+    shareAsPdf: 'مشاركة كـ PDF',
+    shareSuccess: 'تمت المشاركة بنجاح',
+    shareError: 'خطأ أثناء المشاركة',
+    shareNotSupported: 'المشاركة غير مدعومة في هذا المتصفح',
   },
 } as const;
 

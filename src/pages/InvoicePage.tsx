@@ -6,11 +6,17 @@ import { Button } from '@/components/ui/button';
 import { useLang } from '@/contexts/LanguageContext';
 import { useInvoice } from '@/contexts/InvoiceContext';
 import { calculateTotalTTCWithDiscount, generateInvoiceNumber } from '@/lib/invoiceTypes';
-import { Download, Printer, FileDown, Eye, Edit3 } from 'lucide-react';
+import { Download, Printer, FileDown, Eye, Edit3, Share2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import { useState } from 'react';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import { useIsMobile } from '@/hooks/use-mobile';
 
 const TRIAL_LIMIT = 3;
