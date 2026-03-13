@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { SellerInfo, BuyerInfo, InvoiceItem, Client, Invoice, generateInvoiceNumber } from '@/lib/invoiceTypes';
+import { SellerInfo, BuyerInfo, InvoiceItem, Client, Invoice, SavedProduct, generateInvoiceNumber } from '@/lib/invoiceTypes';
 
 const STORAGE_KEY = 'facturapro-data';
 
