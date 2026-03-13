@@ -1,12 +1,16 @@
 import { NavLink, useLocation } from 'react-router-dom';
-import { LayoutDashboard, FilePlus, Globe, Settings, History } from 'lucide-react';
+import { LayoutDashboard, FilePlus, Globe, Settings, History, Menu, X } from 'lucide-react';
 import { useLang } from '@/contexts/LanguageContext';
 import { cn } from '@/lib/utils';
 import ActivationDialog from './ActivationDialog';
+import { useIsMobile } from '@/hooks/use-mobile';
+import { useState } from 'react';
 
 export default function AppSidebar() {
   const { t, lang, setLang } = useLang();
   const location = useLocation();
+  const isMobile = useIsMobile();
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   const links = [
     { to: '/', icon: LayoutDashboard, label: t('dashboard') },
@@ -15,6 +19,67 @@ export default function AppSidebar() {
     { to: '/settings', icon: Settings, label: t('settings') },
   ];
 
+  // Mobile: bottom navigation bar
+  if (isMobile) {
+    return (
+      <>
+        {/* Bottom nav */}
+        <nav className="fixed bottom-0 left-0 right-0 z-40 flex items-center justify-around border-t border-border bg-card px-2 py-1.5 safe-area-bottom">
+          {links.map(({ to, icon: Icon, label }) => (
+            <NavLink
+              key={to}
+              to={to}
+              className={cn(
+                'flex flex-col items-center gap-0.5 rounded-md px-2 py-1.5 text-[10px] font-medium transition-colors',
+                location.pathname === to
+                  ? 'text-primary'
+                  : 'text-muted-foreground'
+              )}
+            >
+              <Icon className="h-5 w-5" />
+              <span className="truncate max-w-[60px]">{label}</span>
+            </NavLink>
+          ))}
+          <button
+            onClick={() => setMobileOpen(true)}
+            className="flex flex-col items-center gap-0.5 rounded-md px-2 py-1.5 text-[10px] font-medium text-muted-foreground"
+          >
+            <Menu className="h-5 w-5" />
+            <span>{t('settings')}</span>
+          </button>
+        </nav>
+
+        {/* Mobile menu overlay */}
+        {mobileOpen && (
+          <div className="fixed inset-0 z-50 bg-background/80 backdrop-blur-sm" onClick={() => setMobileOpen(false)}>
+            <div
+              className="absolute bottom-0 left-0 right-0 rounded-t-2xl border-t border-border bg-card p-6 pb-8 animate-in slide-in-from-bottom duration-300"
+              onClick={e => e.stopPropagation()}
+            >
+              <div className="flex items-center justify-between mb-4">
+                <span className="text-sm font-semibold text-foreground">{t('appName')}</span>
+                <button onClick={() => setMobileOpen(false)} className="p-1.5 rounded-md text-muted-foreground hover:text-foreground">
+                  <X className="h-5 w-5" />
+                </button>
+              </div>
+              <div className="space-y-1">
+                <ActivationDialog />
+                <button
+                  onClick={() => { setLang(lang === 'fr' ? 'ar' : 'fr'); setMobileOpen(false); }}
+                  className="flex w-full items-center gap-3 rounded-md px-3 py-2.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
+                >
+                  <Globe className="h-4 w-4" />
+                  {lang === 'fr' ? 'العربية' : 'Français'}
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+      </>
+    );
+  }
+
+  // Desktop: side navigation
   return (
     <aside className="flex h-screen w-64 flex-col border-e border-border bg-card">
       <div
