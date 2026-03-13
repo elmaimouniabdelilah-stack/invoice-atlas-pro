@@ -1,20 +1,13 @@
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
-import { AppSidebar } from "@/components/AppSidebar";
+import { ReactNode } from 'react';
+import AppSidebar from './AppSidebar';
 
-export function AppLayout({ children }: { children: React.ReactNode }) {
+export default function AppLayout({ children }: { children: ReactNode }) {
   return (
-    <SidebarProvider>
-      <div className="min-h-screen flex w-full">
-        <AppSidebar />
-        <div className="flex-1 flex flex-col min-w-0">
-          <header className="h-12 flex items-center border-b bg-card px-2">
-            <SidebarTrigger className="ml-1" />
-          </header>
-          <main className="flex-1 overflow-auto">
-            {children}
-          </main>
-        </div>
-      </div>
-    </SidebarProvider>
+    <div className="flex h-screen overflow-hidden">
+      <AppSidebar />
+      <main className="flex-1 overflow-y-auto bg-background">
+        {children}
+      </main>
+    </div>
   );
 }
