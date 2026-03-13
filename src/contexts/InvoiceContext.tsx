@@ -33,6 +33,7 @@ interface StoredData {
   invoices: Invoice[];
   invoiceTexts: InvoiceTexts;
   savedProducts: SavedProduct[];
+  defaultTvaRate: number;
 }
 
 function loadStored(): Partial<StoredData> {
@@ -82,6 +83,8 @@ interface InvoiceContextType {
   setDiscountValue: React.Dispatch<React.SetStateAction<number>>;
   savedProducts: SavedProduct[];
   setSavedProducts: React.Dispatch<React.SetStateAction<SavedProduct[]>>;
+  defaultTvaRate: number;
+  setDefaultTvaRate: React.Dispatch<React.SetStateAction<number>>;
 }
 
 const InvoiceContext = createContext<InvoiceContextType | undefined>(undefined);
@@ -104,7 +107,7 @@ export function InvoiceProvider({ children }: { children: React.ReactNode }) {
   const [seller, setSeller] = useState<SellerInfo>(stored.seller || defaultSeller);
   const [buyer, setBuyer] = useState<BuyerInfo>({ clientName: '', address: '', ice: '' });
   const [items, setItems] = useState<InvoiceItem[]>([
-    { id: crypto.randomUUID(), description: '', quantity: 1, unitPrice: 0, tvaRate: 20 },
+    { id: crypto.randomUUID(), description: '', quantity: 1, unitPrice: 0, tvaRate: stored.defaultTvaRate ?? 20 },
   ]);
   const [isAutoEntrepreneur, setIsAutoEntrepreneur] = useState(stored.isAutoEntrepreneur ?? false);
   const [invoiceNumber, setInvoiceNumber] = useState(generateInvoiceNumber());
@@ -118,6 +121,7 @@ export function InvoiceProvider({ children }: { children: React.ReactNode }) {
   const [discountType, setDiscountType] = useState<'percentage' | 'fixed'>('percentage');
   const [discountValue, setDiscountValue] = useState(0);
   const [savedProducts, setSavedProducts] = useState<SavedProduct[]>(stored.savedProducts || []);
+  const [defaultTvaRate, setDefaultTvaRate] = useState<number>(stored.defaultTvaRate ?? 20);
 
   const loadInvoice = (invoice: Invoice) => {
     setBuyer(invoice.buyer);
@@ -130,8 +134,8 @@ export function InvoiceProvider({ children }: { children: React.ReactNode }) {
   };
 
   useEffect(() => {
-    saveStored({ seller, clients, invoicesCreated, isAutoEntrepreneur, invoices, invoiceTexts, savedProducts });
-  }, [seller, clients, invoicesCreated, isAutoEntrepreneur, invoices, invoiceTexts, savedProducts]);
+    saveStored({ seller, clients, invoicesCreated, isAutoEntrepreneur, invoices, invoiceTexts, savedProducts, defaultTvaRate });
+  }, [seller, clients, invoicesCreated, isAutoEntrepreneur, invoices, invoiceTexts, savedProducts, defaultTvaRate]);
 
   return (
     <InvoiceContext.Provider value={{
@@ -151,6 +155,7 @@ export function InvoiceProvider({ children }: { children: React.ReactNode }) {
       discountType, setDiscountType,
       discountValue, setDiscountValue,
       savedProducts, setSavedProducts,
+      defaultTvaRate, setDefaultTvaRate,
     }}>
       {children}
     </InvoiceContext.Provider>

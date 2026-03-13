@@ -1,4 +1,5 @@
 import AppLayout from '@/components/AppLayout';
+import { TVA_RATES } from '@/lib/invoiceTypes';
 import { useLang } from '@/contexts/LanguageContext';
 import { useTheme } from '@/contexts/ThemeContext';
 import { useInvoice } from '@/contexts/InvoiceContext';
@@ -22,7 +23,7 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
 export default function SettingsPage() {
   const { t, lang, setLang } = useLang();
   const { theme, toggleTheme } = useTheme();
-  const { seller, setSeller, isAutoEntrepreneur, setIsAutoEntrepreneur, invoiceTexts, setInvoiceTexts } = useInvoice();
+  const { seller, setSeller, isAutoEntrepreneur, setIsAutoEntrepreneur, invoiceTexts, setInvoiceTexts, defaultTvaRate, setDefaultTvaRate } = useInvoice();
   const fileRef = useRef<HTMLInputElement>(null);
 
   const handleLogo = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -60,7 +61,7 @@ export default function SettingsPage() {
           </button>
         </div>
 
-        {/* Auto-entrepreneur */}
+        {/* Auto-entrepreneur & Default TVA */}
         <div className="flex items-center justify-between rounded-lg border border-border bg-card p-3 sm:p-4">
           <div>
             <p className="text-sm font-medium text-foreground">{t('autoEntrepreneur')}</p>
@@ -68,6 +69,24 @@ export default function SettingsPage() {
           </div>
           <Switch checked={isAutoEntrepreneur} onCheckedChange={setIsAutoEntrepreneur} />
         </div>
+
+        {!isAutoEntrepreneur && (
+          <div className="flex items-center justify-between rounded-lg border border-border bg-card p-3 sm:p-4">
+            <div>
+              <p className="text-sm font-medium text-foreground">{t('tvaRate')} {t('settings').toLowerCase()}</p>
+              <p className="text-xs text-muted-foreground">TVA {defaultTvaRate}%</p>
+            </div>
+            <select
+              value={defaultTvaRate}
+              onChange={e => setDefaultTvaRate(Number(e.target.value))}
+              className="h-9 rounded-md border border-input bg-background px-3 text-sm"
+            >
+              {TVA_RATES.map(rate => (
+                <option key={rate} value={rate}>{rate}%</option>
+              ))}
+            </select>
+          </div>
+        )}
 
         {/* Seller info */}
         <div className="rounded-lg border border-border bg-card p-4 sm:p-6 space-y-4">

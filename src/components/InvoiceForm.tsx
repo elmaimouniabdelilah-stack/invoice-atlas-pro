@@ -31,6 +31,7 @@ export default function InvoiceForm() {
     discountType, setDiscountType,
     discountValue, setDiscountValue,
     savedProducts,
+    defaultTvaRate,
   } = useInvoice();
 
   const [showAdminFields, setShowAdminFields] = useState(false);
@@ -62,7 +63,7 @@ export default function InvoiceForm() {
       description: '',
       quantity: 1,
       unitPrice: 0,
-      tvaRate: isAutoEntrepreneur ? 0 : 20,
+      tvaRate: isAutoEntrepreneur ? 0 : defaultTvaRate,
     }]);
   };
 
