@@ -83,6 +83,8 @@ interface InvoiceContextType {
   setDiscountValue: React.Dispatch<React.SetStateAction<number>>;
   savedProducts: SavedProduct[];
   setSavedProducts: React.Dispatch<React.SetStateAction<SavedProduct[]>>;
+  defaultTvaRate: number;
+  setDefaultTvaRate: React.Dispatch<React.SetStateAction<number>>;
 }
 
 const InvoiceContext = createContext<InvoiceContextType | undefined>(undefined);
