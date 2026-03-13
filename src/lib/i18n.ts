@@ -189,6 +189,15 @@ export const translations = {
     cancel: 'إلغاء',
     searchClients: 'البحث عن عميل...',
     createInvoice: 'إنشاء فاتورة',
+    products: 'المنتجات والخدمات',
+    addProduct: 'إضافة منتج',
+    editProduct: 'تعديل المنتج',
+    updateProduct: 'تحديث',
+    saveProduct: 'حفظ',
+    searchProducts: 'البحث عن منتج...',
+    noProducts: 'لا توجد منتجات مسجلة',
+    defaultQuantity: 'الكمية الافتراضية',
+    addFromSaved: 'منتجات محفوظة',
   },
 } as const;
 
