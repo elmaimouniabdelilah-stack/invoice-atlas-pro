@@ -6,6 +6,7 @@ import { cn } from '@/lib/utils';
 import ActivationDialog from './ActivationDialog';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useState } from 'react';
+import logoImg from '@/assets/logo.png';
 
 export default function AppSidebar() {
   const { t, lang, setLang } = useLang();
@@ -97,8 +98,8 @@ export default function AppSidebar() {
         className="flex items-center gap-2 border-b border-border px-6 py-5 cursor-pointer select-none"
         onDoubleClick={() => window.location.href = '/admin/login'}
       >
-        <div className="flex h-8 w-8 items-center justify-center rounded-md bg-primary">
-          <span className="text-sm font-bold text-primary-foreground">F</span>
+        <div className="flex h-8 w-8 items-center justify-center rounded-md overflow-hidden">
+          <img src={logoImg} alt="FacturaPro" className="h-8 w-8 object-contain" />
         </div>
         <span className="text-lg font-semibold text-foreground">{t('appName')}</span>
       </div>
