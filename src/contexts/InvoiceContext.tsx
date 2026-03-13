@@ -33,6 +33,7 @@ interface StoredData {
   invoices: Invoice[];
   invoiceTexts: InvoiceTexts;
   savedProducts: SavedProduct[];
+  defaultTvaRate: number;
 }
 
 function loadStored(): Partial<StoredData> {
