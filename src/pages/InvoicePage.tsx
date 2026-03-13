@@ -93,12 +93,14 @@ export default function InvoicePage() {
     setTimeout(() => { win.print(); win.close(); }, 500);
   };
 
-  const handleSaveAndExport = () => {
+  const handleSaveAndExport = async () => {
     if (!buyer.clientName) return;
     const totalTTC = calculateTotalTTCWithDiscount(items, isAutoEntrepreneur, discountType, discountValue);
 
+    // Export PDF first (before resetting the form)
+    await handleExportPdf();
+
     if (editingInvoiceId) {
-      // Update existing invoice
       setInvoices(prev => prev.map(inv => inv.id === editingInvoiceId ? {
         ...inv,
         number: invoiceNumber,
@@ -114,7 +116,6 @@ export default function InvoicePage() {
       setEditingInvoiceId(null);
       toast({ title: t('invoiceUpdated') });
     } else {
-      // Save new invoice
       setInvoices(prev => [...prev, {
         id: crypto.randomUUID(),
         number: invoiceNumber,
@@ -128,7 +129,6 @@ export default function InvoicePage() {
         discountValue,
       }]);
 
-      // Update client
       setClients(prev => {
         const existing = prev.find(c => c.ice === buyer.ice && buyer.ice);
         if (existing) {
@@ -146,15 +146,14 @@ export default function InvoicePage() {
       toast({ title: t('invoiceSaved') });
     }
 
-    // Reset for new invoice
+    // Reset form completely for a new invoice
     setBuyer({ clientName: '', address: '', ice: '' });
     setItems([{ id: crypto.randomUUID(), description: '', quantity: 1, unitPrice: 0, tvaRate: isAutoEntrepreneur ? 0 : 20 }]);
     setInvoiceNumber(generateInvoiceNumber());
     setInvoiceDate(new Date().toISOString().split('T')[0]);
+    setDueDate('');
     setDiscountType('percentage');
     setDiscountValue(0);
-
-    handleExportPdf();
   };
 
   const trialExceeded = invoicesCreated >= TRIAL_LIMIT && !editingInvoiceId && !isActivated();
