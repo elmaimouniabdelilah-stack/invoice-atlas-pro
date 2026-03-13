@@ -117,6 +117,7 @@ export function InvoiceProvider({ children }: { children: React.ReactNode }) {
   const [editingInvoiceId, setEditingInvoiceId] = useState<string | null>(null);
   const [discountType, setDiscountType] = useState<'percentage' | 'fixed'>('percentage');
   const [discountValue, setDiscountValue] = useState(0);
+  const [savedProducts, setSavedProducts] = useState<SavedProduct[]>(stored.savedProducts || []);
 
   const loadInvoice = (invoice: Invoice) => {
     setBuyer(invoice.buyer);
