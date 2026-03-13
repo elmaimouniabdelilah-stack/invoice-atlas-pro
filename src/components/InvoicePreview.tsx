@@ -195,20 +195,36 @@ export default function InvoicePreview({ mobileView = false }: InvoicePreviewPro
       <table className="w-full mb-6">
         <thead>
           <tr className="border-b border-foreground/20">
+            {detailedMode && <th className="pb-2 text-start text-xs font-semibold text-muted-foreground uppercase tracking-wider w-20">Réf</th>}
             <th className="pb-2 text-start text-xs font-semibold text-muted-foreground uppercase tracking-wider">{t('description')}</th>
-            <th className="pb-2 text-end text-xs font-semibold text-muted-foreground uppercase tracking-wider w-20">{t('quantity')}</th>
-            <th className="pb-2 text-end text-xs font-semibold text-muted-foreground uppercase tracking-wider w-28">{t('unitPrice')}</th>
-            {!isAutoEntrepreneur && (
-              <th className="pb-2 text-end text-xs font-semibold text-muted-foreground uppercase tracking-wider w-20">{t('tvaRate')}</th>
+            <th className="pb-2 text-end text-xs font-semibold text-muted-foreground uppercase tracking-wider w-16">{t('quantity')}</th>
+            {detailedMode && (
+              <>
+                <th className="pb-2 text-end text-xs font-semibold text-muted-foreground uppercase tracking-wider w-16">L</th>
+                <th className="pb-2 text-end text-xs font-semibold text-muted-foreground uppercase tracking-wider w-16">H</th>
+                <th className="pb-2 text-end text-xs font-semibold text-muted-foreground uppercase tracking-wider w-16">Tot M²</th>
+              </>
             )}
-            <th className="pb-2 text-end text-xs font-semibold text-muted-foreground uppercase tracking-wider w-28">{t('total')}</th>
+            <th className="pb-2 text-end text-xs font-semibold text-muted-foreground uppercase tracking-wider w-24">{t('unitPrice')}</th>
+            {!isAutoEntrepreneur && (
+              <th className="pb-2 text-end text-xs font-semibold text-muted-foreground uppercase tracking-wider w-16">{t('tvaRate')}</th>
+            )}
+            <th className="pb-2 text-end text-xs font-semibold text-muted-foreground uppercase tracking-wider w-24">{t('total')}</th>
           </tr>
         </thead>
         <tbody>
           {items.map((item) => (
             <tr key={item.id} className="border-b border-border">
+              {detailedMode && <td className="py-3 text-foreground text-xs">{item.reference || '—'}</td>}
               <td className="py-3 text-foreground">{item.description || '—'}</td>
               <td className="py-3 text-end text-foreground">{item.quantity}</td>
+              {detailedMode && (
+                <>
+                  <td className="py-3 text-end text-foreground">{item.length || '—'}</td>
+                  <td className="py-3 text-end text-foreground">{item.height || '—'}</td>
+                  <td className="py-3 text-end text-foreground">{item.totalM2 || '—'}</td>
+                </>
+              )}
               <td className="py-3 text-end text-foreground">{item.unitPrice.toFixed(2)}</td>
               {!isAutoEntrepreneur && (
                 <td className="py-3 text-end text-foreground">{item.tvaRate}%</td>
