@@ -102,3 +102,22 @@
     font-family: 'JetBrains Mono', monospace;
   }
 }
+
+@media print {
+  body * {
+    visibility: hidden !important;
+  }
+  #invoice-preview,
+  #invoice-preview * {
+    visibility: visible !important;
+  }
+  #invoice-preview {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    box-shadow: none !important;
+    border: none !important;
+    border-radius: 0 !important;
+  }
+}
