@@ -25,6 +25,8 @@ const defaultTexts: InvoiceTexts = {
   swift: '',
 };
 
+export type InvoiceTemplate = 'green' | 'blue' | 'classic';
+
 interface StoredData {
   seller: SellerInfo;
   clients: Client[];
@@ -34,6 +36,7 @@ interface StoredData {
   invoiceTexts: InvoiceTexts;
   savedProducts: SavedProduct[];
   defaultTvaRate: number;
+  invoiceTemplate: InvoiceTemplate;
 }
 
 function loadStored(): Partial<StoredData> {
@@ -87,6 +90,8 @@ interface InvoiceContextType {
   setDefaultTvaRate: React.Dispatch<React.SetStateAction<number>>;
   detailedMode: boolean;
   setDetailedMode: React.Dispatch<React.SetStateAction<boolean>>;
+  invoiceTemplate: InvoiceTemplate;
+  setInvoiceTemplate: React.Dispatch<React.SetStateAction<InvoiceTemplate>>;
 }
 
 const InvoiceContext = createContext<InvoiceContextType | undefined>(undefined);
@@ -125,6 +130,7 @@ export function InvoiceProvider({ children }: { children: React.ReactNode }) {
   const [savedProducts, setSavedProducts] = useState<SavedProduct[]>(stored.savedProducts || []);
   const [defaultTvaRate, setDefaultTvaRate] = useState<number>(stored.defaultTvaRate ?? 20);
   const [detailedMode, setDetailedMode] = useState(false);
+  const [invoiceTemplate, setInvoiceTemplate] = useState<InvoiceTemplate>(stored.invoiceTemplate || 'green');
 
   const loadInvoice = (invoice: Invoice) => {
     setBuyer(invoice.buyer);
@@ -137,8 +143,8 @@ export function InvoiceProvider({ children }: { children: React.ReactNode }) {
   };
 
   useEffect(() => {
-    saveStored({ seller, clients, invoicesCreated, isAutoEntrepreneur, invoices, invoiceTexts, savedProducts, defaultTvaRate });
-  }, [seller, clients, invoicesCreated, isAutoEntrepreneur, invoices, invoiceTexts, savedProducts, defaultTvaRate]);
+    saveStored({ seller, clients, invoicesCreated, isAutoEntrepreneur, invoices, invoiceTexts, savedProducts, defaultTvaRate, invoiceTemplate });
+  }, [seller, clients, invoicesCreated, isAutoEntrepreneur, invoices, invoiceTexts, savedProducts, defaultTvaRate, invoiceTemplate]);
 
   return (
     <InvoiceContext.Provider value={{
@@ -160,6 +166,7 @@ export function InvoiceProvider({ children }: { children: React.ReactNode }) {
       savedProducts, setSavedProducts,
       defaultTvaRate, setDefaultTvaRate,
       detailedMode, setDetailedMode,
+      invoiceTemplate, setInvoiceTemplate,
     }}>
       {children}
     </InvoiceContext.Provider>
