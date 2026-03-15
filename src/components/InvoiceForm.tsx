@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Plus, Trash2, Upload, ChevronDown, ChevronUp, Package, Palette } from 'lucide-react';
 import { TVA_RATES, calculateTotalHT, calculateTotalTVA, calculateTotalTTC, calculateDiscount, calculateTotalTTCWithDiscount } from '@/lib/invoiceTypes';
 import { useState, useRef, useMemo } from 'react';
+import { InvoiceTemplate } from '@/contexts/InvoiceContext';
 
 function FieldGroup({ label, children }: { label: string; children: React.ReactNode }) {
   return (
