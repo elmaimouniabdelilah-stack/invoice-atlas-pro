@@ -33,6 +33,7 @@ export default function InvoiceForm() {
     savedProducts,
     defaultTvaRate,
     detailedMode, setDetailedMode,
+    invoiceTemplate, setInvoiceTemplate,
   } = useInvoice();
 
   const [showAdminFields, setShowAdminFields] = useState(false);
