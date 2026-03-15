@@ -25,6 +25,8 @@ const defaultTexts: InvoiceTexts = {
   swift: '',
 };
 
+export type InvoiceTemplate = 'green' | 'blue' | 'classic';
+
 interface StoredData {
   seller: SellerInfo;
   clients: Client[];
@@ -34,6 +36,7 @@ interface StoredData {
   invoiceTexts: InvoiceTexts;
   savedProducts: SavedProduct[];
   defaultTvaRate: number;
+  invoiceTemplate: InvoiceTemplate;
 }
 
 function loadStored(): Partial<StoredData> {
