@@ -89,6 +89,36 @@ export default function InvoiceForm() {
 
   return (
     <div className="space-y-6 p-4 sm:p-6">
+      {/* Template Selector */}
+      <div className="rounded-lg border border-border bg-card p-3 sm:p-4">
+        <div className="flex items-center gap-2 mb-3">
+          <Palette className="h-4 w-4 text-primary" />
+          <p className="text-sm font-medium text-foreground">Modèle de facture</p>
+        </div>
+        <div className="grid grid-cols-3 gap-2">
+          {([
+            { id: 'green' as InvoiceTemplate, label: 'Vert Maroc', color: '#2d6a4f', desc: 'Professionnel' },
+            { id: 'blue' as InvoiceTemplate, label: 'Bleu Pro', color: '#1b2a4a', desc: 'Moderne' },
+            { id: 'classic' as InvoiceTemplate, label: 'Classique', color: '#333333', desc: 'Simple' },
+          ]).map((tmpl) => (
+            <button
+              key={tmpl.id}
+              type="button"
+              onClick={() => setInvoiceTemplate(tmpl.id)}
+              className={`relative rounded-lg border-2 p-2.5 text-center transition-all ${
+                invoiceTemplate === tmpl.id
+                  ? 'border-primary bg-primary/5 shadow-sm'
+                  : 'border-border hover:border-primary/40'
+              }`}
+            >
+              <div className="h-1.5 rounded-full mb-2 mx-auto w-10" style={{ backgroundColor: tmpl.color }} />
+              <p className="text-xs font-semibold text-foreground">{tmpl.label}</p>
+              <p className="text-[10px] text-muted-foreground">{tmpl.desc}</p>
+            </button>
+          ))}
+        </div>
+      </div>
+
       {/* Auto-entrepreneur + TVA + Detailed Mode */}
       <div className="rounded-lg border border-border bg-card p-3 sm:p-4 space-y-3">
         <div className="flex items-center justify-between">
