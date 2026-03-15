@@ -90,6 +90,8 @@ interface InvoiceContextType {
   setDefaultTvaRate: React.Dispatch<React.SetStateAction<number>>;
   detailedMode: boolean;
   setDetailedMode: React.Dispatch<React.SetStateAction<boolean>>;
+  invoiceTemplate: InvoiceTemplate;
+  setInvoiceTemplate: React.Dispatch<React.SetStateAction<InvoiceTemplate>>;
 }
 
 const InvoiceContext = createContext<InvoiceContextType | undefined>(undefined);
