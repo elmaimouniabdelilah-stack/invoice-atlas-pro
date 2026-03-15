@@ -1,0 +1,297 @@
+import { useLang } from '@/contexts/LanguageContext';
+import { useInvoice } from '@/contexts/InvoiceContext';
+import { calculateItemTotal, calculateTotalHT, calculateTotalTVA, calculateDiscount, calculateTotalTTCWithDiscount } from '@/lib/invoiceTypes';
+import { numberToWordsFr, numberToWordsAr } from '@/lib/numberToWords';
+import { MapPin, Phone, Mail } from 'lucide-react';
+
+interface Props {
+  mobileView?: boolean;
+}
+
+export default function GreenTemplate({ mobileView = false }: Props) {
+  const { t, lang } = useLang();
+  const { seller, buyer, items, isAutoEntrepreneur, invoiceNumber, invoiceDate, dueDate, invoiceTexts, discountType, discountValue, detailedMode } = useInvoice();
+
+  const totalHT = calculateTotalHT(items);
+  const discount = calculateDiscount(totalHT, discountType, discountValue);
+  const discountedHT = totalHT - discount;
+  const totalTVA = calculateTotalTVA(items, isAutoEntrepreneur);
+  const tvaRatio = totalHT > 0 ? discountedHT / totalHT : 0;
+  const adjustedTVA = isAutoEntrepreneur ? 0 : totalTVA * tvaRatio;
+  const totalTTC = calculateTotalTTCWithDiscount(items, isAutoEntrepreneur, discountType, discountValue);
+  const amountInWords = lang === 'ar' ? numberToWordsAr(totalTTC) : numberToWordsFr(totalTTC);
+
+  const accentColor = '#2d6a4f';
+  const accentBg = '#2d6a4f15';
+  const accentBorder = '#2d6a4f40';
+
+  const formatNumber = (n: number) => n.toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+  if (mobileView) {
+    return (
+      <div id="invoice-preview" className="bg-white rounded-lg border font-latin" style={{ fontSize: '11px', color: '#1a1a1a' }}>
+        {/* Header */}
+        <div className="p-4 pb-0">
+          <div className="flex items-start justify-between mb-4">
+            <div className="flex items-center gap-3">
+              {seller.logo && <img src={seller.logo} alt="Logo" className="h-12 w-12 object-contain" />}
+              <div>
+                <h2 className="text-sm font-bold" style={{ color: accentColor }}>{seller.businessName || 'NOM DE L\'ENTREPRISE'}</h2>
+              </div>
+            </div>
+            <h1 className="text-lg font-black tracking-tight">{invoiceTexts.invoiceTitle?.replace(' N°', '') || 'FACTURE'}</h1>
+          </div>
+
+          {/* Separator */}
+          <div className="h-0.5 mb-3" style={{ backgroundColor: accentColor }} />
+
+          {/* Info row */}
+          <div className="flex justify-between mb-4">
+            <div className="space-y-1 text-[10px]">
+              {seller.address && <div className="flex items-center gap-1"><MapPin className="h-3 w-3" style={{ color: accentColor }} />{seller.address}</div>}
+              {seller.phone && <div className="flex items-center gap-1"><Phone className="h-3 w-3" style={{ color: accentColor }} />{seller.phone}</div>}
+              {seller.email && <div className="flex items-center gap-1"><Mail className="h-3 w-3" style={{ color: accentColor }} />{seller.email}</div>}
+            </div>
+            <div className="border text-[10px]" style={{ borderColor: accentBorder }}>
+              <div className="flex"><span className="px-2 py-1 font-semibold" style={{ backgroundColor: accentBg }}>Facture N°:</span><span className="px-2 py-1">{invoiceNumber}</span></div>
+              <div className="flex border-t" style={{ borderColor: accentBorder }}><span className="px-2 py-1 font-semibold" style={{ backgroundColor: accentBg }}>Date:</span><span className="px-2 py-1">{invoiceDate}</span></div>
+              {dueDate && <div className="flex border-t" style={{ borderColor: accentBorder }}><span className="px-2 py-1 font-semibold" style={{ backgroundColor: accentBg }}>Échéance:</span><span className="px-2 py-1">{dueDate}</span></div>}
+            </div>
+          </div>
+        </div>
+
+        {/* Client */}
+        <div className="mx-4 mb-4 border p-3" style={{ borderColor: accentBorder }}>
+          <h3 className="font-bold text-xs mb-1">Client :</h3>
+          <p className="font-semibold text-xs">{buyer.clientName || '—'}</p>
+          <p className="text-[10px]">{buyer.address}</p>
+          {buyer.ice && <p className="text-[10px]">ICE: {buyer.ice}</p>}
+        </div>
+
+        {/* Items */}
+        <div className="mx-4 mb-4">
+          <table className="w-full text-[10px]">
+            <thead>
+              <tr style={{ backgroundColor: accentColor, color: 'white' }}>
+                <th className="py-1.5 px-2 text-start font-bold">DÉSIGNATION</th>
+                <th className="py-1.5 px-1 text-center font-bold w-10">QTE</th>
+                <th className="py-1.5 px-1 text-end font-bold w-20">PRIX U. (DH)</th>
+                <th className="py-1.5 px-2 text-end font-bold w-20">TOTAL (DH)</th>
+              </tr>
+            </thead>
+            <tbody>
+              {items.map((item, i) => (
+                <tr key={item.id} className={i % 2 === 0 ? '' : ''} style={{ borderBottom: '1px solid #e5e5e5' }}>
+                  <td className="py-2 px-2">{item.description || '—'}</td>
+                  <td className="py-2 px-1 text-center">{item.quantity}</td>
+                  <td className="py-2 px-1 text-end">{formatNumber(item.unitPrice)} DH</td>
+                  <td className="py-2 px-2 text-end">{formatNumber(calculateItemTotal(item))} DH</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        {/* Totals */}
+        <div className="mx-4 mb-4 flex justify-end">
+          <div className="text-[11px] w-48">
+            <div className="flex justify-between py-1"><span className="font-bold">Total HT:</span><span>{formatNumber(totalHT)} DH</span></div>
+            {discount > 0 && (
+              <>
+                <div className="flex justify-between py-1"><span>Remise {discountType === 'percentage' ? `(${discountValue}%)` : ''}:</span><span style={{ color: '#c0392b' }}>-{formatNumber(discount)} DH</span></div>
+                <div className="flex justify-between py-1"><span>Net HT:</span><span>{formatNumber(discountedHT)} DH</span></div>
+              </>
+            )}
+            {!isAutoEntrepreneur && <div className="flex justify-between py-1"><span className="font-bold">TVA {items[0]?.tvaRate || 20}%:</span><span>{formatNumber(adjustedTVA)} DH</span></div>}
+            <div className="flex justify-between py-1.5 font-bold text-xs border-t-2" style={{ borderColor: accentColor }}>
+              <span>Total TTC:</span><span style={{ color: accentColor }}>{formatNumber(totalTTC)} DH</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Amount in words */}
+        <div className="mx-4 mb-3 p-2 rounded text-[10px] italic" style={{ backgroundColor: accentBg }}>
+          {invoiceTexts.amountInWordsPhrase}: <span className="font-semibold">{amountInWords}</span>
+        </div>
+
+        {/* Footer */}
+        <div className="mx-4 mb-3">
+          {(seller.ice || seller.ifCode || seller.rc) && (
+            <div className="border p-2 mb-3 text-[10px]" style={{ borderColor: accentBorder }}>
+              <h4 className="font-bold mb-1">Mode de paiement :</h4>
+              <div className="space-y-0.5">
+                {seller.ice && <p>ICE : {seller.ice}</p>}
+                {seller.ifCode && <p>IF : {seller.ifCode}</p>}
+                {seller.rc && <p>RC : {seller.rc}</p>}
+                {seller.cnss && <p>CNSS : {seller.cnss}</p>}
+              </div>
+            </div>
+          )}
+
+          {(invoiceTexts.rib || invoiceTexts.iban) && (
+            <div className="border p-2 mb-3 text-[10px] font-mono" style={{ borderColor: accentBorder }}>
+              {invoiceTexts.bankName && <p>Banque: {invoiceTexts.bankName}</p>}
+              {invoiceTexts.rib && <p>RIB: {invoiceTexts.rib}</p>}
+              {invoiceTexts.iban && <p>IBAN: {invoiceTexts.iban}</p>}
+              {invoiceTexts.swift && <p>SWIFT: {invoiceTexts.swift}</p>}
+            </div>
+          )}
+
+          {isAutoEntrepreneur && <p className="text-[10px] italic mb-2">{invoiceTexts.taxExemption}</p>}
+
+          <p className="text-center italic text-[11px] my-3" style={{ color: accentColor }}>Merci pour votre confiance</p>
+
+          <div className="border-t pt-2 text-[10px]" style={{ borderColor: accentBorder }}>
+            <p className="font-semibold">Cachet / Signature :</p>
+          </div>
+
+          {invoiceTexts.footerNotes && <p className="text-[10px] mt-2 whitespace-pre-line">{invoiceTexts.footerNotes}</p>}
+        </div>
+      </div>
+    );
+  }
+
+  // Desktop A4
+  return (
+    <div id="invoice-preview" className="mx-auto w-[210mm] min-h-[297mm] bg-white p-10 invoice-shadow font-latin" style={{ fontSize: '11px', color: '#1a1a1a' }}>
+      {/* Header */}
+      <div className="flex items-start justify-between mb-2">
+        <div className="flex items-center gap-4">
+          {seller.logo && <img src={seller.logo} alt="Logo" className="h-16 w-16 object-contain" />}
+          <h2 className="text-xl font-black" style={{ color: accentColor }}>{seller.businessName || 'NOM DE L\'ENTREPRISE'}</h2>
+        </div>
+        <h1 className="text-3xl font-black tracking-tight">FACTURE</h1>
+      </div>
+
+      {/* Green separator */}
+      <div className="h-1 mb-5" style={{ backgroundColor: accentColor }} />
+
+      {/* Info row */}
+      <div className="flex justify-between mb-8">
+        <div className="space-y-1.5 text-xs">
+          {seller.address && <div className="flex items-center gap-2"><MapPin className="h-3.5 w-3.5" style={{ color: accentColor }} />{seller.address}</div>}
+          {seller.phone && <div className="flex items-center gap-2"><Phone className="h-3.5 w-3.5" style={{ color: accentColor }} />{seller.phone}</div>}
+          {seller.email && <div className="flex items-center gap-2"><Mail className="h-3.5 w-3.5" style={{ color: accentColor }} />{seller.email}</div>}
+        </div>
+        <div className="border" style={{ borderColor: accentBorder }}>
+          <div className="flex"><span className="px-4 py-2 text-xs font-semibold w-28" style={{ backgroundColor: accentBg }}>Facture N°:</span><span className="px-4 py-2 text-xs w-36 text-end">{invoiceNumber}</span></div>
+          <div className="flex border-t" style={{ borderColor: accentBorder }}><span className="px-4 py-2 text-xs font-semibold w-28" style={{ backgroundColor: accentBg }}>Date:</span><span className="px-4 py-2 text-xs w-36 text-end">{invoiceDate}</span></div>
+          {dueDate && <div className="flex border-t" style={{ borderColor: accentBorder }}><span className="px-4 py-2 text-xs font-semibold w-28" style={{ backgroundColor: accentBg }}>Échéance:</span><span className="px-4 py-2 text-xs w-36 text-end">{dueDate}</span></div>}
+        </div>
+      </div>
+
+      {/* Client box */}
+      <div className="border p-5 mb-8" style={{ borderColor: accentBorder }}>
+        <h3 className="font-bold text-sm mb-2">Client :</h3>
+        <p className="font-semibold">{buyer.clientName || '—'}</p>
+        <p className="text-xs">{buyer.address}</p>
+        {buyer.ice && <p className="text-xs">ICE: {buyer.ice}</p>}
+      </div>
+
+      {/* Items Table */}
+      <table className="w-full mb-6">
+        <thead>
+          <tr style={{ backgroundColor: accentColor, color: 'white' }}>
+            {detailedMode && <th className="py-2.5 px-3 text-start text-xs font-bold uppercase">Réf</th>}
+            <th className="py-2.5 px-3 text-start text-xs font-bold uppercase">DÉSIGNATION</th>
+            <th className="py-2.5 px-3 text-center text-xs font-bold uppercase w-16">QTE</th>
+            {detailedMode && (
+              <>
+                <th className="py-2.5 px-3 text-center text-xs font-bold uppercase w-14">L</th>
+                <th className="py-2.5 px-3 text-center text-xs font-bold uppercase w-14">H</th>
+                <th className="py-2.5 px-3 text-center text-xs font-bold uppercase w-16">M²</th>
+              </>
+            )}
+            <th className="py-2.5 px-3 text-end text-xs font-bold uppercase w-28">PRIX U. (DH)</th>
+            {!isAutoEntrepreneur && <th className="py-2.5 px-3 text-center text-xs font-bold uppercase w-16">TVA</th>}
+            <th className="py-2.5 px-3 text-end text-xs font-bold uppercase w-28">TOTAL (DH)</th>
+          </tr>
+        </thead>
+        <tbody>
+          {items.map((item, i) => (
+            <tr key={item.id} style={{ borderBottom: '1px solid #e0e0e0', backgroundColor: i % 2 === 1 ? '#f9f9f9' : 'white' }}>
+              {detailedMode && <td className="py-3 px-3 text-xs">{item.reference || '—'}</td>}
+              <td className="py-3 px-3">{item.description || '—'}</td>
+              <td className="py-3 px-3 text-center">{item.quantity}</td>
+              {detailedMode && (
+                <>
+                  <td className="py-3 px-3 text-center">{item.length || '—'}</td>
+                  <td className="py-3 px-3 text-center">{item.height || '—'}</td>
+                  <td className="py-3 px-3 text-center">{item.totalM2 || '—'}</td>
+                </>
+              )}
+              <td className="py-3 px-3 text-end">{formatNumber(item.unitPrice)} DH</td>
+              {!isAutoEntrepreneur && <td className="py-3 px-3 text-center">{item.tvaRate}%</td>}
+              <td className="py-3 px-3 text-end font-medium">{formatNumber(calculateItemTotal(item))} DH</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+
+      {/* Totals */}
+      <div className="flex justify-end mb-8">
+        <div className="w-72">
+          <div className="flex justify-between py-2 text-sm"><span className="font-bold">Total HT:</span><span>{formatNumber(totalHT)} DH</span></div>
+          {discount > 0 && (
+            <>
+              <div className="flex justify-between py-1 text-sm"><span>Remise {discountType === 'percentage' ? `(${discountValue}%)` : ''}:</span><span style={{ color: '#c0392b' }}>-{formatNumber(discount)} DH</span></div>
+              <div className="flex justify-between py-1 text-sm"><span>Net HT:</span><span>{formatNumber(discountedHT)} DH</span></div>
+            </>
+          )}
+          {!isAutoEntrepreneur && (
+            <div className="flex justify-between py-2 text-sm"><span className="font-bold">TVA {items[0]?.tvaRate || 20}%:</span><span>{formatNumber(adjustedTVA)} DH</span></div>
+          )}
+          <div className="flex justify-between py-2.5 text-base font-bold border-t-2" style={{ borderColor: accentColor }}>
+            <span>Total TTC:</span><span style={{ color: accentColor }}>{formatNumber(totalTTC)} DH</span>
+          </div>
+        </div>
+      </div>
+
+      {/* Amount in words */}
+      <div className="rounded p-3 mb-6 text-xs italic" style={{ backgroundColor: accentBg }}>
+        {invoiceTexts.amountInWordsPhrase}: <span className="font-semibold">{amountInWords}</span>
+      </div>
+
+      {/* Payment / Seller IDs */}
+      <div className="flex justify-between mb-6">
+        {(seller.ice || seller.ifCode || seller.rc) && (
+          <div className="border p-4 flex-1 mr-4 text-xs" style={{ borderColor: accentBorder }}>
+            <h4 className="font-bold mb-2">Mode de paiement :</h4>
+            {seller.ice && <p>ICE : {seller.ice}</p>}
+            {seller.ifCode && <p>IF : {seller.ifCode}</p>}
+            {seller.rc && <p>RC : {seller.rc}</p>}
+            {seller.cnss && <p>CNSS : {seller.cnss}</p>}
+          </div>
+        )}
+        {(invoiceTexts.rib || invoiceTexts.iban) && (
+          <div className="border p-4 flex-1 text-xs font-mono" style={{ borderColor: accentBorder }}>
+            <h4 className="font-bold mb-2 font-sans">{t('bankInfo')}</h4>
+            {invoiceTexts.bankName && <p>{invoiceTexts.bankName}</p>}
+            {invoiceTexts.rib && <p>RIB: {invoiceTexts.rib}</p>}
+            {invoiceTexts.iban && <p>IBAN: {invoiceTexts.iban}</p>}
+            {invoiceTexts.swift && <p>SWIFT: {invoiceTexts.swift}</p>}
+          </div>
+        )}
+      </div>
+
+      {isAutoEntrepreneur && <p className="text-xs italic mb-4">{invoiceTexts.taxExemption}</p>}
+
+      {/* Thank you */}
+      <div className="my-6" style={{ borderTop: `1px solid ${accentBorder}`, borderBottom: `1px solid ${accentBorder}` }}>
+        <p className="text-center italic text-sm py-3" style={{ color: accentColor }}>Merci pour votre confiance</p>
+      </div>
+
+      {/* Signature */}
+      <div className="mt-6 pt-4">
+        <p className="font-semibold text-xs">Cachet / Signature :</p>
+        <div className="h-20" />
+      </div>
+
+      {invoiceTexts.footerNotes && (
+        <div className="border-t pt-4 mt-4" style={{ borderColor: accentBorder }}>
+          <p className="text-xs whitespace-pre-line">{invoiceTexts.footerNotes}</p>
+        </div>
+      )}
+    </div>
+  );
+}
