@@ -143,8 +143,8 @@ export function InvoiceProvider({ children }: { children: React.ReactNode }) {
   };
 
   useEffect(() => {
-    saveStored({ seller, clients, invoicesCreated, isAutoEntrepreneur, invoices, invoiceTexts, savedProducts, defaultTvaRate });
-  }, [seller, clients, invoicesCreated, isAutoEntrepreneur, invoices, invoiceTexts, savedProducts, defaultTvaRate]);
+    saveStored({ seller, clients, invoicesCreated, isAutoEntrepreneur, invoices, invoiceTexts, savedProducts, defaultTvaRate, invoiceTemplate });
+  }, [seller, clients, invoicesCreated, isAutoEntrepreneur, invoices, invoiceTexts, savedProducts, defaultTvaRate, invoiceTemplate]);
 
   return (
     <InvoiceContext.Provider value={{
