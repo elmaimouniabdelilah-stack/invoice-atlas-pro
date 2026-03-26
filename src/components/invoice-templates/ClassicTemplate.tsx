@@ -162,7 +162,7 @@ export default function ClassicTemplate({ mobileView = false }: Props) {
       {/* Items Table */}
       <table className="w-full mb-6">
         <thead>
-          <tr style={{ borderBottom: '2px solid #333' }}>
+          <tr style={{ borderBottom: `2px solid ${classicAccent}` }}>
             {detailedMode && <th className="pb-2 text-start text-xs font-semibold uppercase tracking-wider w-20" style={{ color: '#999' }}>Réf</th>}
             <th className="pb-2 text-start text-xs font-semibold uppercase tracking-wider" style={{ color: '#999' }}>{t('description')}</th>
             <th className="pb-2 text-end text-xs font-semibold uppercase tracking-wider w-16" style={{ color: '#999' }}>{t('quantity')}</th>
