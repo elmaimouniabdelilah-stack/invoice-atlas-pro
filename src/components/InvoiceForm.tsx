@@ -35,6 +35,7 @@ export default function InvoiceForm() {
     defaultTvaRate,
     detailedMode, setDetailedMode,
     invoiceTemplate, setInvoiceTemplate,
+    templateColor, setTemplateColor,
   } = useInvoice();
 
   const [showAdminFields, setShowAdminFields] = useState(false);
