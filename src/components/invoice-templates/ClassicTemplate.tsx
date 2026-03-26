@@ -210,7 +210,7 @@ export default function ClassicTemplate({ mobileView = false }: Props) {
             </>
           )}
           {!isAutoEntrepreneur && <div className="flex justify-between text-sm"><span style={{ color: '#666' }}>{t('totalTVA')}</span><span>{formatNumber(adjustedTVA)} {t('dh')}</span></div>}
-          <div className="flex justify-between border-t pt-2 text-sm" style={{ borderColor: '#333' }}>
+          <div className="flex justify-between border-t pt-2 text-sm" style={{ borderColor: classicAccent }}>
             <span className="font-bold">{t('totalTTC')}</span><span className="font-bold">{formatNumber(totalTTC)} {t('dh')}</span>
           </div>
         </div>
