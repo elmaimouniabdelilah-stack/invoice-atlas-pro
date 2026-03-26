@@ -93,6 +93,8 @@ interface InvoiceContextType {
   setDetailedMode: React.Dispatch<React.SetStateAction<boolean>>;
   invoiceTemplate: InvoiceTemplate;
   setInvoiceTemplate: React.Dispatch<React.SetStateAction<InvoiceTemplate>>;
+  templateColor: string;
+  setTemplateColor: React.Dispatch<React.SetStateAction<string>>;
 }
 
 const InvoiceContext = createContext<InvoiceContextType | undefined>(undefined);
