@@ -9,7 +9,8 @@ interface Props {
 
 export default function ClassicTemplate({ mobileView = false }: Props) {
   const { t, lang } = useLang();
-  const { seller, buyer, items, isAutoEntrepreneur, invoiceNumber, invoiceDate, dueDate, invoiceTexts, discountType, discountValue, detailedMode } = useInvoice();
+  const { seller, buyer, items, isAutoEntrepreneur, invoiceNumber, invoiceDate, dueDate, invoiceTexts, discountType, discountValue, detailedMode, templateColor } = useInvoice();
+  const classicAccent = templateColor;
 
   const totalHT = calculateTotalHT(items);
   const discount = calculateDiscount(totalHT, discountType, discountValue);

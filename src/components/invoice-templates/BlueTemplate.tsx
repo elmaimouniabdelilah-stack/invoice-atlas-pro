@@ -9,7 +9,7 @@ interface Props {
 
 export default function BlueTemplate({ mobileView = false }: Props) {
   const { t, lang } = useLang();
-  const { seller, buyer, items, isAutoEntrepreneur, invoiceNumber, invoiceDate, dueDate, invoiceTexts, discountType, discountValue, detailedMode } = useInvoice();
+  const { seller, buyer, items, isAutoEntrepreneur, invoiceNumber, invoiceDate, dueDate, invoiceTexts, discountType, discountValue, detailedMode, templateColor } = useInvoice();
 
   const totalHT = calculateTotalHT(items);
   const discount = calculateDiscount(totalHT, discountType, discountValue);
@@ -20,7 +20,7 @@ export default function BlueTemplate({ mobileView = false }: Props) {
   const totalTTC = calculateTotalTTCWithDiscount(items, isAutoEntrepreneur, discountType, discountValue);
   const amountInWords = lang === 'ar' ? numberToWordsAr(totalTTC) : numberToWordsFr(totalTTC);
 
-  const navy = '#1b2a4a';
+  const navy = templateColor;
   const red = '#c0392b';
   const formatNumber = (n: number) => n.toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 

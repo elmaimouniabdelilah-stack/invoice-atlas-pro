@@ -10,7 +10,7 @@ interface Props {
 
 export default function GreenTemplate({ mobileView = false }: Props) {
   const { t, lang } = useLang();
-  const { seller, buyer, items, isAutoEntrepreneur, invoiceNumber, invoiceDate, dueDate, invoiceTexts, discountType, discountValue, detailedMode } = useInvoice();
+  const { seller, buyer, items, isAutoEntrepreneur, invoiceNumber, invoiceDate, dueDate, invoiceTexts, discountType, discountValue, detailedMode, templateColor } = useInvoice();
 
   const totalHT = calculateTotalHT(items);
   const discount = calculateDiscount(totalHT, discountType, discountValue);
@@ -21,9 +21,9 @@ export default function GreenTemplate({ mobileView = false }: Props) {
   const totalTTC = calculateTotalTTCWithDiscount(items, isAutoEntrepreneur, discountType, discountValue);
   const amountInWords = lang === 'ar' ? numberToWordsAr(totalTTC) : numberToWordsFr(totalTTC);
 
-  const accentColor = '#2d6a4f';
-  const accentBg = '#2d6a4f15';
-  const accentBorder = '#2d6a4f40';
+  const accentColor = templateColor;
+  const accentBg = templateColor + '15';
+  const accentBorder = templateColor + '40';
 
   const formatNumber = (n: number) => n.toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
