@@ -510,6 +510,8 @@ export default function InvoiceForm() {
         )}
       </div>
 
+      {/* Layout Customization Panel */}
+      <InvoiceLayoutPanel />
 
       {/* Totals */}
       <div className="space-y-2 rounded-lg border border-border bg-card p-3 sm:p-4">
