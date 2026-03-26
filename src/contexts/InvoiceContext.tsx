@@ -171,6 +171,7 @@ export function InvoiceProvider({ children }: { children: React.ReactNode }) {
       defaultTvaRate, setDefaultTvaRate,
       detailedMode, setDetailedMode,
       invoiceTemplate, setInvoiceTemplate,
+      templateColor, setTemplateColor,
     }}>
       {children}
     </InvoiceContext.Provider>
