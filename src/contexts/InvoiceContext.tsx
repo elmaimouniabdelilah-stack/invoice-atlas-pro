@@ -37,6 +37,7 @@ interface StoredData {
   savedProducts: SavedProduct[];
   defaultTvaRate: number;
   invoiceTemplate: InvoiceTemplate;
+  templateColor: string;
 }
 
 function loadStored(): Partial<StoredData> {
