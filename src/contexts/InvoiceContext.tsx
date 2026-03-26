@@ -26,6 +26,33 @@ const defaultTexts: InvoiceTexts = {
 };
 
 export type InvoiceTemplate = 'green' | 'blue' | 'classic';
+export type InvoiceDirection = 'ltr' | 'rtl';
+export type LogoPosition = 'left' | 'center' | 'right';
+export type InvoiceFont = 'inter' | 'cairo' | 'amiri' | 'roboto' | 'playfair';
+
+export interface InvoiceLayoutSettings {
+  direction: InvoiceDirection;
+  logoPosition: LogoPosition;
+  font: InvoiceFont;
+  showSignature: boolean;
+  showBankInfo: boolean;
+  showFooterNotes: boolean;
+  showSellerIds: boolean;
+  showAmountInWords: boolean;
+  showThankYou: boolean;
+}
+
+const defaultLayoutSettings: InvoiceLayoutSettings = {
+  direction: 'ltr',
+  logoPosition: 'left',
+  font: 'inter',
+  showSignature: true,
+  showBankInfo: true,
+  showFooterNotes: true,
+  showSellerIds: true,
+  showAmountInWords: true,
+  showThankYou: true,
+};
 
 interface StoredData {
   seller: SellerInfo;
@@ -38,6 +65,7 @@ interface StoredData {
   defaultTvaRate: number;
   invoiceTemplate: InvoiceTemplate;
   templateColor: string;
+  layoutSettings: InvoiceLayoutSettings;
 }
 
 function loadStored(): Partial<StoredData> {
@@ -95,6 +123,8 @@ interface InvoiceContextType {
   setInvoiceTemplate: React.Dispatch<React.SetStateAction<InvoiceTemplate>>;
   templateColor: string;
   setTemplateColor: React.Dispatch<React.SetStateAction<string>>;
+  layoutSettings: InvoiceLayoutSettings;
+  setLayoutSettings: React.Dispatch<React.SetStateAction<InvoiceLayoutSettings>>;
 }
 
 const InvoiceContext = createContext<InvoiceContextType | undefined>(undefined);
@@ -135,6 +165,10 @@ export function InvoiceProvider({ children }: { children: React.ReactNode }) {
   const [detailedMode, setDetailedMode] = useState(false);
   const [invoiceTemplate, setInvoiceTemplate] = useState<InvoiceTemplate>(stored.invoiceTemplate || 'green');
   const [templateColor, setTemplateColor] = useState<string>(stored.templateColor || '#2d6a4f');
+  const [layoutSettings, setLayoutSettings] = useState<InvoiceLayoutSettings>({
+    ...defaultLayoutSettings,
+    ...(stored.layoutSettings || {}),
+  });
 
   const loadInvoice = (invoice: Invoice) => {
     setBuyer(invoice.buyer);
@@ -147,8 +181,8 @@ export function InvoiceProvider({ children }: { children: React.ReactNode }) {
   };
 
   useEffect(() => {
-    saveStored({ seller, clients, invoicesCreated, isAutoEntrepreneur, invoices, invoiceTexts, savedProducts, defaultTvaRate, invoiceTemplate, templateColor });
-  }, [seller, clients, invoicesCreated, isAutoEntrepreneur, invoices, invoiceTexts, savedProducts, defaultTvaRate, invoiceTemplate, templateColor]);
+    saveStored({ seller, clients, invoicesCreated, isAutoEntrepreneur, invoices, invoiceTexts, savedProducts, defaultTvaRate, invoiceTemplate, templateColor, layoutSettings });
+  }, [seller, clients, invoicesCreated, isAutoEntrepreneur, invoices, invoiceTexts, savedProducts, defaultTvaRate, invoiceTemplate, templateColor, layoutSettings]);
 
   return (
     <InvoiceContext.Provider value={{
@@ -172,6 +206,7 @@ export function InvoiceProvider({ children }: { children: React.ReactNode }) {
       detailedMode, setDetailedMode,
       invoiceTemplate, setInvoiceTemplate,
       templateColor, setTemplateColor,
+      layoutSettings, setLayoutSettings,
     }}>
       {children}
     </InvoiceContext.Provider>

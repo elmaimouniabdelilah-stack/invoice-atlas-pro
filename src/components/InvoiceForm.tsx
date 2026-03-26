@@ -8,6 +8,7 @@ import { Plus, Trash2, Upload, ChevronDown, ChevronUp, Package, Palette } from '
 import { TVA_RATES, calculateTotalHT, calculateTotalTVA, calculateTotalTTC, calculateDiscount, calculateTotalTTCWithDiscount } from '@/lib/invoiceTypes';
 import { useState, useRef, useMemo } from 'react';
 import { InvoiceTemplate } from '@/contexts/InvoiceContext';
+import InvoiceLayoutPanel from '@/components/InvoiceLayoutPanel';
 
 function FieldGroup({ label, children }: { label: string; children: React.ReactNode }) {
   return (
@@ -509,6 +510,8 @@ export default function InvoiceForm() {
         )}
       </div>
 
+      {/* Layout Customization Panel */}
+      <InvoiceLayoutPanel />
 
       {/* Totals */}
       <div className="space-y-2 rounded-lg border border-border bg-card p-3 sm:p-4">
