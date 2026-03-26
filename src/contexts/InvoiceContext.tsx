@@ -37,6 +37,7 @@ interface StoredData {
   savedProducts: SavedProduct[];
   defaultTvaRate: number;
   invoiceTemplate: InvoiceTemplate;
+  templateColor: string;
 }
 
 function loadStored(): Partial<StoredData> {
@@ -92,6 +93,8 @@ interface InvoiceContextType {
   setDetailedMode: React.Dispatch<React.SetStateAction<boolean>>;
   invoiceTemplate: InvoiceTemplate;
   setInvoiceTemplate: React.Dispatch<React.SetStateAction<InvoiceTemplate>>;
+  templateColor: string;
+  setTemplateColor: React.Dispatch<React.SetStateAction<string>>;
 }
 
 const InvoiceContext = createContext<InvoiceContextType | undefined>(undefined);
@@ -131,6 +134,7 @@ export function InvoiceProvider({ children }: { children: React.ReactNode }) {
   const [defaultTvaRate, setDefaultTvaRate] = useState<number>(stored.defaultTvaRate ?? 20);
   const [detailedMode, setDetailedMode] = useState(false);
   const [invoiceTemplate, setInvoiceTemplate] = useState<InvoiceTemplate>(stored.invoiceTemplate || 'green');
+  const [templateColor, setTemplateColor] = useState<string>(stored.templateColor || '#2d6a4f');
 
   const loadInvoice = (invoice: Invoice) => {
     setBuyer(invoice.buyer);
@@ -143,8 +147,8 @@ export function InvoiceProvider({ children }: { children: React.ReactNode }) {
   };
 
   useEffect(() => {
-    saveStored({ seller, clients, invoicesCreated, isAutoEntrepreneur, invoices, invoiceTexts, savedProducts, defaultTvaRate, invoiceTemplate });
-  }, [seller, clients, invoicesCreated, isAutoEntrepreneur, invoices, invoiceTexts, savedProducts, defaultTvaRate, invoiceTemplate]);
+    saveStored({ seller, clients, invoicesCreated, isAutoEntrepreneur, invoices, invoiceTexts, savedProducts, defaultTvaRate, invoiceTemplate, templateColor });
+  }, [seller, clients, invoicesCreated, isAutoEntrepreneur, invoices, invoiceTexts, savedProducts, defaultTvaRate, invoiceTemplate, templateColor]);
 
   return (
     <InvoiceContext.Provider value={{
@@ -167,6 +171,7 @@ export function InvoiceProvider({ children }: { children: React.ReactNode }) {
       defaultTvaRate, setDefaultTvaRate,
       detailedMode, setDetailedMode,
       invoiceTemplate, setInvoiceTemplate,
+      templateColor, setTemplateColor,
     }}>
       {children}
     </InvoiceContext.Provider>

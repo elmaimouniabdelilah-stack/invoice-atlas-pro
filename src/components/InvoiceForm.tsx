@@ -35,6 +35,7 @@ export default function InvoiceForm() {
     defaultTvaRate,
     detailedMode, setDetailedMode,
     invoiceTemplate, setInvoiceTemplate,
+    templateColor, setTemplateColor,
   } = useInvoice();
 
   const [showAdminFields, setShowAdminFields] = useState(false);
@@ -104,7 +105,10 @@ export default function InvoiceForm() {
             <button
               key={tmpl.id}
               type="button"
-              onClick={() => setInvoiceTemplate(tmpl.id)}
+              onClick={() => {
+                setInvoiceTemplate(tmpl.id);
+                setTemplateColor(tmpl.color);
+              }}
               className={`relative rounded-lg border-2 p-2.5 text-center transition-all ${
                 invoiceTemplate === tmpl.id
                   ? 'border-primary bg-primary/5 shadow-sm'
@@ -116,6 +120,36 @@ export default function InvoiceForm() {
               <p className="text-[10px] text-muted-foreground">{tmpl.desc}</p>
             </button>
           ))}
+        </div>
+
+        {/* Color Picker */}
+        <div className="mt-3 pt-3 border-t border-border">
+          <p className="text-xs font-medium text-muted-foreground mb-2">Couleur principale</p>
+          <div className="flex items-center gap-2 flex-wrap">
+            {[
+              '#2d6a4f', '#1b2a4a', '#333333', '#c0392b', '#8e44ad',
+              '#2980b9', '#d35400', '#16a085', '#2c3e50', '#e74c3c',
+            ].map((color) => (
+              <button
+                key={color}
+                type="button"
+                onClick={() => setTemplateColor(color)}
+                className={`w-7 h-7 rounded-full border-2 transition-all ${
+                  templateColor === color ? 'border-foreground scale-110 shadow-md' : 'border-transparent hover:scale-105'
+                }`}
+                style={{ backgroundColor: color }}
+              />
+            ))}
+            <label className="relative w-7 h-7 rounded-full border-2 border-dashed border-muted-foreground cursor-pointer flex items-center justify-center overflow-hidden hover:border-foreground transition-colors">
+              <span className="text-[10px] text-muted-foreground">+</span>
+              <input
+                type="color"
+                value={templateColor}
+                onChange={(e) => setTemplateColor(e.target.value)}
+                className="absolute inset-0 opacity-0 cursor-pointer"
+              />
+            </label>
+          </div>
         </div>
       </div>
 

@@ -9,7 +9,8 @@ interface Props {
 
 export default function ClassicTemplate({ mobileView = false }: Props) {
   const { t, lang } = useLang();
-  const { seller, buyer, items, isAutoEntrepreneur, invoiceNumber, invoiceDate, dueDate, invoiceTexts, discountType, discountValue, detailedMode } = useInvoice();
+  const { seller, buyer, items, isAutoEntrepreneur, invoiceNumber, invoiceDate, dueDate, invoiceTexts, discountType, discountValue, detailedMode, templateColor } = useInvoice();
+  const classicAccent = templateColor;
 
   const totalHT = calculateTotalHT(items);
   const discount = calculateDiscount(totalHT, discountType, discountValue);
@@ -161,7 +162,7 @@ export default function ClassicTemplate({ mobileView = false }: Props) {
       {/* Items Table */}
       <table className="w-full mb-6">
         <thead>
-          <tr style={{ borderBottom: '2px solid #333' }}>
+          <tr style={{ borderBottom: `2px solid ${classicAccent}` }}>
             {detailedMode && <th className="pb-2 text-start text-xs font-semibold uppercase tracking-wider w-20" style={{ color: '#999' }}>Réf</th>}
             <th className="pb-2 text-start text-xs font-semibold uppercase tracking-wider" style={{ color: '#999' }}>{t('description')}</th>
             <th className="pb-2 text-end text-xs font-semibold uppercase tracking-wider w-16" style={{ color: '#999' }}>{t('quantity')}</th>
@@ -209,7 +210,7 @@ export default function ClassicTemplate({ mobileView = false }: Props) {
             </>
           )}
           {!isAutoEntrepreneur && <div className="flex justify-between text-sm"><span style={{ color: '#666' }}>{t('totalTVA')}</span><span>{formatNumber(adjustedTVA)} {t('dh')}</span></div>}
-          <div className="flex justify-between border-t pt-2 text-sm" style={{ borderColor: '#333' }}>
+          <div className="flex justify-between border-t pt-2 text-sm" style={{ borderColor: classicAccent }}>
             <span className="font-bold">{t('totalTTC')}</span><span className="font-bold">{formatNumber(totalTTC)} {t('dh')}</span>
           </div>
         </div>
