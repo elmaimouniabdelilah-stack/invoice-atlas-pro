@@ -134,6 +134,7 @@ export function InvoiceProvider({ children }: { children: React.ReactNode }) {
   const [defaultTvaRate, setDefaultTvaRate] = useState<number>(stored.defaultTvaRate ?? 20);
   const [detailedMode, setDetailedMode] = useState(false);
   const [invoiceTemplate, setInvoiceTemplate] = useState<InvoiceTemplate>(stored.invoiceTemplate || 'green');
+  const [templateColor, setTemplateColor] = useState<string>(stored.templateColor || '#2d6a4f');
 
   const loadInvoice = (invoice: Invoice) => {
     setBuyer(invoice.buyer);
