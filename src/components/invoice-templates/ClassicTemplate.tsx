@@ -39,7 +39,7 @@ export default function ClassicTemplate({ mobileView = false }: Props) {
     const logo = seller.logo && <img src={seller.logo} alt="Logo" className={`${size} object-contain rounded`} />;
     const nameBlock = (
       <div className="flex-1 min-w-0">
-        <h2 className={`${mobileView ? 'text-sm' : 'text-lg'} font-bold truncate`}>{seller.businessName || 'Nom de l\'entreprise'}</h2>
+        <h2 className={`${mobileView ? 'text-sm' : 'text-lg'} font-bold truncate`}>{seller.businessName || t('businessName')}</h2>
         <p className="truncate" style={{ color: '#666' }}>{seller.address}</p>
         {seller.phone && <p style={{ color: '#666' }}>{seller.phone}</p>}
         {!mobileView && seller.email && <p style={{ color: '#666' }}>{seller.email}</p>}
@@ -63,8 +63,8 @@ export default function ClassicTemplate({ mobileView = false }: Props) {
           <div className="rounded-md p-3 mb-3 mt-3" style={{ backgroundColor: '#f5f5f5' }}>
             <h1 className="text-sm font-bold">{invoiceTexts.invoiceTitle} {invoiceNumber}</h1>
             <div className="flex gap-3 mt-1 text-xs" style={{ color: '#666' }}>
-              <span>{t('invoiceDate')}: {invoiceDate}</span>
-              {dueDate && <span>{t('dueDate')}: {dueDate}</span>}
+              <span>{t('dateLabel')}: {invoiceDate}</span>
+              {dueDate && <span>{t('dueDateLabel')}: {dueDate}</span>}
             </div>
           </div>
         </div>
@@ -91,7 +91,7 @@ export default function ClassicTemplate({ mobileView = false }: Props) {
               <p className="text-xs font-medium">{item.description || '—'}</p>
               <div className="flex items-center justify-between text-[11px] mt-1" style={{ color: '#666' }}>
                 <span>{item.quantity} × {item.unitPrice.toFixed(2)}</span>
-                {!isAutoEntrepreneur && <span>TVA {item.tvaRate}%</span>}
+                {!isAutoEntrepreneur && <span>{t('tvaRate')} {item.tvaRate}%</span>}
                 <span className="font-semibold" style={{ color: '#222' }}>{formatNumber(calculateItemTotal(item))} {t('dh')}</span>
               </div>
             </div>
@@ -151,8 +151,8 @@ export default function ClassicTemplate({ mobileView = false }: Props) {
         <div style={{ textAlign: textEnd }}>
           <h1 className="text-xl font-bold mb-1">{invoiceTexts.invoiceTitle}</h1>
           <p className="text-base font-semibold">{invoiceNumber}</p>
-          <p className="mt-1" style={{ color: '#666' }}>{t('invoiceDate')}: {invoiceDate}</p>
-          {dueDate && <p style={{ color: '#666' }}>{t('dueDate')}: {dueDate}</p>}
+          <p className="mt-1" style={{ color: '#666' }}>{t('dateLabel')}: {invoiceDate}</p>
+          {dueDate && <p style={{ color: '#666' }}>{t('dueDateLabel')}: {dueDate}</p>}
         </div>
       </div>
 
@@ -175,7 +175,7 @@ export default function ClassicTemplate({ mobileView = false }: Props) {
       <table className="w-full mb-6">
         <thead>
           <tr style={{ borderBottom: `2px solid ${classicAccent}` }}>
-            {detailedMode && <th className="pb-2 text-xs font-semibold uppercase tracking-wider w-20" style={{ color: '#999', textAlign }}>Réf</th>}
+            {detailedMode && <th className="pb-2 text-xs font-semibold uppercase tracking-wider w-20" style={{ color: '#999', textAlign }}>{t('reference')}</th>}
             <th className="pb-2 text-xs font-semibold uppercase tracking-wider" style={{ color: '#999', textAlign }}>{t('description')}</th>
             <th className="pb-2 text-xs font-semibold uppercase tracking-wider w-16" style={{ color: '#999', textAlign: textEnd }}>{t('quantity')}</th>
             {detailedMode && (
