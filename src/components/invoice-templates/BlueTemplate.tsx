@@ -38,7 +38,7 @@ export default function BlueTemplate({ mobileView = false }: Props) {
 
   const renderLogo = (size: string) => {
     const logo = seller.logo && <img src={seller.logo} alt="Logo" className={`${size} object-contain`} />;
-    const name = <h2 className={`${mobileView ? 'text-xs' : 'text-lg'} font-bold`} style={{ color: red }}>{seller.businessName || 'COMPANY NAME'}</h2>;
+    const name = <h2 className={`${mobileView ? 'text-xs' : 'text-lg'} font-bold`} style={{ color: red }}>{seller.businessName || t('businessName')}</h2>;
     
     if (layoutSettings.logoPosition === 'center') {
       return <div className="flex justify-center items-center gap-2">{logo}{name}</div>;
@@ -49,6 +49,8 @@ export default function BlueTemplate({ mobileView = false }: Props) {
     return <div className="flex items-center gap-2">{logo}{name}</div>;
   };
 
+  const invoiceTitleText = invoiceTexts.invoiceTitle?.replace(' N°', '') || t('docTypeInvoice');
+
   if (mobileView) {
     return (
       <div id="invoice-preview" dir={isRtl ? 'rtl' : 'ltr'} className="bg-white rounded-lg border" style={{ fontSize: '11px', color: '#1a1a1a', fontFamily }}>
@@ -57,27 +59,27 @@ export default function BlueTemplate({ mobileView = false }: Props) {
         <div className="p-4">
           <div className={`flex items-start justify-between mb-4 ${isRtl ? 'flex-row-reverse' : ''}`}>
             {renderLogo('h-10 w-10')}
-            <h1 className="text-lg font-black" style={{ color: navy }}>INVOICE</h1>
+            <h1 className="text-lg font-black" style={{ color: navy }}>{invoiceTitleText}</h1>
           </div>
 
           <div className="flex flex-wrap gap-x-4 gap-y-1 mb-4 text-[10px]">
-            <span><strong>INVOICE NO:</strong> {invoiceNumber}</span>
-            <span><strong>DATE:</strong> {invoiceDate}</span>
-            {dueDate && <span><strong>DUE:</strong> {dueDate}</span>}
-            <span><strong>DUE TOTAL:</strong> {formatNumber(totalTTC)} DH</span>
+            <span><strong>{t('invoiceLabel')}:</strong> {invoiceNumber}</span>
+            <span><strong>{t('dateLabel')}:</strong> {invoiceDate}</span>
+            {dueDate && <span><strong>{t('dueDateLabel')}:</strong> {dueDate}</span>}
+            <span><strong>{t('dueTotalLabel')}:</strong> {formatNumber(totalTTC)} {t('dh')}</span>
           </div>
 
           <div className={`grid grid-cols-2 gap-3 mb-4 text-[10px] ${isRtl ? 'text-right' : ''}`}>
             <div>
-              <h4 className="font-bold text-xs mb-1" style={{ color: navy }}>INVOICE TO :</h4>
+              <h4 className="font-bold text-xs mb-1" style={{ color: navy }}>{t('invoiceTo')} :</h4>
               <p className="font-semibold">{buyer.clientName || '—'}</p>
               <p>{buyer.address}</p>
               {buyer.ice && <p>ICE: {buyer.ice}</p>}
             </div>
             {layoutSettings.showBankInfo && (invoiceTexts.rib || invoiceTexts.iban) && (
               <div>
-                <h4 className="font-bold text-xs mb-1" style={{ color: navy }}>PAYMENT:</h4>
-                {invoiceTexts.bankName && <p><strong>Bank:</strong> {invoiceTexts.bankName}</p>}
+                <h4 className="font-bold text-xs mb-1" style={{ color: navy }}>{t('paymentLabel')}:</h4>
+                {invoiceTexts.bankName && <p><strong>{t('bankName')}:</strong> {invoiceTexts.bankName}</p>}
                 {invoiceTexts.rib && <p><strong>RIB:</strong> {invoiceTexts.rib}</p>}
                 {invoiceTexts.iban && <p><strong>IBAN:</strong> {invoiceTexts.iban}</p>}
                 {invoiceTexts.swift && <p><strong>SWIFT:</strong> {invoiceTexts.swift}</p>}
@@ -88,10 +90,10 @@ export default function BlueTemplate({ mobileView = false }: Props) {
           <table className="w-full text-[10px] mb-4">
             <thead>
               <tr style={{ backgroundColor: navy, color: 'white' }}>
-                <th className="py-1.5 px-2 font-bold" style={{ textAlign }}>ITEM DESCRIPTION</th>
-                <th className="py-1.5 px-1 font-bold w-16" style={{ textAlign: textEnd }}>PRICE</th>
-                <th className="py-1.5 px-1 text-center font-bold w-10">QTY</th>
-                <th className="py-1.5 px-2 font-bold w-16" style={{ textAlign: textEnd }}>TOTAL</th>
+                <th className="py-1.5 px-2 font-bold" style={{ textAlign }}>{t('designation')}</th>
+                <th className="py-1.5 px-1 font-bold w-16" style={{ textAlign: textEnd }}>{t('unitPriceShort')}</th>
+                <th className="py-1.5 px-1 text-center font-bold w-10">{t('qty')}</th>
+                <th className="py-1.5 px-2 font-bold w-16" style={{ textAlign: textEnd }}>{t('total')}</th>
               </tr>
             </thead>
             <tbody>
@@ -108,11 +110,11 @@ export default function BlueTemplate({ mobileView = false }: Props) {
 
           <div className={`flex ${isRtl ? 'justify-start' : 'justify-end'} mb-4`}>
             <div className="w-40 text-[10px]">
-              <div className="flex justify-between py-1"><span>SUB TOTAL</span><span>{formatNumber(totalHT)}</span></div>
-              {!isAutoEntrepreneur && <div className="flex justify-between py-1"><span>TAX</span><span>{formatNumber(adjustedTVA)}</span></div>}
-              {discount > 0 && <div className="flex justify-between py-1"><span>DISC. {discountType === 'percentage' ? `${discountValue}%` : ''}</span><span>{formatNumber(discount)}</span></div>}
+              <div className="flex justify-between py-1"><span>{t('totalHT')}</span><span>{formatNumber(totalHT)}</span></div>
+              {!isAutoEntrepreneur && <div className="flex justify-between py-1"><span>{t('totalTVA')}</span><span>{formatNumber(adjustedTVA)}</span></div>}
+              {discount > 0 && <div className="flex justify-between py-1"><span>{t('discount')} {discountType === 'percentage' ? `${discountValue}%` : ''}</span><span>{formatNumber(discount)}</span></div>}
               <div className="flex justify-between py-1.5 font-bold text-xs" style={{ backgroundColor: navy, color: 'white', margin: '0 -4px', padding: '6px 8px' }}>
-                <span>TOTAL</span><span>{formatNumber(totalTTC)}</span>
+                <span>{t('totalTTC')}</span><span>{formatNumber(totalTTC)}</span>
               </div>
             </div>
           </div>
@@ -152,7 +154,7 @@ export default function BlueTemplate({ mobileView = false }: Props) {
   return (
     <div id="invoice-preview" dir={isRtl ? 'rtl' : 'ltr'} className="mx-auto w-[210mm] min-h-[297mm] bg-white invoice-shadow flex" style={{ fontSize: '11px', color: '#1a1a1a', fontFamily, flexDirection: isRtl ? 'row-reverse' : 'row' }}>
       <div className="w-14 shrink-0 flex items-center justify-center" style={{ backgroundColor: navy }}>
-        <span className="text-white font-black text-4xl tracking-[0.3em]" style={{ writingMode: 'vertical-rl', transform: 'rotate(180deg)' }}>INVOICE</span>
+        <span className="text-white font-black text-4xl tracking-[0.3em]" style={{ writingMode: 'vertical-rl', transform: 'rotate(180deg)' }}>{invoiceTitleText}</span>
       </div>
 
       <div className="flex-1 p-10">
@@ -165,35 +167,35 @@ export default function BlueTemplate({ mobileView = false }: Props) {
           </div>
         </div>
 
-        <h1 className="text-2xl font-black mb-4" style={{ color: navy }}>INVOICE</h1>
+        <h1 className="text-2xl font-black mb-4" style={{ color: navy }}>{invoiceTitleText}</h1>
 
         <div className="flex gap-6 mb-6 text-xs" style={{ borderBottom: `2px solid ${navy}`, paddingBottom: '8px' }}>
-          <span><strong>DUE TOTAL:</strong> {formatNumber(totalTTC)} DH</span>
-          <span><strong>DATE:</strong> {invoiceDate}</span>
-          {dueDate && <span><strong>DUE DATE:</strong> {dueDate}</span>}
-          <span><strong>INVOICE NO:</strong> {invoiceNumber}</span>
+          <span><strong>{t('dueTotalLabel')}:</strong> {formatNumber(totalTTC)} {t('dh')}</span>
+          <span><strong>{t('dateLabel')}:</strong> {invoiceDate}</span>
+          {dueDate && <span><strong>{t('dueDateLabel')}:</strong> {dueDate}</span>}
+          <span><strong>{t('invoiceLabel')}:</strong> {invoiceNumber}</span>
         </div>
 
         <div className={`flex gap-12 mb-8 text-xs ${isRtl ? 'flex-row-reverse' : ''}`}>
           <div className="flex-1">
-            <h4 className="font-bold mb-2" style={{ color: navy }}>INVOICE TO :</h4>
+            <h4 className="font-bold mb-2" style={{ color: navy }}>{t('invoiceTo')} :</h4>
             <table className="text-xs">
               <tbody>
-                <tr><td className="font-bold pr-3 py-0.5">Name</td><td>{buyer.clientName || '—'}</td></tr>
-                <tr><td className="font-bold pr-3 py-0.5">Address</td><td>{buyer.address}</td></tr>
+                <tr><td className="font-bold pr-3 py-0.5">{t('name')}</td><td>{buyer.clientName || '—'}</td></tr>
+                <tr><td className="font-bold pr-3 py-0.5">{t('address')}</td><td>{buyer.address}</td></tr>
                 {buyer.ice && <tr><td className="font-bold pr-3 py-0.5">ICE</td><td>{buyer.ice}</td></tr>}
               </tbody>
             </table>
           </div>
           {layoutSettings.showBankInfo && (invoiceTexts.rib || invoiceTexts.iban) && (
             <div className="flex-1">
-              <h4 className="font-bold mb-2" style={{ color: navy }}>PAYMENT:</h4>
+              <h4 className="font-bold mb-2" style={{ color: navy }}>{t('paymentLabel')}:</h4>
               <table className="text-xs">
                 <tbody>
-                  {invoiceTexts.bankName && <tr><td className="font-bold pr-3 py-0.5">Bank Name</td><td>{invoiceTexts.bankName}</td></tr>}
+                  {invoiceTexts.bankName && <tr><td className="font-bold pr-3 py-0.5">{t('bankName')}</td><td>{invoiceTexts.bankName}</td></tr>}
                   {invoiceTexts.rib && <tr><td className="font-bold pr-3 py-0.5">RIB</td><td>{invoiceTexts.rib}</td></tr>}
                   {invoiceTexts.iban && <tr><td className="font-bold pr-3 py-0.5">IBAN</td><td>{invoiceTexts.iban}</td></tr>}
-                  {invoiceTexts.swift && <tr><td className="font-bold pr-3 py-0.5">Swift Code</td><td>{invoiceTexts.swift}</td></tr>}
+                  {invoiceTexts.swift && <tr><td className="font-bold pr-3 py-0.5">SWIFT</td><td>{invoiceTexts.swift}</td></tr>}
                 </tbody>
               </table>
             </div>
@@ -203,10 +205,10 @@ export default function BlueTemplate({ mobileView = false }: Props) {
         <table className="w-full mb-6">
           <thead>
             <tr style={{ backgroundColor: navy, color: 'white' }}>
-              {detailedMode && <th className="py-2.5 px-3 text-xs font-bold w-16" style={{ textAlign }}>RÉF</th>}
-              <th className="py-2.5 px-3 text-xs font-bold" style={{ textAlign }}>ITEM DESCRIPTION</th>
-              <th className="py-2.5 px-3 text-xs font-bold w-20" style={{ textAlign: textEnd }}>PRICE</th>
-              <th className="py-2.5 px-3 text-center text-xs font-bold w-14">QTY</th>
+              {detailedMode && <th className="py-2.5 px-3 text-xs font-bold w-16" style={{ textAlign }}>{t('reference')}</th>}
+              <th className="py-2.5 px-3 text-xs font-bold" style={{ textAlign }}>{t('designation')}</th>
+              <th className="py-2.5 px-3 text-xs font-bold w-20" style={{ textAlign: textEnd }}>{t('unitPriceShort')}</th>
+              <th className="py-2.5 px-3 text-center text-xs font-bold w-14">{t('qty')}</th>
               {detailedMode && (
                 <>
                   <th className="py-2.5 px-3 text-center text-xs font-bold w-12">L</th>
@@ -214,8 +216,8 @@ export default function BlueTemplate({ mobileView = false }: Props) {
                   <th className="py-2.5 px-3 text-center text-xs font-bold w-14">M²</th>
                 </>
               )}
-              {!isAutoEntrepreneur && <th className="py-2.5 px-3 text-center text-xs font-bold w-14">TVA</th>}
-              <th className="py-2.5 px-3 text-xs font-bold w-24" style={{ textAlign: textEnd }}>TOTAL</th>
+              {!isAutoEntrepreneur && <th className="py-2.5 px-3 text-center text-xs font-bold w-14">{t('tvaRate')}</th>}
+              <th className="py-2.5 px-3 text-xs font-bold w-24" style={{ textAlign: textEnd }}>{t('total')}</th>
             </tr>
           </thead>
           <tbody>
@@ -241,11 +243,11 @@ export default function BlueTemplate({ mobileView = false }: Props) {
 
         <div className={`flex ${isRtl ? 'justify-start' : 'justify-end'} mb-8`}>
           <div className="w-64">
-            <div className="flex justify-between py-2 text-sm border-b"><span>SUB TOTAL</span><span>{formatNumber(totalHT)}</span></div>
-            {!isAutoEntrepreneur && <div className="flex justify-between py-2 text-sm border-b"><span>TAX</span><span>{formatNumber(adjustedTVA)}</span></div>}
-            {discount > 0 && <div className="flex justify-between py-2 text-sm border-b"><span>DISC. {discountType === 'percentage' ? `${discountValue}%` : ''}</span><span>{formatNumber(discount)}</span></div>}
+            <div className="flex justify-between py-2 text-sm border-b"><span>{t('totalHT')}</span><span>{formatNumber(totalHT)}</span></div>
+            {!isAutoEntrepreneur && <div className="flex justify-between py-2 text-sm border-b"><span>{t('totalTVA')}</span><span>{formatNumber(adjustedTVA)}</span></div>}
+            {discount > 0 && <div className="flex justify-between py-2 text-sm border-b"><span>{t('discount')} {discountType === 'percentage' ? `${discountValue}%` : ''}</span><span>{formatNumber(discount)}</span></div>}
             <div className="flex justify-between py-2.5 text-sm font-bold" style={{ backgroundColor: navy, color: 'white', margin: '0 -8px', padding: '8px 16px' }}>
-              <span>TOTAL</span><span>{formatNumber(totalTTC)} DH</span>
+              <span>{t('totalTTC')}</span><span>{formatNumber(totalTTC)} {t('dh')}</span>
             </div>
           </div>
         </div>
@@ -270,7 +272,7 @@ export default function BlueTemplate({ mobileView = false }: Props) {
         <div className={`flex justify-between mt-8 pt-4 border-t ${isRtl ? 'flex-row-reverse' : ''}`}>
           {layoutSettings.showFooterNotes && invoiceTexts.footerNotes && (
             <div className="flex-1">
-              <h4 className="font-bold text-xs mb-2">Terms & Conditions :</h4>
+              <h4 className="font-bold text-xs mb-2">{t('termsConditions')} :</h4>
               <p className="text-xs whitespace-pre-line">{invoiceTexts.footerNotes}</p>
             </div>
           )}
