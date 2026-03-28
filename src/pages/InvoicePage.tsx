@@ -120,30 +120,18 @@ export default function InvoicePage() {
     }
   };
 
-  const handleShareWhatsApp = async () => {
-    setExporting(true);
-    try {
-      const canvas = await getInvoiceCanvas();
-      if (!canvas) return;
-      const imgData = canvas.toDataURL('image/png');
-      const pdf = new jsPDF('p', 'mm', 'a4');
-      const pdfWidth = 210;
-      const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
-      pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
-      const pdfBlob = pdf.output('blob');
-      const file = new File([pdfBlob], `${invoiceNumber}.pdf`, { type: 'application/pdf' });
-      if (navigator.share && navigator.canShare?.({ files: [file] })) {
-        await navigator.share({ title: invoiceNumber, files: [file] });
-      } else {
-        const totalTTC = calculateTotalTTCWithDiscount(items, isAutoEntrepreneur, discountType, discountValue);
-        const message = encodeURIComponent(`${t('invoiceLabel')} ${invoiceNumber}\n${t('totalTTC')}: ${totalTTC.toFixed(2)} ${t('dh')}\n${t('dateLabel')}: ${invoiceDate}`);
-        window.open(`https://wa.me/?text=${message}`, '_blank');
-      }
-    } catch (e: any) {
-      if (e?.name !== 'AbortError') toast({ title: t('shareError'), variant: 'destructive' });
-    } finally {
-      setExporting(false);
-    }
+  const handleShareWhatsApp = () => {
+    const totalTTC = calculateTotalTTCWithDiscount(items, isAutoEntrepreneur, discountType, discountValue);
+    const message = encodeURIComponent(
+      `${t('invoiceLabel')}: ${invoiceNumber}\n${t('clientLabel')}: ${buyer.clientName}\n${t('dateLabel')}: ${invoiceDate}\n${t('totalTTC')}: ${totalTTC.toFixed(2)} ${t('dh')}`
+    );
+    const link = document.createElement('a');
+    link.href = `https://wa.me/?text=${message}`;
+    link.target = '_blank';
+    link.rel = 'noopener noreferrer';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
 
   const handleShareEmail = async () => {
