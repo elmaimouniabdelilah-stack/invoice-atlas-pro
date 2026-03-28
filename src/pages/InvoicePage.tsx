@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { useLang } from '@/contexts/LanguageContext';
 import { useInvoice } from '@/contexts/InvoiceContext';
 import { calculateTotalTTCWithDiscount, generateInvoiceNumber } from '@/lib/invoiceTypes';
-import { Download, Printer, FileDown, Eye, Edit3, Share2 } from 'lucide-react';
+import { Download, Printer, FileDown, Eye, Edit3, Share2, Mail, MessageCircle } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
