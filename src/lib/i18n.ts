@@ -239,6 +239,8 @@ export const translations = {
     share: 'مشاركة',
     shareAsImage: 'مشاركة كصورة',
     shareAsPdf: 'مشاركة كـ PDF',
+    shareViaWhatsApp: 'مشاركة عبر واتساب',
+    shareViaEmail: 'مشاركة عبر البريد الإلكتروني',
     shareSuccess: 'تمت المشاركة بنجاح',
     shareError: 'خطأ أثناء المشاركة',
     shareNotSupported: 'المشاركة غير مدعومة في هذا المتصفح',

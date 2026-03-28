@@ -337,6 +337,14 @@ export default function InvoicePage() {
                   <DropdownMenuItem onClick={handleSharePdf}>
                     {t('shareAsPdf')}
                   </DropdownMenuItem>
+                  <DropdownMenuItem onClick={handleShareWhatsApp}>
+                    <MessageCircle className="h-4 w-4" />
+                    {t('shareViaWhatsApp')}
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={handleShareEmail}>
+                    <Mail className="h-4 w-4" />
+                    {t('shareViaEmail')}
+                  </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
               <Button size="sm" onClick={handleSaveAndExport} disabled={exporting || trialExceeded}>
