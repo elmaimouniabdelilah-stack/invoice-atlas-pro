@@ -104,6 +104,8 @@ export const translations = {
     share: 'Partager',
     shareAsImage: 'Partager comme image',
     shareAsPdf: 'Partager comme PDF',
+    shareViaWhatsApp: 'Partager via WhatsApp',
+    shareViaEmail: 'Partager via Email',
     shareSuccess: 'Partagé avec succès',
     shareError: 'Erreur lors du partage',
     shareNotSupported: 'Le partage n\'est pas supporté sur ce navigateur',
