@@ -2,6 +2,7 @@ import AppLayout from '@/components/AppLayout';
 import { useLang } from '@/contexts/LanguageContext';
 import { useInvoice } from '@/contexts/InvoiceContext';
 import { FileText, Users, DollarSign, Download, Upload, TrendingUp } from 'lucide-react';
+import QuickInvoiceDialog from '@/components/QuickInvoiceDialog';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 import { useRef, useMemo } from 'react';
