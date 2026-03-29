@@ -121,6 +121,7 @@ export default function Dashboard() {
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <h1 className="text-xl font-semibold text-foreground">{t('dashboard')}</h1>
           <div className="flex gap-2">
+            <QuickInvoiceDialog />
             <Button size="sm" variant="outline" onClick={handleExport}>
               <Download className="h-3.5 w-3.5 me-1.5" />
               {t('exportData')}
