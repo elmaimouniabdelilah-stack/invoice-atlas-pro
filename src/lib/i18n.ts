@@ -135,6 +135,13 @@ export const translations = {
     dueTotalLabel: 'Total dû',
     invoiceTo: 'Facturer à',
     paymentLabel: 'Paiement',
+    quickInvoice: 'Facture rapide',
+    selectClient: 'Sélectionner un client',
+    selectProducts: 'Sélectionner les produits',
+    generateInvoice: 'Générer la facture',
+    noClientSelected: 'Veuillez sélectionner un client',
+    noProductSelected: 'Veuillez sélectionner au moins un produit',
+    selected: 'sélectionné(s)',
   },
   ar: {
     appName: 'فاتورة برو',
@@ -270,6 +277,13 @@ export const translations = {
     dueTotalLabel: 'المبلغ المستحق',
     invoiceTo: 'فاتورة إلى',
     paymentLabel: 'الدفع',
+    quickInvoice: 'فاتورة سريعة',
+    selectClient: 'اختر العميل',
+    selectProducts: 'اختر المنتجات',
+    generateInvoice: 'إنشاء الفاتورة',
+    noClientSelected: 'يرجى اختيار العميل',
+    noProductSelected: 'يرجى اختيار منتج واحد على الأقل',
+    selected: 'مختار',
   },
 } as const;
 

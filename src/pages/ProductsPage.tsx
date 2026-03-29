@@ -4,7 +4,8 @@ import { useInvoice } from '@/contexts/InvoiceContext';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
-import { Plus, Trash2, Edit2, X, Package, Search } from 'lucide-react';
+import { Plus, Trash2, Edit2, X, Package, Search, Zap } from 'lucide-react';
+import QuickInvoiceDialog from '@/components/QuickInvoiceDialog';
 import { useState } from 'react';
 import { TVA_RATES, SavedProduct } from '@/lib/invoiceTypes';
 import { useIsMobile } from '@/hooks/use-mobile';
@@ -63,10 +64,13 @@ export default function ProductsPage() {
       <div className="p-4 sm:p-8 max-w-3xl space-y-4 sm:space-y-6">
         <div className="flex items-center justify-between">
           <h1 className="text-lg sm:text-xl font-semibold text-foreground">{t('products')}</h1>
-          <Button size="sm" onClick={() => { resetForm(); setShowForm(true); }} className="h-9">
-            <Plus className="h-4 w-4" />
-            {t('addProduct')}
-          </Button>
+          <div className="flex gap-2">
+            <QuickInvoiceDialog />
+            <Button size="sm" onClick={() => { resetForm(); setShowForm(true); }} className="h-9">
+              <Plus className="h-4 w-4" />
+              {t('addProduct')}
+            </Button>
+          </div>
         </div>
 
         {showForm && (
