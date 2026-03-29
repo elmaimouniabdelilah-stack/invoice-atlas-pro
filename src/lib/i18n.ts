@@ -277,6 +277,13 @@ export const translations = {
     dueTotalLabel: 'المبلغ المستحق',
     invoiceTo: 'فاتورة إلى',
     paymentLabel: 'الدفع',
+    quickInvoice: 'فاتورة سريعة',
+    selectClient: 'اختر العميل',
+    selectProducts: 'اختر المنتجات',
+    generateInvoice: 'إنشاء الفاتورة',
+    noClientSelected: 'يرجى اختيار العميل',
+    noProductSelected: 'يرجى اختيار منتج واحد على الأقل',
+    selected: 'مختار',
   },
 } as const;
 
