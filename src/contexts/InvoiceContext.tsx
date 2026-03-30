@@ -41,6 +41,7 @@ export interface InvoiceLayoutSettings {
   showSellerIds: boolean;
   showAmountInWords: boolean;
   showThankYou: boolean;
+  bankInfoPosition: BankInfoPosition;
 }
 
 const defaultLayoutSettings: InvoiceLayoutSettings = {
