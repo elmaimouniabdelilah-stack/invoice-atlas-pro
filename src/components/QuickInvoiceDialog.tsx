@@ -35,11 +35,19 @@ export default function QuickInvoiceDialog({ trigger }: Props) {
     p.description.toLowerCase().includes(productSearch.toLowerCase())
   );
 
-  const toggleProduct = (id: string) => {
-    setSelectedProductIds(prev => {
-      const next = new Set(prev);
+  const toggleProduct = (id: string, defaultQty: number) => {
+    setSelectedProducts(prev => {
+      const next = new Map(prev);
       if (next.has(id)) next.delete(id);
-      else next.add(id);
+      else next.set(id, defaultQty);
+      return next;
+    });
+  };
+
+  const updateQuantity = (id: string, qty: number) => {
+    setSelectedProducts(prev => {
+      const next = new Map(prev);
+      if (next.has(id)) next.set(id, Math.max(1, qty));
       return next;
     });
   };
