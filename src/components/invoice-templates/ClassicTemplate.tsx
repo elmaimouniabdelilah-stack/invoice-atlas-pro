@@ -282,6 +282,19 @@ export default function ClassicTemplate({ mobileView = false }: Props) {
         </div>
       </div>
 
+      {/* Bank info AFTER TOTALS position */}
+      {layoutSettings.showBankInfo && layoutSettings.bankInfoPosition === 'afterTotals' && (invoiceTexts.rib || invoiceTexts.iban) && (
+        <div className="mb-6 p-3 border border-black/20 rounded text-xs">
+          <p className="font-bold mb-1">Mode de Règlement: Virement Bancaire</p>
+          <div className="font-mono" style={{ color: '#444' }}>
+            {invoiceTexts.rib && invoiceTexts.bankName && <p>(RIB: {invoiceTexts.rib} - {invoiceTexts.bankName})</p>}
+            {invoiceTexts.rib && !invoiceTexts.bankName && <p>RIB: {invoiceTexts.rib}</p>}
+            {invoiceTexts.iban && <p>IBAN: {invoiceTexts.iban}</p>}
+            {invoiceTexts.swift && <p>SWIFT: {invoiceTexts.swift}</p>}
+          </div>
+        </div>
+      )}
+
       {/* Amount in words */}
       {layoutSettings.showAmountInWords && (
         <div className="mb-6 text-xs">
@@ -296,10 +309,10 @@ export default function ClassicTemplate({ mobileView = false }: Props) {
         <p className="text-center italic text-sm my-4" style={{ color: '#666' }}>{t('thankYou')}</p>
       )}
 
-      {/* Bank info LEFT + Signature RIGHT — like reference */}
+      {/* Bank info BOTTOM position + Signature */}
       <div className={`flex justify-between items-start mt-8 ${isRtl ? 'flex-row-reverse' : ''}`}>
         <div className="flex-1 text-xs">
-          {layoutSettings.showBankInfo && (invoiceTexts.rib || invoiceTexts.iban) && (
+          {layoutSettings.showBankInfo && layoutSettings.bankInfoPosition !== 'afterTotals' && (invoiceTexts.rib || invoiceTexts.iban) && (
             <div>
               <p className="font-bold mb-1">Mode de Règlement: Virement Bancaire</p>
               <div className="font-mono text-xs" style={{ color: '#444' }}>
