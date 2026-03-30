@@ -1,9 +1,9 @@
-import { useInvoice, InvoiceDirection, LogoPosition, InvoiceFont } from '@/contexts/InvoiceContext';
+import { useInvoice, InvoiceDirection, LogoPosition, InvoiceFont, BankInfoPosition } from '@/contexts/InvoiceContext';
 import { Switch } from '@/components/ui/switch';
 import { 
   AlignLeft, AlignRight, AlignCenter, 
   Eye, EyeOff, Type, Layout, 
-  ArrowLeftRight
+  ArrowLeftRight, ArrowUpDown
 } from 'lucide-react';
 
 const fonts: { id: InvoiceFont; label: string; family: string }[] = [
