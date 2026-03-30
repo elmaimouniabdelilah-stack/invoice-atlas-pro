@@ -22,7 +22,7 @@ export default function QuickInvoiceDialog({ trigger }: Props) {
 
   const [open, setOpen] = useState(false);
   const [selectedClientId, setSelectedClientId] = useState<string | null>(null);
-  const [selectedProductIds, setSelectedProductIds] = useState<Set<string>>(new Set());
+  const [selectedProducts, setSelectedProducts] = useState<Map<string, number>>(new Map());
   const [clientSearch, setClientSearch] = useState('');
   const [productSearch, setProductSearch] = useState('');
 
@@ -35,11 +35,19 @@ export default function QuickInvoiceDialog({ trigger }: Props) {
     p.description.toLowerCase().includes(productSearch.toLowerCase())
   );
 
-  const toggleProduct = (id: string) => {
-    setSelectedProductIds(prev => {
-      const next = new Set(prev);
+  const toggleProduct = (id: string, defaultQty: number) => {
+    setSelectedProducts(prev => {
+      const next = new Map(prev);
       if (next.has(id)) next.delete(id);
-      else next.add(id);
+      else next.set(id, defaultQty);
+      return next;
+    });
+  };
+
+  const updateQuantity = (id: string, qty: number) => {
+    setSelectedProducts(prev => {
+      const next = new Map(prev);
+      if (next.has(id)) next.set(id, Math.max(1, qty));
       return next;
     });
   };
@@ -49,7 +57,7 @@ export default function QuickInvoiceDialog({ trigger }: Props) {
       toast({ title: t('noClientSelected'), variant: 'destructive' });
       return;
     }
-    if (selectedProductIds.size === 0) {
+    if (selectedProducts.size === 0) {
       toast({ title: t('noProductSelected'), variant: 'destructive' });
       return;
     }
@@ -60,11 +68,11 @@ export default function QuickInvoiceDialog({ trigger }: Props) {
     setBuyer({ clientName: client.name, address: client.address, ice: client.ice });
 
     const invoiceItems = savedProducts
-      .filter(p => selectedProductIds.has(p.id))
+      .filter(p => selectedProducts.has(p.id))
       .map(p => ({
         id: crypto.randomUUID(),
         description: p.description,
-        quantity: p.defaultQuantity,
+        quantity: selectedProducts.get(p.id) ?? p.defaultQuantity,
         unitPrice: p.unitPrice,
         tvaRate: isAutoEntrepreneur ? 0 : p.tvaRate,
       }));
@@ -75,7 +83,7 @@ export default function QuickInvoiceDialog({ trigger }: Props) {
 
     setOpen(false);
     setSelectedClientId(null);
-    setSelectedProductIds(new Set());
+    setSelectedProducts(new Map());
     setClientSearch('');
     setProductSearch('');
     navigate('/invoice');
@@ -144,8 +152,8 @@ export default function QuickInvoiceDialog({ trigger }: Props) {
             <h3 className="text-sm font-semibold text-foreground mb-2 flex items-center gap-2">
               <Package className="h-4 w-4 text-muted-foreground" />
               {t('selectProducts')}
-              {selectedProductIds.size > 0 && (
-                <span className="text-xs font-normal text-primary">({selectedProductIds.size} {t('selected')})</span>
+              {selectedProducts.size > 0 && (
+                <span className="text-xs font-normal text-primary">({selectedProducts.size} {t('selected')})</span>
               )}
             </h3>
             {savedProducts.length > 3 && (
@@ -159,28 +167,50 @@ export default function QuickInvoiceDialog({ trigger }: Props) {
                 />
               </div>
             )}
-            <div className="space-y-1 max-h-44 overflow-y-auto rounded-md border border-border p-1">
+            <div className="space-y-1 max-h-52 overflow-y-auto rounded-md border border-border p-1">
               {filteredProducts.length === 0 ? (
                 <p className="text-xs text-muted-foreground text-center py-3">{t('noProducts')}</p>
               ) : (
                 filteredProducts.map(product => (
-                  <label
+                  <div
                     key={product.id}
-                    className={`flex items-center gap-3 w-full rounded-md px-3 py-2 text-xs cursor-pointer transition-colors ${
-                      selectedProductIds.has(product.id) ? 'bg-primary/10' : 'hover:bg-muted'
+                    className={`flex items-center gap-3 w-full rounded-md px-3 py-2 text-xs transition-colors ${
+                      selectedProducts.has(product.id) ? 'bg-primary/10' : 'hover:bg-muted'
                     }`}
                   >
                     <Checkbox
-                      checked={selectedProductIds.has(product.id)}
-                      onCheckedChange={() => toggleProduct(product.id)}
+                      checked={selectedProducts.has(product.id)}
+                      onCheckedChange={() => toggleProduct(product.id, product.defaultQuantity)}
                     />
-                    <div className="flex-1 min-w-0">
+                    <div className="flex-1 min-w-0 cursor-pointer" onClick={() => toggleProduct(product.id, product.defaultQuantity)}>
                       <span className="font-medium">{product.description}</span>
                     </div>
-                    <span className="shrink-0 text-muted-foreground">
-                      {product.unitPrice.toFixed(2)} {t('dh')} × {product.defaultQuantity}
-                    </span>
-                  </label>
+                    {selectedProducts.has(product.id) ? (
+                      <div className="flex items-center gap-1 shrink-0">
+                        <button
+                          type="button"
+                          className="h-5 w-5 rounded bg-muted flex items-center justify-center text-foreground hover:bg-muted-foreground/20"
+                          onClick={() => updateQuantity(product.id, (selectedProducts.get(product.id) ?? 1) - 1)}
+                        >−</button>
+                        <Input
+                          type="number"
+                          min={1}
+                          value={selectedProducts.get(product.id) ?? 1}
+                          onChange={e => updateQuantity(product.id, parseInt(e.target.value) || 1)}
+                          className="h-5 w-10 text-center text-xs p-0 border-muted"
+                        />
+                        <button
+                          type="button"
+                          className="h-5 w-5 rounded bg-muted flex items-center justify-center text-foreground hover:bg-muted-foreground/20"
+                          onClick={() => updateQuantity(product.id, (selectedProducts.get(product.id) ?? 1) + 1)}
+                        >+</button>
+                      </div>
+                    ) : (
+                      <span className="shrink-0 text-muted-foreground">
+                        {product.unitPrice.toFixed(2)} {t('dh')}
+                      </span>
+                    )}
+                  </div>
                 ))
               )}
             </div>
@@ -190,7 +220,7 @@ export default function QuickInvoiceDialog({ trigger }: Props) {
           <Button
             onClick={handleGenerate}
             className="w-full gap-2"
-            disabled={!selectedClientId || selectedProductIds.size === 0}
+            disabled={!selectedClientId || selectedProducts.size === 0}
           >
             <Zap className="h-4 w-4" />
             {t('generateInvoice')}
