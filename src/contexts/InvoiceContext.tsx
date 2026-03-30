@@ -28,6 +28,7 @@ const defaultTexts: InvoiceTexts = {
 export type InvoiceTemplate = 'green' | 'blue' | 'classic';
 export type InvoiceDirection = 'ltr' | 'rtl';
 export type LogoPosition = 'left' | 'center' | 'right';
+export type BankInfoPosition = 'bottom' | 'afterTotals';
 export type InvoiceFont = 'inter' | 'cairo' | 'amiri' | 'roboto' | 'playfair';
 
 export interface InvoiceLayoutSettings {
