@@ -132,6 +132,34 @@ export default function InvoiceLayoutPanel() {
           ))}
         </div>
       </div>
+
+      {/* Bank Info Position */}
+      {layoutSettings.showBankInfo && (
+        <div>
+          <p className="text-xs font-medium text-muted-foreground mb-2 flex items-center gap-1">
+            <ArrowUpDown className="h-3 w-3" /> Position infos bancaires
+          </p>
+          <div className="grid grid-cols-2 gap-2">
+            {([
+              { id: 'bottom' as BankInfoPosition, label: 'En bas (défaut)' },
+              { id: 'afterTotals' as BankInfoPosition, label: 'Après les totaux' },
+            ]).map(pos => (
+              <button
+                key={pos.id}
+                type="button"
+                onClick={() => update('bankInfoPosition', pos.id)}
+                className={`rounded-md border-2 px-2.5 py-2 text-[11px] transition-all ${
+                  layoutSettings.bankInfoPosition === pos.id
+                    ? 'border-primary bg-primary/5 text-foreground font-semibold'
+                    : 'border-border text-muted-foreground hover:border-primary/40'
+                }`}
+              >
+                {pos.label}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

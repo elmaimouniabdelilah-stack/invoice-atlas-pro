@@ -54,6 +54,7 @@ const defaultLayoutSettings: InvoiceLayoutSettings = {
   showSellerIds: true,
   showAmountInWords: true,
   showThankYou: true,
+  bankInfoPosition: 'bottom',
 };
 
 interface StoredData {
