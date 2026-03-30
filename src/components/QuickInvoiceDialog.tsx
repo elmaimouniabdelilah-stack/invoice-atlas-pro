@@ -22,7 +22,7 @@ export default function QuickInvoiceDialog({ trigger }: Props) {
 
   const [open, setOpen] = useState(false);
   const [selectedClientId, setSelectedClientId] = useState<string | null>(null);
-  const [selectedProductIds, setSelectedProductIds] = useState<Set<string>>(new Set());
+  const [selectedProducts, setSelectedProducts] = useState<Map<string, number>>(new Map());
   const [clientSearch, setClientSearch] = useState('');
   const [productSearch, setProductSearch] = useState('');
 
