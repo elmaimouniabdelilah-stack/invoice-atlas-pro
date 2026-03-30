@@ -57,7 +57,7 @@ export default function QuickInvoiceDialog({ trigger }: Props) {
       toast({ title: t('noClientSelected'), variant: 'destructive' });
       return;
     }
-    if (selectedProductIds.size === 0) {
+    if (selectedProducts.size === 0) {
       toast({ title: t('noProductSelected'), variant: 'destructive' });
       return;
     }
@@ -68,11 +68,11 @@ export default function QuickInvoiceDialog({ trigger }: Props) {
     setBuyer({ clientName: client.name, address: client.address, ice: client.ice });
 
     const invoiceItems = savedProducts
-      .filter(p => selectedProductIds.has(p.id))
+      .filter(p => selectedProducts.has(p.id))
       .map(p => ({
         id: crypto.randomUUID(),
         description: p.description,
-        quantity: p.defaultQuantity,
+        quantity: selectedProducts.get(p.id) ?? p.defaultQuantity,
         unitPrice: p.unitPrice,
         tvaRate: isAutoEntrepreneur ? 0 : p.tvaRate,
       }));
@@ -83,7 +83,7 @@ export default function QuickInvoiceDialog({ trigger }: Props) {
 
     setOpen(false);
     setSelectedClientId(null);
-    setSelectedProductIds(new Set());
+    setSelectedProducts(new Map());
     setClientSearch('');
     setProductSearch('');
     navigate('/invoice');
