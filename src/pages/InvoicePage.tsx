@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { useLang } from '@/contexts/LanguageContext';
 import { useInvoice } from '@/contexts/InvoiceContext';
 import { calculateTotalTTCWithDiscount, generateInvoiceNumber } from '@/lib/invoiceTypes';
-import { Download, Printer, FileDown, Eye, Edit3, Share2, Mail, MessageCircle } from 'lucide-react';
+import { Download, Printer, FileDown, Eye, Edit3, Share2, Mail, MessageCircle, ArrowRightLeft } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
@@ -33,12 +33,22 @@ export default function InvoicePage() {
     dueDate, setDueDate,
     editingInvoiceId, setEditingInvoiceId,
     discountType, discountValue, setDiscountType, setDiscountValue,
+    invoiceTexts, setInvoiceTexts,
   } = useInvoice();
   const { toast } = useToast();
   const [exporting, setExporting] = useState(false);
   const isMobile = useIsMobile();
   const [mobileTab, setMobileTab] = useState<'form' | 'preview'>('form');
 
+  const isConvertible = invoiceNumber.startsWith('DEV-') || invoiceNumber.startsWith('BC-') || invoiceNumber.startsWith('BL-');
+
+  const handleConvertToInvoice = () => {
+    const newNumber = generateInvoiceNumber('Facture');
+    setInvoiceNumber(newNumber);
+    setInvoiceTexts(prev => ({ ...prev, invoiceTitle: 'Facture N°' }));
+    setEditingInvoiceId(null);
+    toast({ title: t('convertedToInvoice') });
+  };
   const handleExportPdf = async () => {
     const element = document.getElementById('invoice-preview');
     if (!element) return;
@@ -285,6 +295,12 @@ export default function InvoicePage() {
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
+            {isConvertible && (
+              <Button variant="outline" onClick={handleConvertToInvoice} className="h-10 px-3 text-sm text-primary border-primary/30">
+                <ArrowRightLeft className="h-4 w-4" />
+                {t('convertToInvoice')}
+              </Button>
+            )}
             <Button onClick={handleSaveAndExport} disabled={exporting || trialExceeded} className="h-10 flex-1 text-sm font-semibold">
               <Download className="h-4 w-4" />
               {editingInvoiceId ? t('updateInvoice') : t('exportPdf')}
@@ -305,6 +321,12 @@ export default function InvoicePage() {
               {editingInvoiceId ? t('editInvoice') : t('newInvoice')}
             </h2>
             <div className="flex gap-2">
+              {isConvertible && (
+                <Button size="sm" variant="outline" onClick={handleConvertToInvoice} className="text-primary border-primary/30">
+                  <ArrowRightLeft className="h-3.5 w-3.5" />
+                  {t('convertToInvoice')}
+                </Button>
+              )}
               <Button size="sm" variant="outline" onClick={handlePrint} disabled={trialExceeded}>
                 <Printer className="h-3.5 w-3.5" />
               </Button>
