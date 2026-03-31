@@ -102,10 +102,18 @@ export function calculateTotalTTCWithDiscount(
   return discountedHT + totalTVA * tvaRatio;
 }
 
-export function generateInvoiceNumber(): string {
+export function getInvoicePrefix(invoiceTitle: string): string {
+  if (invoiceTitle.startsWith('Devis')) return 'DEV';
+  if (invoiceTitle.startsWith('Bon de commande')) return 'BC';
+  if (invoiceTitle.startsWith('Bon de livraison')) return 'BL';
+  return 'FAC';
+}
+
+export function generateInvoiceNumber(invoiceTitle?: string): string {
   const now = new Date();
   const year = now.getFullYear();
   const month = String(now.getMonth() + 1).padStart(2, '0');
   const rand = String(Math.floor(Math.random() * 1000)).padStart(3, '0');
-  return `FAC-${year}${month}-${rand}`;
+  const prefix = getInvoicePrefix(invoiceTitle || 'Facture');
+  return `${prefix}-${year}${month}-${rand}`;
 }

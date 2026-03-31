@@ -199,7 +199,7 @@ export default function BlueTemplate({ mobileView = false }: Props) {
           <div style={{ textAlign: textEnd }} className="flex-shrink-0">
             <h1 className="text-3xl font-black uppercase tracking-tight mb-2" style={{ color: navy }}>{invoiceTexts.invoiceTitle?.replace(' N°', '') || t('docTypeInvoice')}</h1>
             <p className="text-sm">{t('dateLabel')}: {invoiceDate}</p>
-            <p className="text-sm">N° {t('invoiceLabel')}: {invoiceNumber}</p>
+            <p className="text-sm">{invoiceTexts.invoiceTitle || t('invoiceLabel')} {invoiceNumber}</p>
             {dueDate && <p className="text-sm">{t('dueDateLabel')}: {dueDate}</p>}
           </div>
         </div>
