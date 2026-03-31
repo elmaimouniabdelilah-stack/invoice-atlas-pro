@@ -161,6 +161,7 @@ export default function SettingsPage() {
                     updateText('invoiceTitle', '');
                   } else {
                     updateText('invoiceTitle', val);
+                    setInvoiceNumber(generateInvoiceNumber(val));
                   }
                 }}
                 className="h-9 w-full rounded-md border border-input bg-background px-3 text-sm"
