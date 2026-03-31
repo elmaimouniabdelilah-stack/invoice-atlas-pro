@@ -295,6 +295,12 @@ export default function InvoicePage() {
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
+            {isConvertible && (
+              <Button variant="outline" onClick={handleConvertToInvoice} className="h-10 px-3 text-sm text-primary border-primary/30">
+                <ArrowRightLeft className="h-4 w-4" />
+                {t('convertToInvoice')}
+              </Button>
+            )}
             <Button onClick={handleSaveAndExport} disabled={exporting || trialExceeded} className="h-10 flex-1 text-sm font-semibold">
               <Download className="h-4 w-4" />
               {editingInvoiceId ? t('updateInvoice') : t('exportPdf')}
