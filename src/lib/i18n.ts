@@ -286,6 +286,8 @@ export const translations = {
     noClientSelected: 'يرجى اختيار العميل',
     noProductSelected: 'يرجى اختيار منتج واحد على الأقل',
     selected: 'مختار',
+    convertToInvoice: 'تحويل إلى فاتورة',
+    convertedToInvoice: 'تم التحويل إلى فاتورة بنجاح',
   },
 } as const;
 
