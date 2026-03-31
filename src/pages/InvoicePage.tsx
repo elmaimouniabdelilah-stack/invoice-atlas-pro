@@ -40,6 +40,15 @@ export default function InvoicePage() {
   const isMobile = useIsMobile();
   const [mobileTab, setMobileTab] = useState<'form' | 'preview'>('form');
 
+  const isConvertible = invoiceNumber.startsWith('DEV-') || invoiceNumber.startsWith('BC-') || invoiceNumber.startsWith('BL-');
+
+  const handleConvertToInvoice = () => {
+    const newNumber = generateInvoiceNumber('Facture');
+    setInvoiceNumber(newNumber);
+    setInvoiceTexts(prev => ({ ...prev, invoiceTitle: 'Facture N°' }));
+    setEditingInvoiceId(null);
+    toast({ title: t('convertedToInvoice') });
+  };
   const handleExportPdf = async () => {
     const element = document.getElementById('invoice-preview');
     if (!element) return;
