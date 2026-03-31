@@ -33,6 +33,7 @@ export default function InvoicePage() {
     dueDate, setDueDate,
     editingInvoiceId, setEditingInvoiceId,
     discountType, discountValue, setDiscountType, setDiscountValue,
+    invoiceTexts, setInvoiceTexts,
   } = useInvoice();
   const { toast } = useToast();
   const [exporting, setExporting] = useState(false);
