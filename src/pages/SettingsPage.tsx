@@ -1,5 +1,5 @@
 import AppLayout from '@/components/AppLayout';
-import { TVA_RATES } from '@/lib/invoiceTypes';
+import { TVA_RATES, generateInvoiceNumber } from '@/lib/invoiceTypes';
 import { useLang } from '@/contexts/LanguageContext';
 import { useTheme } from '@/contexts/ThemeContext';
 import { useInvoice } from '@/contexts/InvoiceContext';
@@ -23,7 +23,7 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
 export default function SettingsPage() {
   const { t, lang, setLang } = useLang();
   const { theme, toggleTheme } = useTheme();
-  const { seller, setSeller, isAutoEntrepreneur, setIsAutoEntrepreneur, invoiceTexts, setInvoiceTexts, defaultTvaRate, setDefaultTvaRate } = useInvoice();
+  const { seller, setSeller, isAutoEntrepreneur, setIsAutoEntrepreneur, invoiceTexts, setInvoiceTexts, defaultTvaRate, setDefaultTvaRate, setInvoiceNumber } = useInvoice();
   const fileRef = useRef<HTMLInputElement>(null);
 
   const handleLogo = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -161,6 +161,7 @@ export default function SettingsPage() {
                     updateText('invoiceTitle', '');
                   } else {
                     updateText('invoiceTitle', val);
+                    setInvoiceNumber(generateInvoiceNumber(val));
                   }
                 }}
                 className="h-9 w-full rounded-md border border-input bg-background px-3 text-sm"
