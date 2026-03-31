@@ -315,6 +315,12 @@ export default function InvoicePage() {
               {editingInvoiceId ? t('editInvoice') : t('newInvoice')}
             </h2>
             <div className="flex gap-2">
+              {isConvertible && (
+                <Button size="sm" variant="outline" onClick={handleConvertToInvoice} className="text-primary border-primary/30">
+                  <ArrowRightLeft className="h-3.5 w-3.5" />
+                  {t('convertToInvoice')}
+                </Button>
+              )}
               <Button size="sm" variant="outline" onClick={handlePrint} disabled={trialExceeded}>
                 <Printer className="h-3.5 w-3.5" />
               </Button>
