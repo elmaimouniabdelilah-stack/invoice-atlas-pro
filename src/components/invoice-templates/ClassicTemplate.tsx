@@ -55,7 +55,7 @@ export default function ClassicTemplate({ mobileView = false }: Props) {
           <div style={{ textAlign: textEnd }} className="flex-shrink-0">
             <h1 className="text-base font-black uppercase">{invoiceTexts.invoiceTitle?.replace(' N°', '') || t('docTypeInvoice')}</h1>
             <p className="text-[9px] mt-1">{t('dateLabel')}: {invoiceDate}</p>
-            <p className="text-[9px]">N° {t('invoiceLabel')}: {invoiceNumber}</p>
+            <p className="text-[9px]">{invoiceTexts.invoiceTitle || t('invoiceLabel')} {invoiceNumber}</p>
             {dueDate && <p className="text-[9px]">{t('dueDateLabel')}: {dueDate}</p>}
           </div>
         </div>
