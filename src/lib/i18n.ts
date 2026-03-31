@@ -142,6 +142,8 @@ export const translations = {
     noClientSelected: 'Veuillez sélectionner un client',
     noProductSelected: 'Veuillez sélectionner au moins un produit',
     selected: 'sélectionné(s)',
+    convertToInvoice: 'Convertir en facture',
+    convertedToInvoice: 'Converti en facture avec succès',
   },
   ar: {
     appName: 'فاتورة برو',
@@ -284,6 +286,8 @@ export const translations = {
     noClientSelected: 'يرجى اختيار العميل',
     noProductSelected: 'يرجى اختيار منتج واحد على الأقل',
     selected: 'مختار',
+    convertToInvoice: 'تحويل إلى فاتورة',
+    convertedToInvoice: 'تم التحويل إلى فاتورة بنجاح',
   },
 } as const;
 
