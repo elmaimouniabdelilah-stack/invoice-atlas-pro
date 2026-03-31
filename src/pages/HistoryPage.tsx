@@ -1,15 +1,17 @@
 import AppLayout from '@/components/AppLayout';
 import { useLang } from '@/contexts/LanguageContext';
 import { useInvoice } from '@/contexts/InvoiceContext';
-import { calculateTotalTTC } from '@/lib/invoiceTypes';
-import { FileText, Eye, Trash2, Pencil } from 'lucide-react';
+import { calculateTotalTTC, generateInvoiceNumber } from '@/lib/invoiceTypes';
+import { FileText, Eye, Trash2, Pencil, ArrowRightLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
+import { useToast } from '@/hooks/use-toast';
 
 export default function HistoryPage() {
   const { t } = useLang();
-  const { invoices, setInvoices, loadInvoice, setEditingInvoiceId } = useInvoice();
+  const { invoices, setInvoices, loadInvoice, setEditingInvoiceId, invoiceTexts, setInvoiceTexts, setInvoiceNumber } = useInvoice();
   const navigate = useNavigate();
+  const { toast } = useToast();
 
   const handleView = (id: string) => {
     const inv = invoices.find(i => i.id === id);
@@ -29,6 +31,22 @@ export default function HistoryPage() {
 
   const handleDelete = (id: string) => {
     setInvoices(prev => prev.filter(i => i.id !== id));
+  };
+
+  const isConvertible = (number: string) => {
+    return number.startsWith('DEV-') || number.startsWith('BC-') || number.startsWith('BL-');
+  };
+
+  const handleConvertToInvoice = (id: string) => {
+    const inv = invoices.find(i => i.id === id);
+    if (!inv) return;
+    loadInvoice(inv);
+    setEditingInvoiceId(null);
+    const newNumber = generateInvoiceNumber('Facture');
+    setInvoiceNumber(newNumber);
+    setInvoiceTexts(prev => ({ ...prev, invoiceTitle: 'Facture N°' }));
+    toast({ title: t('convertedToInvoice') });
+    navigate('/invoice');
   };
 
   return (
@@ -62,6 +80,12 @@ export default function HistoryPage() {
                         <td className="px-5 py-3 text-end text-sm font-medium text-foreground">{inv.totalTTC.toFixed(2)} {t('dh')}</td>
                         <td className="px-5 py-3 text-end">
                           <div className="flex justify-end gap-1">
+                            {isConvertible(inv.number) && (
+                              <Button size="sm" variant="ghost" onClick={() => handleConvertToInvoice(inv.id)} title={t('convertToInvoice')}>
+                                <ArrowRightLeft className="h-3.5 w-3.5 me-1 text-primary" />
+                                {t('convertToInvoice')}
+                              </Button>
+                            )}
                             <Button size="sm" variant="ghost" onClick={() => handleEdit(inv.id)}>
                               <Pencil className="h-3.5 w-3.5 me-1" />
                               {t('editInvoice')}
@@ -93,7 +117,13 @@ export default function HistoryPage() {
                       <span>{inv.buyer.clientName || '—'}</span>
                       <span>{inv.date}</span>
                     </div>
-                    <div className="flex gap-1 pt-1">
+                    <div className="flex gap-1 pt-1 flex-wrap">
+                      {isConvertible(inv.number) && (
+                        <Button size="sm" variant="ghost" className="h-7 text-xs flex-1" onClick={() => handleConvertToInvoice(inv.id)}>
+                          <ArrowRightLeft className="h-3 w-3 me-1 text-primary" />
+                          {t('convertToInvoice')}
+                        </Button>
+                      )}
                       <Button size="sm" variant="ghost" className="h-7 text-xs flex-1" onClick={() => handleEdit(inv.id)}>
                         <Pencil className="h-3 w-3 me-1" />
                         {t('editInvoice')}
