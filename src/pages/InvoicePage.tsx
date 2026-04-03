@@ -254,7 +254,7 @@ export default function InvoicePage() {
           </div>
 
           {/* Content area */}
-          <div className="flex-1 overflow-y-auto relative">
+          <div className="flex-1 overflow-y-auto relative" {...swipeHandlers}>
             <div className={mobileTab === 'form' ? '' : 'hidden'}>
               <InvoiceForm />
             </div>
