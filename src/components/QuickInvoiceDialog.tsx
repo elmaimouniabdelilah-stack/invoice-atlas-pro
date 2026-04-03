@@ -101,7 +101,7 @@ export default function QuickInvoiceDialog({ trigger }: Props) {
     setSelectedProducts(new Map());
     setClientSearch('');
     setProductSearch('');
-    setDocType('Facture');
+    
     navigate('/invoice');
   };
 
