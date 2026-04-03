@@ -130,7 +130,7 @@ export default function QuickInvoiceDialog({ trigger }: Props) {
               <FileText className="h-4 w-4 text-muted-foreground" />
               {t('documentType')}
             </h3>
-            <Select value={docType} onValueChange={setDocType}>
+            <Select value={docType} onValueChange={handleDocTypeChange}>
               <SelectTrigger className="h-9 text-xs">
                 <SelectValue />
               </SelectTrigger>
