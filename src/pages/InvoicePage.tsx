@@ -18,6 +18,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { useSwipe } from '@/hooks/use-swipe';
 
 const TRIAL_LIMIT = 3;
 
@@ -39,6 +40,10 @@ export default function InvoicePage() {
   const [exporting, setExporting] = useState(false);
   const isMobile = useIsMobile();
   const [mobileTab, setMobileTab] = useState<'form' | 'preview'>('form');
+  const swipeHandlers = useSwipe(
+    () => setMobileTab('preview'),  // swipe left → preview
+    () => setMobileTab('form'),     // swipe right → form
+  );
 
   const isConvertible = invoiceNumber.startsWith('DEV-') || invoiceNumber.startsWith('BC-') || invoiceNumber.startsWith('BL-');
 
@@ -249,7 +254,7 @@ export default function InvoicePage() {
           </div>
 
           {/* Content area */}
-          <div className="flex-1 overflow-y-auto relative">
+          <div className="flex-1 overflow-y-auto relative" {...swipeHandlers}>
             <div className={mobileTab === 'form' ? '' : 'hidden'}>
               <InvoiceForm />
             </div>
