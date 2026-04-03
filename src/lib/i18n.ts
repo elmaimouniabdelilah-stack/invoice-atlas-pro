@@ -281,6 +281,7 @@ export const translations = {
     invoiceTo: 'فاتورة إلى',
     paymentLabel: 'الدفع',
     quickInvoice: 'فاتورة سريعة',
+    documentType: 'نوع المستند',
     selectClient: 'اختر العميل',
     selectProducts: 'اختر المنتجات',
     generateInvoice: 'إنشاء الفاتورة',
