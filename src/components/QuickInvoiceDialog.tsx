@@ -33,7 +33,12 @@ export default function QuickInvoiceDialog({ trigger }: Props) {
   const [selectedProducts, setSelectedProducts] = useState<Map<string, number>>(new Map());
   const [clientSearch, setClientSearch] = useState('');
   const [productSearch, setProductSearch] = useState('');
-  const [docType, setDocType] = useState('Facture');
+  const [docType, setDocType] = useState(() => localStorage.getItem('quickInvoice-docType') || 'Facture');
+
+  const handleDocTypeChange = (value: string) => {
+    setDocType(value);
+    localStorage.setItem('quickInvoice-docType', value);
+  };
 
   const filteredClients = clients.filter(c =>
     c.name.toLowerCase().includes(clientSearch.toLowerCase()) ||
