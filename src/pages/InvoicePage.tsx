@@ -18,6 +18,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { useSwipe } from '@/hooks/use-swipe';
 
 const TRIAL_LIMIT = 3;
 
