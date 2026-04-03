@@ -87,14 +87,16 @@ export default function QuickInvoiceDialog({ trigger }: Props) {
       }));
 
     setItems(invoiceItems);
-    setInvoiceNumber(generateInvoiceNumber());
+    setInvoiceNumber(generateInvoiceNumber(docType));
     setInvoiceDate(new Date().toISOString().split('T')[0]);
+    setInvoiceTexts(prev => ({ ...prev, invoiceTitle: `${docType} N°` }));
 
     setOpen(false);
     setSelectedClientId(null);
     setSelectedProducts(new Map());
     setClientSearch('');
     setProductSearch('');
+    setDocType('Facture');
     navigate('/invoice');
   };
 
