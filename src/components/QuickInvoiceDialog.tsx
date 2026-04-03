@@ -26,13 +26,14 @@ export default function QuickInvoiceDialog({ trigger }: Props) {
   const { t } = useLang();
   const navigate = useNavigate();
   const { toast } = useToast();
-  const { clients, savedProducts, setBuyer, setItems, setInvoiceNumber, setInvoiceDate, isAutoEntrepreneur } = useInvoice();
+  const { clients, savedProducts, setBuyer, setItems, setInvoiceNumber, setInvoiceDate, isAutoEntrepreneur, setInvoiceTexts } = useInvoice();
 
   const [open, setOpen] = useState(false);
   const [selectedClientId, setSelectedClientId] = useState<string | null>(null);
   const [selectedProducts, setSelectedProducts] = useState<Map<string, number>>(new Map());
   const [clientSearch, setClientSearch] = useState('');
   const [productSearch, setProductSearch] = useState('');
+  const [docType, setDocType] = useState('Facture');
 
   const filteredClients = clients.filter(c =>
     c.name.toLowerCase().includes(clientSearch.toLowerCase()) ||
