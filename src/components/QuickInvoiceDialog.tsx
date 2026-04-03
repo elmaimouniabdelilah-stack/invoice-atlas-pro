@@ -6,9 +6,17 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Zap, Search, User, Package } from 'lucide-react';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Zap, Search, User, Package, FileText } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { generateInvoiceNumber } from '@/lib/invoiceTypes';
+
+const DOC_TYPES = [
+  { value: 'Facture', label: 'Facture', prefix: 'FAC' },
+  { value: 'Devis', label: 'Devis', prefix: 'DEV' },
+  { value: 'Bon de commande', label: 'Bon de commande', prefix: 'BC' },
+  { value: 'Bon de livraison', label: 'Bon de livraison', prefix: 'BL' },
+];
 
 interface Props {
   trigger?: React.ReactNode;
