@@ -119,6 +119,26 @@ export default function QuickInvoiceDialog({ trigger }: Props) {
         </DialogHeader>
 
         <div className="space-y-5 mt-2">
+          {/* Document Type Selection */}
+          <div>
+            <h3 className="text-sm font-semibold text-foreground mb-2 flex items-center gap-2">
+              <FileText className="h-4 w-4 text-muted-foreground" />
+              {t('documentType')}
+            </h3>
+            <Select value={docType} onValueChange={setDocType}>
+              <SelectTrigger className="h-9 text-xs">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {DOC_TYPES.map(dt => (
+                  <SelectItem key={dt.value} value={dt.value} className="text-xs">
+                    {dt.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
           {/* Client Selection */}
           <div>
             <h3 className="text-sm font-semibold text-foreground mb-2 flex items-center gap-2">
