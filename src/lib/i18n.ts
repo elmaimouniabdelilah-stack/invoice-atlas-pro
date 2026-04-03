@@ -136,6 +136,7 @@ export const translations = {
     invoiceTo: 'Facturer à',
     paymentLabel: 'Paiement',
     quickInvoice: 'Facture rapide',
+    documentType: 'Type de document',
     selectClient: 'Sélectionner un client',
     selectProducts: 'Sélectionner les produits',
     generateInvoice: 'Générer la facture',
