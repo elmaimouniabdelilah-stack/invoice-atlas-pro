@@ -6,9 +6,17 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Zap, Search, User, Package } from 'lucide-react';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Zap, Search, User, Package, FileText } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { generateInvoiceNumber } from '@/lib/invoiceTypes';
+
+const DOC_TYPES = [
+  { value: 'Facture', label: 'Facture', prefix: 'FAC' },
+  { value: 'Devis', label: 'Devis', prefix: 'DEV' },
+  { value: 'Bon de commande', label: 'Bon de commande', prefix: 'BC' },
+  { value: 'Bon de livraison', label: 'Bon de livraison', prefix: 'BL' },
+];
 
 interface Props {
   trigger?: React.ReactNode;
@@ -18,13 +26,14 @@ export default function QuickInvoiceDialog({ trigger }: Props) {
   const { t } = useLang();
   const navigate = useNavigate();
   const { toast } = useToast();
-  const { clients, savedProducts, setBuyer, setItems, setInvoiceNumber, setInvoiceDate, isAutoEntrepreneur } = useInvoice();
+  const { clients, savedProducts, setBuyer, setItems, setInvoiceNumber, setInvoiceDate, isAutoEntrepreneur, setInvoiceTexts } = useInvoice();
 
   const [open, setOpen] = useState(false);
   const [selectedClientId, setSelectedClientId] = useState<string | null>(null);
   const [selectedProducts, setSelectedProducts] = useState<Map<string, number>>(new Map());
   const [clientSearch, setClientSearch] = useState('');
   const [productSearch, setProductSearch] = useState('');
+  const [docType, setDocType] = useState('Facture');
 
   const filteredClients = clients.filter(c =>
     c.name.toLowerCase().includes(clientSearch.toLowerCase()) ||
@@ -78,14 +87,16 @@ export default function QuickInvoiceDialog({ trigger }: Props) {
       }));
 
     setItems(invoiceItems);
-    setInvoiceNumber(generateInvoiceNumber());
+    setInvoiceNumber(generateInvoiceNumber(docType));
     setInvoiceDate(new Date().toISOString().split('T')[0]);
+    setInvoiceTexts(prev => ({ ...prev, invoiceTitle: `${docType} N°` }));
 
     setOpen(false);
     setSelectedClientId(null);
     setSelectedProducts(new Map());
     setClientSearch('');
     setProductSearch('');
+    setDocType('Facture');
     navigate('/invoice');
   };
 
@@ -108,6 +119,26 @@ export default function QuickInvoiceDialog({ trigger }: Props) {
         </DialogHeader>
 
         <div className="space-y-5 mt-2">
+          {/* Document Type Selection */}
+          <div>
+            <h3 className="text-sm font-semibold text-foreground mb-2 flex items-center gap-2">
+              <FileText className="h-4 w-4 text-muted-foreground" />
+              {t('documentType')}
+            </h3>
+            <Select value={docType} onValueChange={setDocType}>
+              <SelectTrigger className="h-9 text-xs">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {DOC_TYPES.map(dt => (
+                  <SelectItem key={dt.value} value={dt.value} className="text-xs">
+                    {dt.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
           {/* Client Selection */}
           <div>
             <h3 className="text-sm font-semibold text-foreground mb-2 flex items-center gap-2">
