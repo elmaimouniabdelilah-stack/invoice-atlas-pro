@@ -143,6 +143,8 @@ export const translations = {
     noClientSelected: 'Veuillez sélectionner un client',
     noProductSelected: 'Veuillez sélectionner au moins un produit',
     selected: 'sélectionné(s)',
+    selectAll: 'Tout sélectionner',
+    deselectAll: 'Tout désélectionner',
     convertToInvoice: 'Convertir en facture',
     convertedToInvoice: 'Converti en facture avec succès',
   },
