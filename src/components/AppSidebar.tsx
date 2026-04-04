@@ -94,6 +94,13 @@ export default function AppSidebar() {
                   <Globe className="h-4 w-4" />
                   {lang === 'fr' ? 'العربية' : 'Français'}
                 </button>
+                <button
+                  onClick={() => { signOut(); setMobileOpen(false); }}
+                  className="flex w-full items-center gap-3 rounded-md px-3 py-2.5 text-sm font-medium text-destructive transition-colors hover:bg-destructive/10"
+                >
+                  <LogOut className="h-4 w-4" />
+                  {t('logout')}
+                </button>
               </div>
             </div>
           </div>
