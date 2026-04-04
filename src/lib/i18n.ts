@@ -148,7 +148,6 @@ export const translations = {
     convertToInvoice: 'Convertir en facture',
     convertedToInvoice: 'Converti en facture avec succès',
     // Auth
-    email: 'Email',
     password: 'Mot de passe',
     login: 'Se connecter',
     signup: "S'inscrire",
