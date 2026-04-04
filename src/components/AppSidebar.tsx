@@ -12,6 +12,7 @@ import logoImg from '@/assets/logo.png';
 export default function AppSidebar() {
   const { t, lang, setLang } = useLang();
   const { theme, toggleTheme } = useTheme();
+  const { signOut } = useAuth();
   const location = useLocation();
   const isMobile = useIsMobile();
   const [mobileOpen, setMobileOpen] = useState(false);
