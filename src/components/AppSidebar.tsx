@@ -28,6 +28,7 @@ export default function AppSidebar() {
     { to: '/', icon: LayoutDashboard, label: t('dashboard'), adminShortcut: true },
     { to: '/invoice', icon: FilePlus, label: t('newInvoice') },
     { to: '/clients', icon: Users, label: t('clients') },
+    { to: '/products', icon: Package, label: t('products') },
     { to: '/history', icon: History, label: t('invoiceHistory') },
     { to: '/settings', icon: Settings, label: t('settings') },
   ];
