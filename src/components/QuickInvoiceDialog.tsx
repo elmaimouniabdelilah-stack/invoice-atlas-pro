@@ -208,7 +208,7 @@ export default function QuickInvoiceDialog({ trigger }: Props) {
                   }
                 }}
               >
-                {selectedProducts.size === savedProducts.length && savedProducts.length > 0 ? t('deselectAll') || 'إلغاء الكل' : t('selectAll') || 'تحديد الكل'}
+                {selectedProducts.size === savedProducts.length && savedProducts.length > 0 ? t('deselectAll') : t('selectAll')}
               </Button>
             </div>
             {savedProducts.length > 3 && (
