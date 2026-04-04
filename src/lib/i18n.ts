@@ -317,7 +317,6 @@ export const translations = {
     convertToInvoice: 'تحويل إلى فاتورة',
     convertedToInvoice: 'تم التحويل إلى فاتورة بنجاح',
     // Auth
-    email: 'البريد الإلكتروني',
     password: 'كلمة المرور',
     login: 'تسجيل الدخول',
     signup: 'إنشاء حساب',
