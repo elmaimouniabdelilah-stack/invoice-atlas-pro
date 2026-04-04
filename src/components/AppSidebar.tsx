@@ -1,5 +1,6 @@
 import { NavLink, useLocation } from 'react-router-dom';
-import { LayoutDashboard, FilePlus, Globe, Settings, History, Menu, X, Users, Package, Moon, Sun } from 'lucide-react';
+import { LayoutDashboard, FilePlus, Globe, Settings, History, Menu, X, Users, Package, Moon, Sun, LogOut } from 'lucide-react';
+import { useAuth } from '@/contexts/AuthContext';
 import { useLang } from '@/contexts/LanguageContext';
 import { useTheme } from '@/contexts/ThemeContext';
 import { cn } from '@/lib/utils';
@@ -11,6 +12,7 @@ import logoImg from '@/assets/logo.png';
 export default function AppSidebar() {
   const { t, lang, setLang } = useLang();
   const { theme, toggleTheme } = useTheme();
+  const { signOut } = useAuth();
   const location = useLocation();
   const isMobile = useIsMobile();
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -92,6 +94,13 @@ export default function AppSidebar() {
                   <Globe className="h-4 w-4" />
                   {lang === 'fr' ? 'العربية' : 'Français'}
                 </button>
+                <button
+                  onClick={() => { signOut(); setMobileOpen(false); }}
+                  className="flex w-full items-center gap-3 rounded-md px-3 py-2.5 text-sm font-medium text-destructive transition-colors hover:bg-destructive/10"
+                >
+                  <LogOut className="h-4 w-4" />
+                  {t('logout')}
+                </button>
               </div>
             </div>
           </div>
@@ -146,6 +155,13 @@ export default function AppSidebar() {
         >
           <Globe className="h-4 w-4" />
           {lang === 'fr' ? 'العربية' : 'Français'}
+        </button>
+        <button
+          onClick={signOut}
+          className="flex w-full items-center gap-3 rounded-md px-3 py-2.5 text-sm font-medium text-destructive transition-colors hover:bg-destructive/10"
+        >
+          <LogOut className="h-4 w-4" />
+          {t('logout')}
         </button>
       </div>
     </aside>
