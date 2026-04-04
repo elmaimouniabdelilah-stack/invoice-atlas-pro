@@ -185,13 +185,32 @@ export default function QuickInvoiceDialog({ trigger }: Props) {
 
           {/* Product Selection */}
           <div>
-            <h3 className="text-sm font-semibold text-foreground mb-2 flex items-center gap-2">
-              <Package className="h-4 w-4 text-muted-foreground" />
-              {t('selectProducts')}
-              {selectedProducts.size > 0 && (
-                <span className="text-xs font-normal text-primary">({selectedProducts.size} {t('selected')})</span>
-              )}
-            </h3>
+            <div className="flex items-center justify-between mb-2">
+              <h3 className="text-sm font-semibold text-foreground flex items-center gap-2">
+                <Package className="h-4 w-4 text-muted-foreground" />
+                {t('selectProducts')}
+                {selectedProducts.size > 0 && (
+                  <span className="text-xs font-normal text-primary">({selectedProducts.size} {t('selected')})</span>
+                )}
+              </h3>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                className="h-7 text-xs px-2"
+                onClick={() => {
+                  if (selectedProducts.size === savedProducts.length) {
+                    setSelectedProducts(new Map());
+                  } else {
+                    const all = new Map<string, number>();
+                    savedProducts.forEach(p => all.set(p.id, p.defaultQuantity));
+                    setSelectedProducts(all);
+                  }
+                }}
+              >
+                {selectedProducts.size === savedProducts.length && savedProducts.length > 0 ? t('deselectAll') || 'إلغاء الكل' : t('selectAll') || 'تحديد الكل'}
+              </Button>
+            </div>
             {savedProducts.length > 3 && (
               <div className="relative mb-2">
                 <Search className="absolute start-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
