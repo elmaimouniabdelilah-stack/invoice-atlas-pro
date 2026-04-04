@@ -290,6 +290,8 @@ export const translations = {
     noClientSelected: 'يرجى اختيار العميل',
     noProductSelected: 'يرجى اختيار منتج واحد على الأقل',
     selected: 'مختار',
+    selectAll: 'تحديد الكل',
+    deselectAll: 'إلغاء الكل',
     convertToInvoice: 'تحويل إلى فاتورة',
     convertedToInvoice: 'تم التحويل إلى فاتورة بنجاح',
   },
