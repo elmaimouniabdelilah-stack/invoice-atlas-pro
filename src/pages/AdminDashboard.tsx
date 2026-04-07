@@ -262,6 +262,7 @@ export default function AdminDashboard() {
                   <TableHead className="text-right">الاستعمال</TableHead>
                   <TableHead className="text-right">الأجهزة</TableHead>
                   <TableHead className="text-right">الحالة</TableHead>
+                  <TableHead className="text-right">الصلاحية</TableHead>
                   <TableHead className="text-right">التاريخ</TableHead>
                   <TableHead className="text-right">إجراءات</TableHead>
                 </TableRow>
