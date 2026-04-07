@@ -125,6 +125,7 @@ export default function AdminDashboard() {
     } finally {
       setCreatingTrial(false);
     }
+  };
 
   const handleToggleActive = async (code: ActivationCode) => {
     await supabase
