@@ -23,6 +23,7 @@ interface ActivationCode {
   max_devices: number;
   is_active: boolean;
   created_at: string;
+  expires_at: string | null;
   device_count?: number;
 }
 
