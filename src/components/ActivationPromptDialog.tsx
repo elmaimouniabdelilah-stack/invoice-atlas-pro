@@ -77,7 +77,7 @@ const ActivationPromptDialog = ({ open, onActivated, onSkip }: Props) => {
 
         {success ? (
           <div className="flex flex-col items-center gap-3 py-4">
-            <CheckCircle2 className="h-12 w-12 text-green-500" />
+            <CheckCircle2 className="h-12 w-12 text-emerald-500" />
             <p className="font-semibold text-foreground">{t('activationSuccess')} 🎉</p>
             <p className="text-sm text-muted-foreground">{t('redirecting')}</p>
           </div>
