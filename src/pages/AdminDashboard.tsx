@@ -30,6 +30,7 @@ export default function AdminDashboard() {
   const [codes, setCodes] = useState<ActivationCode[]>([]);
   const [loading, setLoading] = useState(true);
   const [creating, setCreating] = useState(false);
+  const [creatingTrial, setCreatingTrial] = useState(false);
   const [newMaxDevices, setNewMaxDevices] = useState(2);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [selectedCode, setSelectedCode] = useState<ActivationCode | null>(null);
