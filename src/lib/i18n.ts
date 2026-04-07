@@ -180,6 +180,7 @@ export const translations = {
     or: 'ou',
     contactWhatsapp: 'Contactez-nous sur WhatsApp',
     skipForNow: 'Passer pour le moment',
+    trialTimeRemaining: 'Temps restant de l\'essai',
   },
   ar: {
     appName: 'فاتورة برو',
@@ -360,6 +361,7 @@ export const translations = {
     or: 'أو',
     contactWhatsapp: 'تواصل معنا عبر واتساب',
     skipForNow: 'تخطي الآن',
+    trialTimeRemaining: 'الوقت المتبقي للتجربة',
   },
 } as const;
 
