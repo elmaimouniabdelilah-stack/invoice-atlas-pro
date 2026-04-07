@@ -14,7 +14,7 @@ import {
 } from '@/components/ui/dialog';
 import { Badge } from '@/components/ui/badge';
 import {
-  Plus, Copy, LogOut, Loader2, Trash2, RefreshCw, KeyRound, Monitor,
+  Plus, Copy, LogOut, Loader2, Trash2, RefreshCw, KeyRound, Monitor, Clock,
 } from 'lucide-react';
 
 interface ActivationCode {
