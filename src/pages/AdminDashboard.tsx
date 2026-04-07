@@ -113,6 +113,19 @@ export default function AdminDashboard() {
     }
   };
 
+  const handleCreateTrialCode = async () => {
+    setCreatingTrial(true);
+    try {
+      const { data, error } = await supabase.functions.invoke('generate-trial-code');
+      if (error) throw error;
+      toast({ title: `تم إنشاء كود تجريبي: ${data.code}` });
+      fetchCodes();
+    } catch (err: any) {
+      toast({ title: err.message || 'خطأ', variant: 'destructive' });
+    } finally {
+      setCreatingTrial(false);
+    }
+
   const handleToggleActive = async (code: ActivationCode) => {
     await supabase
       .from('activation_codes')
