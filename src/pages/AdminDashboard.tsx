@@ -311,6 +311,20 @@ export default function AdminDashboard() {
                         onCheckedChange={() => handleToggleActive(code)}
                       />
                     </TableCell>
+                    <TableCell>
+                      {code.expires_at ? (
+                        new Date(code.expires_at) < new Date() ? (
+                          <Badge variant="destructive" className="gap-1"><Clock className="h-3 w-3" />منتهية</Badge>
+                        ) : (
+                          <Badge variant="secondary" className="gap-1">
+                            <Clock className="h-3 w-3" />
+                            {new Date(code.expires_at).toLocaleString('ar-MA', { dateStyle: 'short', timeStyle: 'short' })}
+                          </Badge>
+                        )
+                      ) : (
+                        <Badge variant="outline">دائم</Badge>
+                      )}
+                    </TableCell>
                     <TableCell className="text-xs text-muted-foreground">
                       {new Date(code.created_at).toLocaleDateString('ar-MA')}
                     </TableCell>
