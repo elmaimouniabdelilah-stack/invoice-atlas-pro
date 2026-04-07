@@ -40,6 +40,13 @@ Deno.serve(async (req) => {
       });
     }
 
+    // Check expiration
+    if (codeData.expires_at && new Date(codeData.expires_at) < new Date()) {
+      return new Response(JSON.stringify({ error: "code_expired" }), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
     // Check if this device is already activated with this code
     const { data: existing } = await supabase
       .from("device_activations")
