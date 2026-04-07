@@ -240,6 +240,10 @@ export default function AdminDashboard() {
               </div>
             </DialogContent>
           </Dialog>
+          <Button variant="outline" className="gap-2" onClick={handleCreateTrialCode} disabled={creatingTrial}>
+            {creatingTrial ? <Loader2 className="h-4 w-4 animate-spin" /> : <Clock className="h-4 w-4" />}
+            كود تجريبي (24 ساعة)
+          </Button>
         </div>
 
         {/* Codes Table */}
