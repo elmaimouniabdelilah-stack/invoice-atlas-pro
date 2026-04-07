@@ -361,6 +361,7 @@ export const translations = {
     or: 'أو',
     contactWhatsapp: 'تواصل معنا عبر واتساب',
     skipForNow: 'تخطي الآن',
+    trialTimeRemaining: 'الوقت المتبقي للتجربة',
   },
 } as const;
 
