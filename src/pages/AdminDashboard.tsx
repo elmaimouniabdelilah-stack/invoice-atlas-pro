@@ -14,7 +14,7 @@ import {
 } from '@/components/ui/dialog';
 import { Badge } from '@/components/ui/badge';
 import {
-  Plus, Copy, LogOut, Loader2, Trash2, RefreshCw, KeyRound, Monitor,
+  Plus, Copy, LogOut, Loader2, Trash2, RefreshCw, KeyRound, Monitor, Clock,
 } from 'lucide-react';
 
 interface ActivationCode {
@@ -23,6 +23,7 @@ interface ActivationCode {
   max_devices: number;
   is_active: boolean;
   created_at: string;
+  expires_at: string | null;
   device_count?: number;
 }
 
@@ -30,6 +31,7 @@ export default function AdminDashboard() {
   const [codes, setCodes] = useState<ActivationCode[]>([]);
   const [loading, setLoading] = useState(true);
   const [creating, setCreating] = useState(false);
+  const [creatingTrial, setCreatingTrial] = useState(false);
   const [newMaxDevices, setNewMaxDevices] = useState(2);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [selectedCode, setSelectedCode] = useState<ActivationCode | null>(null);
@@ -108,6 +110,20 @@ export default function AdminDashboard() {
       toast({ title: err.message || 'خطأ', variant: 'destructive' });
     } finally {
       setCreating(false);
+    }
+  };
+
+  const handleCreateTrialCode = async () => {
+    setCreatingTrial(true);
+    try {
+      const { data, error } = await supabase.functions.invoke('generate-trial-code');
+      if (error) throw error;
+      toast({ title: `تم إنشاء كود تجريبي: ${data.code}` });
+      fetchCodes();
+    } catch (err: any) {
+      toast({ title: err.message || 'خطأ', variant: 'destructive' });
+    } finally {
+      setCreatingTrial(false);
     }
   };
 
@@ -224,6 +240,10 @@ export default function AdminDashboard() {
               </div>
             </DialogContent>
           </Dialog>
+          <Button variant="outline" className="gap-2" onClick={handleCreateTrialCode} disabled={creatingTrial}>
+            {creatingTrial ? <Loader2 className="h-4 w-4 animate-spin" /> : <Clock className="h-4 w-4" />}
+            كود تجريبي (24 ساعة)
+          </Button>
         </div>
 
         {/* Codes Table */}
@@ -242,6 +262,7 @@ export default function AdminDashboard() {
                   <TableHead className="text-right">الاستعمال</TableHead>
                   <TableHead className="text-right">الأجهزة</TableHead>
                   <TableHead className="text-right">الحالة</TableHead>
+                  <TableHead className="text-right">الصلاحية</TableHead>
                   <TableHead className="text-right">التاريخ</TableHead>
                   <TableHead className="text-right">إجراءات</TableHead>
                 </TableRow>
@@ -289,6 +310,20 @@ export default function AdminDashboard() {
                         checked={code.is_active}
                         onCheckedChange={() => handleToggleActive(code)}
                       />
+                    </TableCell>
+                    <TableCell>
+                      {code.expires_at ? (
+                        new Date(code.expires_at) < new Date() ? (
+                          <Badge variant="destructive" className="gap-1"><Clock className="h-3 w-3" />منتهية</Badge>
+                        ) : (
+                          <Badge variant="secondary" className="gap-1">
+                            <Clock className="h-3 w-3" />
+                            {new Date(code.expires_at).toLocaleString('ar-MA', { dateStyle: 'short', timeStyle: 'short' })}
+                          </Badge>
+                        )
+                      ) : (
+                        <Badge variant="outline">دائم</Badge>
+                      )}
                     </TableCell>
                     <TableCell className="text-xs text-muted-foreground">
                       {new Date(code.created_at).toLocaleDateString('ar-MA')}
