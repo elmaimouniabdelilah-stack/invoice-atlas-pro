@@ -7,7 +7,8 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
-import { LogIn, UserPlus, KeyRound, Mail, Lock, Eye, EyeOff } from 'lucide-react';
+import { LogIn, UserPlus, Mail, Lock, Eye, EyeOff, KeyRound } from 'lucide-react';
+import ActivationPromptDialog from '@/components/ActivationPromptDialog';
 
 export default function AuthPage() {
   const { t } = useLang();
@@ -17,9 +18,9 @@ export default function AuthPage() {
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [activationCode, setActivationCode] = useState('');
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [showActivationDialog, setShowActivationDialog] = useState(false);
 
   const handleLogin = async () => {
     if (!email || !password) {
@@ -32,12 +33,18 @@ export default function AuthPage() {
     if (error) {
       toast({ title: t('loginError'), description: error.message, variant: 'destructive' });
     } else {
-      navigate('/', { replace: true });
+      // Check if activated
+      const activated = localStorage.getItem('facturapro-activated') === 'true';
+      if (!activated) {
+        setShowActivationDialog(true);
+      } else {
+        navigate('/', { replace: true });
+      }
     }
   };
 
   const handleSignup = async () => {
-    if (!email || !password || !activationCode) {
+    if (!email || !password) {
       toast({ title: t('fillAllFields'), variant: 'destructive' });
       return;
     }
@@ -47,25 +54,6 @@ export default function AuthPage() {
     }
 
     setLoading(true);
-
-    // Validate activation code first
-    const { data: codeResult, error: codeError } = await supabase.functions.invoke('validate-activation-code', {
-      body: { code: activationCode.trim().toUpperCase(), deviceFingerprint: `auth_${email}` },
-    });
-
-    if (codeError || codeResult?.error) {
-      setLoading(false);
-      const errKey = codeResult?.error || 'invalidActivationCode';
-      const messages: Record<string, string> = {
-        invalid_code: t('invalidActivationCode'),
-        code_disabled: t('codeDisabled'),
-        max_devices_reached: t('maxDevicesReached'),
-      };
-      toast({ title: messages[errKey] || t('invalidActivationCode'), variant: 'destructive' });
-      return;
-    }
-
-    // Code valid, proceed with signup
     const { error } = await supabase.auth.signUp({ email, password });
     setLoading(false);
 
@@ -73,8 +61,19 @@ export default function AuthPage() {
       toast({ title: t('signupError'), description: error.message, variant: 'destructive' });
     } else {
       toast({ title: t('signupSuccess') });
-      navigate('/', { replace: true });
+      // Show activation dialog immediately after signup
+      setShowActivationDialog(true);
     }
+  };
+
+  const handleActivationComplete = () => {
+    setShowActivationDialog(false);
+    navigate('/', { replace: true });
+  };
+
+  const handleSkipActivation = () => {
+    setShowActivationDialog(false);
+    navigate('/', { replace: true });
   };
 
   return (
@@ -120,20 +119,6 @@ export default function AuthPage() {
               </button>
             </div>
           </div>
-
-          {!isLogin && (
-            <div className="space-y-2">
-              <Label className="flex items-center gap-2"><KeyRound className="h-4 w-4" />{t('activationCode')}</Label>
-              <Input
-                placeholder="XXXX-XXXX"
-                value={activationCode}
-                onChange={e => setActivationCode(e.target.value.toUpperCase())}
-                disabled={loading}
-                className="tracking-widest font-mono text-center"
-              />
-              <p className="text-xs text-muted-foreground">{t('activationCodeRequired')}</p>
-            </div>
-          )}
 
           <Button
             onClick={isLogin ? handleLogin : handleSignup}
@@ -184,6 +169,12 @@ export default function AuthPage() {
           )}
         </CardContent>
       </Card>
+
+      <ActivationPromptDialog
+        open={showActivationDialog}
+        onActivated={handleActivationComplete}
+        onSkip={handleSkipActivation}
+      />
     </div>
   );
 }

@@ -18,6 +18,7 @@ export type Database = {
         Row: {
           code: string
           created_at: string
+          expires_at: string | null
           id: string
           is_active: boolean
           max_devices: number
@@ -25,6 +26,7 @@ export type Database = {
         Insert: {
           code: string
           created_at?: string
+          expires_at?: string | null
           id?: string
           is_active?: boolean
           max_devices?: number
@@ -32,6 +34,7 @@ export type Database = {
         Update: {
           code?: string
           created_at?: string
+          expires_at?: string | null
           id?: string
           is_active?: boolean
           max_devices?: number
