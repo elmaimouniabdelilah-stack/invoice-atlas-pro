@@ -15,6 +15,7 @@ import {
 import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from '@/components/ui/select';
+import AdminShell from '@/components/admin/AdminShell';
 import {
   ArrowLeft, Loader2, RefreshCw, Shield, ShieldCheck, UserPlus, X, Users,
 } from 'lucide-react';
@@ -134,33 +135,23 @@ export default function AdminRolesPage() {
   );
 
   return (
-    <div className="min-h-screen bg-background" dir="rtl">
-      <header className="sticky top-0 z-20 border-b bg-background/80 backdrop-blur">
-        <div className="mx-auto flex max-w-6xl items-center justify-between gap-2 p-3 sm:p-4">
-          <div className="flex items-center gap-2">
-            <Button variant="ghost" size="icon" onClick={() => navigate('/admin')}>
-              <ArrowLeft className="h-5 w-5 rotate-180" />
+    <AdminShell
+      title="الأدوار والصلاحيات"
+      subtitle={`${users.length} مستخدم`}
+      actions={
+        <>
+          <Button variant="outline" size="icon" className="h-9 w-9" onClick={load} disabled={loading}>
+            <RefreshCw className={`h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
+          </Button>
+          {isSuper && (
+            <Button size="icon" className="h-9 w-9" onClick={() => setInviteOpen(true)}>
+              <UserPlus className="h-4 w-4" />
             </Button>
-            <div>
-              <h1 className="text-base font-bold sm:text-xl">الأدوار والصلاحيات</h1>
-              <p className="text-xs text-muted-foreground">{users.length} مستخدم</p>
-            </div>
-          </div>
-          <div className="flex gap-2">
-            <Button variant="outline" size="icon" onClick={load} disabled={loading}>
-              <RefreshCw className={`h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
-            </Button>
-            {isSuper && (
-              <Button size="sm" onClick={() => setInviteOpen(true)}>
-                <UserPlus className="h-4 w-4" />
-                <span className="ms-1 hidden sm:inline">منح صلاحية</span>
-              </Button>
-            )}
-          </div>
-        </div>
-      </header>
-
-      <main className="mx-auto max-w-6xl space-y-4 p-3 sm:p-6">
+          )}
+        </>
+      }
+    >
+      <div className="space-y-4">
         {!isSuper && (
           <div className="rounded-lg border border-dashed p-3 text-sm text-muted-foreground">
             أنت أدمن عادي: يمكنك الاطلاع على الأدوار فقط. تعديل الصلاحيات متاح للسوبر أدمن.
@@ -237,7 +228,7 @@ export default function AdminRolesPage() {
             </div>
           </>
         )}
-      </main>
+      </div>
 
       <Dialog open={inviteOpen} onOpenChange={setInviteOpen}>
         <DialogContent className="w-[95vw] max-w-md" dir="rtl">
@@ -273,6 +264,6 @@ export default function AdminRolesPage() {
           </div>
         </DialogContent>
       </Dialog>
-    </div>
+    </AdminShell>
   );
 }

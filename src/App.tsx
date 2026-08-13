@@ -22,6 +22,9 @@ import AdminDashboard from "./pages/AdminDashboard";
 import AdminRolesPage from "./pages/AdminRolesPage";
 import ResetPasswordPage from "./pages/ResetPasswordPage";
 import AuthPage from "./pages/AuthPage";
+import AdminOverviewPage from "./pages/admin/OverviewPage";
+import AdminModerationPage from "./pages/admin/ModerationPage";
+import AdminAccountPage from "./pages/admin/AccountPage";
 
 const queryClient = new QueryClient();
 
@@ -41,6 +44,9 @@ const App = () => (
                   <Route path="/admin/login" element={<AdminLoginPage />} />
                   <Route path="/admin" element={<AdminDashboard />} />
                   <Route path="/admin/roles" element={<AdminRolesPage />} />
+                  <Route path="/admin/overview" element={<AdminOverviewPage />} />
+                  <Route path="/admin/moderation" element={<AdminModerationPage />} />
+                  <Route path="/admin/account" element={<AdminAccountPage />} />
                   <Route path="/reset-password" element={<ResetPasswordPage />} />
                   <Route path="/" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
                   <Route path="/invoice" element={<ProtectedRoute><InvoicePage /></ProtectedRoute>} />
