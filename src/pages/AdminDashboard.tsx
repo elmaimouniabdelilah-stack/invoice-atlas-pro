@@ -382,8 +382,10 @@ export default function AdminDashboard() {
                           <button onClick={() => handleCopy(code.code)} className="text-muted-foreground hover:text-foreground">
                             <Copy className="h-3.5 w-3.5" />
                           </button>
+                          <Badge variant="outline" className="text-[10px]">{PLAN_LABELS[code.plan ?? 'monthly']}</Badge>
                         </div>
                       </TableCell>
+
                       <TableCell>
                         {code.device_count! > 0 ? (
                           <Badge className="bg-green-600 hover:bg-green-700 text-white gap-1">
