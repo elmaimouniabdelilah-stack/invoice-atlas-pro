@@ -217,10 +217,17 @@ export default function AdminDashboard() {
               <p className="text-[10px] sm:text-xs text-muted-foreground">FacturaPro Admin</p>
             </div>
           </div>
-          <Button variant="ghost" size="sm" onClick={handleLogout} className="gap-1 sm:gap-2 shrink-0">
-            <LogOut className="h-4 w-4" />
-            <span className="hidden sm:inline">خروج</span>
-          </Button>
+          <div className="flex items-center gap-1 shrink-0">
+            <Button variant="outline" size="sm" onClick={() => navigate('/admin/roles')} className="gap-1 sm:gap-2">
+              <ShieldCheck className="h-4 w-4" />
+              <span className="hidden sm:inline">الأدوار</span>
+            </Button>
+            <Button variant="ghost" size="sm" onClick={handleLogout} className="gap-1 sm:gap-2">
+              <LogOut className="h-4 w-4" />
+              <span className="hidden sm:inline">خروج</span>
+            </Button>
+          </div>
+
         </div>
       </header>
 
