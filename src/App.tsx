@@ -19,6 +19,7 @@ import NotFound from "./pages/NotFound";
 import PWAInstallPrompt from "./components/PWAInstallPrompt";
 import AdminLoginPage from "./pages/AdminLoginPage";
 import AdminDashboard from "./pages/AdminDashboard";
+import AdminRolesPage from "./pages/AdminRolesPage";
 import ResetPasswordPage from "./pages/ResetPasswordPage";
 import AuthPage from "./pages/AuthPage";
 
@@ -39,6 +40,7 @@ const App = () => (
                   <Route path="/auth" element={<AuthPage />} />
                   <Route path="/admin/login" element={<AdminLoginPage />} />
                   <Route path="/admin" element={<AdminDashboard />} />
+                  <Route path="/admin/roles" element={<AdminRolesPage />} />
                   <Route path="/reset-password" element={<ResetPasswordPage />} />
                   <Route path="/" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
                   <Route path="/invoice" element={<ProtectedRoute><InvoicePage /></ProtectedRoute>} />
