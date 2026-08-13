@@ -48,10 +48,6 @@ export default function AuthPage() {
       toast({ title: t('fillAllFields'), variant: 'destructive' });
       return;
     }
-    if (password.length < 6) {
-      toast({ title: t('passwordTooShort'), variant: 'destructive' });
-      return;
-    }
 
     setLoading(true);
     const { error } = await supabase.auth.signUp({ email, password });
