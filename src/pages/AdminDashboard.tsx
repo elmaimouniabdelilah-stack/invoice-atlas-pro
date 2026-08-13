@@ -18,6 +18,15 @@ import {
   Plus, Copy, LogOut, Loader2, Trash2, RefreshCw, KeyRound, Monitor, Clock, ShieldCheck,
 } from 'lucide-react';
 
+type PlanType = 'trial' | 'monthly' | 'yearly' | 'lifetime';
+
+const PLAN_LABELS: Record<PlanType, string> = {
+  trial: 'تجريبي',
+  monthly: 'شهري',
+  yearly: 'سنوي',
+  lifetime: 'مدى الحياة',
+};
+
 interface ActivationCode {
   id: string;
   code: string;
@@ -25,6 +34,7 @@ interface ActivationCode {
   is_active: boolean;
   created_at: string;
   expires_at: string | null;
+  plan?: PlanType | null;
   device_count?: number;
 }
 
@@ -34,6 +44,8 @@ export default function AdminDashboard() {
   const [creating, setCreating] = useState(false);
   const [creatingTrial, setCreatingTrial] = useState(false);
   const [newMaxDevices, setNewMaxDevices] = useState(2);
+  const [newPlan, setNewPlan] = useState<PlanType>('monthly');
+
   const [dialogOpen, setDialogOpen] = useState(false);
   const [selectedCode, setSelectedCode] = useState<ActivationCode | null>(null);
   const [devices, setDevices] = useState<any[]>([]);
@@ -99,9 +111,18 @@ export default function AdminDashboard() {
 
       if (error) throw error;
 
+      let expiresAt: string | null = null;
+      if (newPlan === 'monthly' || newPlan === 'yearly') {
+        const d = new Date();
+        if (newPlan === 'monthly') d.setMonth(d.getMonth() + 1);
+        else d.setFullYear(d.getFullYear() + 1);
+        expiresAt = d.toISOString();
+      }
+
       const { error: insertError } = await supabase
         .from('activation_codes')
-        .insert({ code: data.code, max_devices: newMaxDevices });
+        .insert({ code: data.code, max_devices: newMaxDevices, plan: newPlan, expires_at: expiresAt });
+
 
       if (insertError) throw insertError;
 
@@ -235,6 +256,30 @@ export default function AdminDashboard() {
               </DialogHeader>
               <div className="space-y-4 py-4">
                 <div className="space-y-2">
+                  <Label>نوع الاشتراك</Label>
+                  <div className="grid grid-cols-3 gap-2">
+                    {(['monthly', 'yearly', 'lifetime'] as PlanType[]).map(p => (
+                      <button
+                        key={p}
+                        type="button"
+                        onClick={() => setNewPlan(p)}
+                        className={`rounded-lg border px-2 py-2.5 text-xs font-medium transition-colors ${
+                          newPlan === p
+                            ? 'border-primary bg-primary text-primary-foreground'
+                            : 'border-border bg-card text-muted-foreground hover:bg-accent'
+                        }`}
+                      >
+                        {PLAN_LABELS[p]}
+                      </button>
+                    ))}
+                  </div>
+                  <p className="text-[11px] text-muted-foreground">
+                    {newPlan === 'lifetime'
+                      ? 'كود بدون تاريخ انتهاء'
+                      : `ينتهي بعد ${newPlan === 'monthly' ? 'شهر واحد' : 'سنة كاملة'} من الإنشاء`}
+                  </p>
+                </div>
+                <div className="space-y-2">
                   <Label>عدد الأجهزة المسموح بها</Label>
                   <Input
                     type="number"
@@ -249,6 +294,7 @@ export default function AdminDashboard() {
                   إنشاء الكود
                 </Button>
               </div>
+
             </DialogContent>
           </Dialog>
           <Button variant="outline" className="gap-2 w-full sm:w-auto" onClick={handleCreateTrialCode} disabled={creatingTrial}>
@@ -286,7 +332,11 @@ export default function AdminDashboard() {
                           <Copy className="h-4 w-4" />
                         </button>
                       </div>
-                      {isTrial && <Badge variant="outline" className="text-[10px] shrink-0">تجريبي</Badge>}
+                      <div className="flex items-center gap-1.5 shrink-0">
+                        <Badge variant="outline" className="text-[10px]">{PLAN_LABELS[code.plan ?? 'monthly']}</Badge>
+                        {isTrial && <Badge variant="outline" className="text-[10px]">تجريبي</Badge>}
+                      </div>
+
                     </div>
 
                     {/* Status badges */}
@@ -382,8 +432,10 @@ export default function AdminDashboard() {
                           <button onClick={() => handleCopy(code.code)} className="text-muted-foreground hover:text-foreground">
                             <Copy className="h-3.5 w-3.5" />
                           </button>
+                          <Badge variant="outline" className="text-[10px]">{PLAN_LABELS[code.plan ?? 'monthly']}</Badge>
                         </div>
                       </TableCell>
+
                       <TableCell>
                         {code.device_count! > 0 ? (
                           <Badge className="bg-green-600 hover:bg-green-700 text-white gap-1">

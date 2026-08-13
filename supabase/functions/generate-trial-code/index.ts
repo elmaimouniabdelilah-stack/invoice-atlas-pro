@@ -29,7 +29,9 @@ Deno.serve(async (req) => {
         code,
         is_active: true,
         max_devices: 1,
+        plan: "trial",
         expires_at: expiresAt.toISOString(),
+
       })
       .select()
       .single();

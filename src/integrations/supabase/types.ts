@@ -22,6 +22,7 @@ export type Database = {
           id: string
           is_active: boolean
           max_devices: number
+          plan: Database["public"]["Enums"]["subscription_plan"]
         }
         Insert: {
           code: string
@@ -30,6 +31,7 @@ export type Database = {
           id?: string
           is_active?: boolean
           max_devices?: number
+          plan?: Database["public"]["Enums"]["subscription_plan"]
         }
         Update: {
           code?: string
@@ -38,6 +40,7 @@ export type Database = {
           id?: string
           is_active?: boolean
           max_devices?: number
+          plan?: Database["public"]["Enums"]["subscription_plan"]
         }
         Relationships: []
       }
@@ -100,6 +103,7 @@ export type Database = {
     }
     Enums: {
       app_role: "admin" | "moderator" | "user" | "super_admin"
+      subscription_plan: "trial" | "monthly" | "yearly" | "lifetime"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -228,6 +232,7 @@ export const Constants = {
   public: {
     Enums: {
       app_role: ["admin", "moderator", "user", "super_admin"],
+      subscription_plan: ["trial", "monthly", "yearly", "lifetime"],
     },
   },
 } as const
