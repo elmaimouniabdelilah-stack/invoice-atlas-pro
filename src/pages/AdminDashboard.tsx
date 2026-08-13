@@ -505,14 +505,7 @@ export default function AdminDashboard() {
                         {code.device_count} / {code.max_devices}
                       </Badge>
                       {code.expires_at ? (
-                        expired ? (
-                          <Badge variant="destructive" className="gap-1 text-[10px]"><Clock className="h-3 w-3" />منتهية</Badge>
-                        ) : (
-                          <Badge variant="secondary" className="gap-1 text-[10px]">
-                            <Clock className="h-3 w-3" />
-                            {new Date(code.expires_at).toLocaleString('ar-MA', { dateStyle: 'short', timeStyle: 'short' })}
-                          </Badge>
-                        )
+                        <CountdownBadge expiresAt={code.expires_at} />
                       ) : (
                         <Badge variant="outline" className="text-[10px]">دائم</Badge>
                       )}
