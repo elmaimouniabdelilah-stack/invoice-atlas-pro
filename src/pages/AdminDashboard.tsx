@@ -18,6 +18,15 @@ import {
   Plus, Copy, LogOut, Loader2, Trash2, RefreshCw, KeyRound, Monitor, Clock, ShieldCheck,
 } from 'lucide-react';
 
+type PlanType = 'trial' | 'monthly' | 'yearly' | 'lifetime';
+
+const PLAN_LABELS: Record<PlanType, string> = {
+  trial: 'تجريبي',
+  monthly: 'شهري',
+  yearly: 'سنوي',
+  lifetime: 'مدى الحياة',
+};
+
 interface ActivationCode {
   id: string;
   code: string;
@@ -25,6 +34,7 @@ interface ActivationCode {
   is_active: boolean;
   created_at: string;
   expires_at: string | null;
+  plan?: PlanType | null;
   device_count?: number;
 }
 
@@ -34,6 +44,8 @@ export default function AdminDashboard() {
   const [creating, setCreating] = useState(false);
   const [creatingTrial, setCreatingTrial] = useState(false);
   const [newMaxDevices, setNewMaxDevices] = useState(2);
+  const [newPlan, setNewPlan] = useState<PlanType>('monthly');
+
   const [dialogOpen, setDialogOpen] = useState(false);
   const [selectedCode, setSelectedCode] = useState<ActivationCode | null>(null);
   const [devices, setDevices] = useState<any[]>([]);
