@@ -45,9 +45,9 @@ function SubscriptionManager({
 }: {
   code: ActivationCode;
   trigger: React.ReactNode;
-  onChangePlan: (code: ActivationCode, plan: PlanType) => Promise<void>;
-  onExtend: (code: ActivationCode, months: number) => Promise<void>;
-  onExpire: (code: ActivationCode) => Promise<void>;
+  onChangePlan: (code: ActivationCode, plan: PlanType) => Promise<unknown>;
+  onExtend: (code: ActivationCode, months: number) => Promise<unknown>;
+  onExpire: (code: ActivationCode) => Promise<unknown>;
 }) {
   const [open, setOpen] = useState(false);
   const [busy, setBusy] = useState(false);
@@ -55,7 +55,7 @@ function SubscriptionManager({
   const expired = !!code.expires_at && new Date(code.expires_at) < new Date();
   const status = !code.is_active ? 'موقوف' : expired ? 'منتهي' : 'نشط';
 
-  const run = async (fn: () => Promise<void>) => {
+  const run = async (fn: () => Promise<unknown>) => {
     setBusy(true);
     try { await fn(); setOpen(false); } finally { setBusy(false); }
   };
