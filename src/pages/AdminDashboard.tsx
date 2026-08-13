@@ -624,14 +624,7 @@ export default function AdminDashboard() {
                       </TableCell>
                       <TableCell>
                         {code.expires_at ? (
-                          new Date(code.expires_at) < new Date() ? (
-                            <Badge variant="destructive" className="gap-1"><Clock className="h-3 w-3" />منتهية</Badge>
-                          ) : (
-                            <Badge variant="secondary" className="gap-1">
-                              <Clock className="h-3 w-3" />
-                              {new Date(code.expires_at).toLocaleString('ar-MA', { dateStyle: 'short', timeStyle: 'short' })}
-                            </Badge>
-                          )
+                          <CountdownBadge expiresAt={code.expires_at} compact />
                         ) : (
                           <Badge variant="outline">دائم</Badge>
                         )}
