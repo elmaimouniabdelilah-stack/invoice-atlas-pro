@@ -51,26 +51,19 @@ export default function AccountPage() {
       if (active) setEmail(user?.email ?? null);
 
       const fp = getDeviceFingerprint();
-      const { data: activations } = await supabase
-        .from('device_activations')
-        .select('code_id')
-        .eq('device_fingerprint', fp);
-
-      if (activations?.length) {
-        const { data: codes } = await supabase
-          .from('activation_codes')
-          .select('code, is_active, expires_at')
-          .in('id', activations.map(a => a.code_id));
-        const valid = codes?.find(c => c.is_active && (!c.expires_at || new Date(c.expires_at) > new Date())) ?? codes?.[0];
-        if (active && valid) {
-          setSub({
-            code: valid.code,
-            isTrial: valid.code.startsWith('TRIAL-'),
-            expiresAt: valid.expires_at,
-            active: valid.is_active && (!valid.expires_at || new Date(valid.expires_at) > new Date()),
-          });
-        }
+      const { data } = await supabase.functions.invoke('check-activation', {
+        body: { deviceFingerprint: fp },
+      });
+      const subscription = (data as any)?.subscription;
+      if (active && subscription) {
+        setSub({
+          code: subscription.code,
+          isTrial: !!subscription.isTrial,
+          expiresAt: subscription.expiresAt ?? null,
+          active: !!subscription.active,
+        });
       }
+
       if (active) setLoading(false);
     })();
     return () => { active = false; };
