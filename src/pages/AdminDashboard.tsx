@@ -387,6 +387,18 @@ export default function AdminDashboard() {
 
                     {/* Actions */}
                     <div className="flex gap-2">
+                      <SubscriptionManager
+                        code={code}
+                        onChangePlan={handleChangePlan}
+                        onExtend={handleExtend}
+                        onExpire={handleExpireNow}
+                        trigger={
+                          <Button size="sm" variant="outline" className="flex-1 gap-2">
+                            <CalendarClock className="h-3.5 w-3.5" />
+                            الاشتراك
+                          </Button>
+                        }
+                      />
                       <Dialog>
                         <DialogTrigger asChild>
                           <Button size="sm" variant="outline" className="flex-1 gap-2" onClick={() => handleViewDevices(code)}>
@@ -400,6 +412,7 @@ export default function AdminDashboard() {
                         <Trash2 className="h-3.5 w-3.5" />
                       </Button>
                     </div>
+
 
                     <p className="text-[10px] text-muted-foreground text-center">
                       أُنشئ في {new Date(code.created_at).toLocaleDateString('ar-MA')}
