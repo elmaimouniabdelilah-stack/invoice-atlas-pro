@@ -13,6 +13,7 @@ import {
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger,
 } from '@/components/ui/dialog';
 import { Badge } from '@/components/ui/badge';
+import AdminShell from '@/components/admin/AdminShell';
 import {
   Plus, Copy, LogOut, Loader2, Trash2, RefreshCw, KeyRound, Monitor, Clock, ShieldCheck,
 } from 'lucide-react';
@@ -205,34 +206,8 @@ export default function AdminDashboard() {
   );
 
   return (
-    <div className="min-h-screen bg-background" dir="rtl">
-      {/* Header */}
-      <header className="sticky top-0 z-30 border-b border-border bg-card/95 backdrop-blur px-3 sm:px-6 py-3 sm:py-4">
-        <div className="mx-auto flex max-w-5xl items-center justify-between gap-2">
-          <div className="flex items-center gap-2 sm:gap-3 min-w-0">
-            <div className="flex h-8 w-8 sm:h-9 sm:w-9 shrink-0 items-center justify-center rounded-lg bg-primary">
-              <KeyRound className="h-4 w-4 sm:h-5 sm:w-5 text-primary-foreground" />
-            </div>
-            <div className="min-w-0">
-              <h1 className="text-sm sm:text-lg font-bold text-foreground truncate">إدارة أكواد التفعيل</h1>
-              <p className="text-[10px] sm:text-xs text-muted-foreground">FacturaPro Admin</p>
-            </div>
-          </div>
-          <div className="flex items-center gap-1 shrink-0">
-            <Button variant="outline" size="sm" onClick={() => navigate('/admin/roles')} className="gap-1 sm:gap-2">
-              <ShieldCheck className="h-4 w-4" />
-              <span className="hidden sm:inline">الأدوار</span>
-            </Button>
-            <Button variant="ghost" size="sm" onClick={handleLogout} className="gap-1 sm:gap-2">
-              <LogOut className="h-4 w-4" />
-              <span className="hidden sm:inline">خروج</span>
-            </Button>
-          </div>
-
-        </div>
-      </header>
-
-      <main className="mx-auto max-w-5xl p-3 sm:p-6 space-y-4 sm:space-y-6 pb-24">
+    <AdminShell title="إدارة أكواد التفعيل">
+      <div className="space-y-4 sm:space-y-6">
         {/* Stats */}
         <div className="grid grid-cols-2 gap-2 sm:gap-4">
           <div className="rounded-xl border border-border bg-card px-3 sm:px-5 py-2.5 sm:py-3 text-center">
@@ -476,7 +451,7 @@ export default function AdminDashboard() {
             </div>
           </>
         )}
-      </main>
-    </div>
+      </div>
+    </AdminShell>
   );
 }
