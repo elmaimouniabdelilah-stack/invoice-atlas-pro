@@ -19,9 +19,9 @@ Deno.serve(async (req) => {
       code += chars.charAt(Math.floor(Math.random() * chars.length));
     }
 
-    // Set expiration to 24 hours from now
+    // Set expiration to 1 hour from now
     const expiresAt = new Date();
-    expiresAt.setHours(expiresAt.getHours() + 24);
+    expiresAt.setHours(expiresAt.getHours() + 1);
 
     const { data, error } = await supabase
       .from("activation_codes")

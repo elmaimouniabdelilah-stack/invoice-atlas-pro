@@ -278,7 +278,7 @@ export default function AdminDashboard() {
     let expiresAt: string | null = null;
     if (plan !== 'lifetime') {
       const d = new Date();
-      if (plan === 'trial') d.setHours(d.getHours() + 24);
+      if (plan === 'trial') d.setHours(d.getHours() + 1);
       else if (plan === 'monthly') d.setMonth(d.getMonth() + 1);
       else d.setFullYear(d.getFullYear() + 1);
       expiresAt = d.toISOString();
