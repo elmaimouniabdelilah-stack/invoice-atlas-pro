@@ -166,6 +166,49 @@ export default function AdminDashboard() {
     fetchCodes();
   };
 
+  const handleChangePlan = async (code: ActivationCode, plan: PlanType) => {
+    let expiresAt: string | null = null;
+    if (plan !== 'lifetime') {
+      const d = new Date();
+      if (plan === 'trial') d.setHours(d.getHours() + 24);
+      else if (plan === 'monthly') d.setMonth(d.getMonth() + 1);
+      else d.setFullYear(d.getFullYear() + 1);
+      expiresAt = d.toISOString();
+    }
+    const { error } = await supabase
+      .from('activation_codes')
+      .update({ plan, expires_at: expiresAt, is_active: true })
+      .eq('id', code.id);
+    if (error) return toast({ title: error.message, variant: 'destructive' });
+    toast({ title: `تم تحديث الاشتراك إلى: ${PLAN_LABELS[plan]}` });
+    fetchCodes();
+  };
+
+  const handleExtend = async (code: ActivationCode, months: number) => {
+    const base = code.expires_at && new Date(code.expires_at) > new Date()
+      ? new Date(code.expires_at)
+      : new Date();
+    base.setMonth(base.getMonth() + months);
+    const { error } = await supabase
+      .from('activation_codes')
+      .update({ expires_at: base.toISOString(), is_active: true })
+      .eq('id', code.id);
+    if (error) return toast({ title: error.message, variant: 'destructive' });
+    toast({ title: `تم التمديد إلى ${base.toLocaleDateString('ar-MA')}` });
+    fetchCodes();
+  };
+
+  const handleExpireNow = async (code: ActivationCode) => {
+    const { error } = await supabase
+      .from('activation_codes')
+      .update({ expires_at: new Date().toISOString(), is_active: false })
+      .eq('id', code.id);
+    if (error) return toast({ title: error.message, variant: 'destructive' });
+    toast({ title: 'تم إنهاء الاشتراك' });
+    fetchCodes();
+  };
+
+
   const handleDeleteCode = async (id: string) => {
     await supabase.from('activation_codes').delete().eq('id', id);
     fetchCodes();
