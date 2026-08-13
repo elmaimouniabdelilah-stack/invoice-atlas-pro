@@ -40,6 +40,112 @@ interface ActivationCode {
   device_count?: number;
 }
 
+function SubscriptionManager({
+  code, trigger, onChangePlan, onExtend, onExpire,
+}: {
+  code: ActivationCode;
+  trigger: React.ReactNode;
+  onChangePlan: (code: ActivationCode, plan: PlanType) => Promise<void>;
+  onExtend: (code: ActivationCode, months: number) => Promise<void>;
+  onExpire: (code: ActivationCode) => Promise<void>;
+}) {
+  const [open, setOpen] = useState(false);
+  const [busy, setBusy] = useState(false);
+  const current = (code.plan ?? 'monthly') as PlanType;
+  const expired = !!code.expires_at && new Date(code.expires_at) < new Date();
+  const status = !code.is_active ? 'موقوف' : expired ? 'منتهي' : 'نشط';
+
+  const run = async (fn: () => Promise<void>) => {
+    setBusy(true);
+    try { await fn(); setOpen(false); } finally { setBusy(false); }
+  };
+
+  return (
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger asChild>{trigger}</DialogTrigger>
+      <DialogContent dir="rtl" className="max-w-sm sm:max-w-md">
+        <DialogHeader>
+          <DialogTitle className="flex items-center gap-2 text-base">
+            <CalendarClock className="h-4 w-4" />
+            إدارة الاشتراك
+          </DialogTitle>
+        </DialogHeader>
+
+        <div className="space-y-4 py-2">
+          <div className="rounded-lg border border-border bg-muted/40 p-3 space-y-1.5">
+            <div className="flex items-center justify-between text-xs">
+              <span className="text-muted-foreground">الكود</span>
+              <code className="font-mono font-bold" dir="ltr">{code.code}</code>
+            </div>
+            <div className="flex items-center justify-between text-xs">
+              <span className="text-muted-foreground">النوع الحالي</span>
+              <Badge variant="secondary" className="text-[10px]">{PLAN_LABELS[current]}</Badge>
+            </div>
+            <div className="flex items-center justify-between text-xs">
+              <span className="text-muted-foreground">الحالة</span>
+              <Badge variant={status === 'نشط' ? 'default' : 'destructive'} className="text-[10px]">{status}</Badge>
+            </div>
+            <div className="flex items-center justify-between text-xs">
+              <span className="text-muted-foreground">ينتهي في</span>
+              <span className="font-medium">
+                {code.expires_at ? new Date(code.expires_at).toLocaleString('ar-MA', { dateStyle: 'short', timeStyle: 'short' }) : 'دائم'}
+              </span>
+            </div>
+          </div>
+
+          <div className="space-y-2">
+            <Label className="text-xs flex items-center gap-1.5">
+              <ArrowUpCircle className="h-3.5 w-3.5" />
+              ترقية / تغيير نوع الاشتراك
+            </Label>
+            <div className="grid grid-cols-2 gap-2">
+              {(['trial', 'monthly', 'yearly', 'lifetime'] as PlanType[]).map(p => (
+                <button
+                  key={p}
+                  type="button"
+                  disabled={busy}
+                  onClick={() => run(() => onChangePlan(code, p))}
+                  className={`rounded-lg border px-2 py-2.5 text-xs font-medium transition-colors disabled:opacity-50 ${
+                    current === p
+                      ? 'border-primary bg-primary text-primary-foreground'
+                      : 'border-border bg-card text-muted-foreground hover:bg-accent'
+                  }`}
+                >
+                  {PLAN_LABELS[p]}
+                </button>
+              ))}
+            </div>
+            <p className="text-[10px] text-muted-foreground">التغيير يعيد احتساب تاريخ الانتهاء ابتداءً من اليوم.</p>
+          </div>
+
+          <div className="space-y-2">
+            <Label className="text-xs">تمديد المدة الحالية</Label>
+            <div className="grid grid-cols-3 gap-2">
+              {[1, 6, 12].map(m => (
+                <Button key={m} size="sm" variant="outline" disabled={busy} onClick={() => run(() => onExtend(code, m))}>
+                  + {m === 12 ? 'سنة' : `${m} أشهر`}
+                </Button>
+              ))}
+            </div>
+          </div>
+
+          <Button
+            variant="outline"
+            size="sm"
+            disabled={busy}
+            onClick={() => run(() => onExpire(code))}
+            className="w-full gap-2 text-destructive border-destructive/30 hover:bg-destructive/10"
+          >
+            <Ban className="h-3.5 w-3.5" />
+            إنهاء الاشتراك الآن
+          </Button>
+        </div>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
+
 export default function AdminDashboard() {
   const [codes, setCodes] = useState<ActivationCode[]>([]);
   const [loading, setLoading] = useState(true);
