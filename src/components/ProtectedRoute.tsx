@@ -17,38 +17,18 @@ export default function ProtectedRoute({ children }: { children: React.ReactNode
     try {
       const fingerprint = getDeviceFingerprint();
 
-      const { data: activations } = await supabase
-        .from('device_activations')
-        .select('code_id')
-        .eq('device_fingerprint', fingerprint);
-
-      if (!activations || activations.length === 0) {
-        setIsActivated(false);
-        setShowActivation(true);
-        setActivationChecked(true);
-        setTrialExpiresAt(null);
-        localStorage.removeItem('facturapro-activated');
-        return;
-      }
-
-      const codeIds = activations.map(a => a.code_id);
-      const { data: codes } = await supabase
-        .from('activation_codes')
-        .select('id, is_active, expires_at')
-        .in('id', codeIds);
-
-      let validExpiresAt: string | null = null;
-      const hasValidCode = codes?.some(c => {
-        if (!c.is_active) return false;
-        if (c.expires_at && new Date(c.expires_at) < new Date()) return false;
-        if (c.expires_at) validExpiresAt = c.expires_at;
-        return true;
+      const { data, error } = await supabase.functions.invoke('check-activation', {
+        body: { deviceFingerprint: fingerprint },
       });
+      if (error) throw error;
 
-      if (hasValidCode) {
+      const activated = !!(data as any)?.activated;
+      const expiresAt = (data as any)?.subscription?.expiresAt ?? null;
+
+      if (activated) {
         setIsActivated(true);
         setShowActivation(false);
-        setTrialExpiresAt(validExpiresAt);
+        setTrialExpiresAt(expiresAt);
         localStorage.setItem('facturapro-activated', 'true');
       } else {
         setIsActivated(false);
@@ -63,6 +43,7 @@ export default function ProtectedRoute({ children }: { children: React.ReactNode
     }
     setActivationChecked(true);
   }, []);
+
 
   useEffect(() => {
     if (session) {
