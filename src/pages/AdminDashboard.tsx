@@ -483,6 +483,17 @@ export default function AdminDashboard() {
                       </TableCell>
                       <TableCell>
                         <div className="flex gap-1">
+                          <SubscriptionManager
+                            code={code}
+                            onChangePlan={handleChangePlan}
+                            onExtend={handleExtend}
+                            onExpire={handleExpireNow}
+                            trigger={
+                              <Button size="sm" variant="ghost" title="إدارة الاشتراك">
+                                <CalendarClock className="h-3.5 w-3.5" />
+                              </Button>
+                            }
+                          />
                           <Dialog>
                             <DialogTrigger asChild>
                               <Button size="sm" variant="ghost" onClick={() => handleViewDevices(code)}>
@@ -496,6 +507,7 @@ export default function AdminDashboard() {
                           </Button>
                         </div>
                       </TableCell>
+
                     </TableRow>
                   ))}
                 </TableBody>
