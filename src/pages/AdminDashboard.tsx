@@ -235,6 +235,30 @@ export default function AdminDashboard() {
               </DialogHeader>
               <div className="space-y-4 py-4">
                 <div className="space-y-2">
+                  <Label>نوع الاشتراك</Label>
+                  <div className="grid grid-cols-3 gap-2">
+                    {(['monthly', 'yearly', 'lifetime'] as PlanType[]).map(p => (
+                      <button
+                        key={p}
+                        type="button"
+                        onClick={() => setNewPlan(p)}
+                        className={`rounded-lg border px-2 py-2.5 text-xs font-medium transition-colors ${
+                          newPlan === p
+                            ? 'border-primary bg-primary text-primary-foreground'
+                            : 'border-border bg-card text-muted-foreground hover:bg-accent'
+                        }`}
+                      >
+                        {PLAN_LABELS[p]}
+                      </button>
+                    ))}
+                  </div>
+                  <p className="text-[11px] text-muted-foreground">
+                    {newPlan === 'lifetime'
+                      ? 'كود بدون تاريخ انتهاء'
+                      : `ينتهي بعد ${newPlan === 'monthly' ? 'شهر واحد' : 'سنة كاملة'} من الإنشاء`}
+                  </p>
+                </div>
+                <div className="space-y-2">
                   <Label>عدد الأجهزة المسموح بها</Label>
                   <Input
                     type="number"
@@ -249,6 +273,7 @@ export default function AdminDashboard() {
                   إنشاء الكود
                 </Button>
               </div>
+
             </DialogContent>
           </Dialog>
           <Button variant="outline" className="gap-2 w-full sm:w-auto" onClick={handleCreateTrialCode} disabled={creatingTrial}>
