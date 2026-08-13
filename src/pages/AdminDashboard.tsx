@@ -99,9 +99,18 @@ export default function AdminDashboard() {
 
       if (error) throw error;
 
+      let expiresAt: string | null = null;
+      if (newPlan === 'monthly' || newPlan === 'yearly') {
+        const d = new Date();
+        if (newPlan === 'monthly') d.setMonth(d.getMonth() + 1);
+        else d.setFullYear(d.getFullYear() + 1);
+        expiresAt = d.toISOString();
+      }
+
       const { error: insertError } = await supabase
         .from('activation_codes')
-        .insert({ code: data.code, max_devices: newMaxDevices });
+        .insert({ code: data.code, max_devices: newMaxDevices, plan: newPlan, expires_at: expiresAt });
+
 
       if (insertError) throw insertError;
 
