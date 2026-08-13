@@ -286,7 +286,11 @@ export default function AdminDashboard() {
                           <Copy className="h-4 w-4" />
                         </button>
                       </div>
-                      {isTrial && <Badge variant="outline" className="text-[10px] shrink-0">تجريبي</Badge>}
+                      <div className="flex items-center gap-1.5 shrink-0">
+                        <Badge variant="outline" className="text-[10px]">{PLAN_LABELS[code.plan ?? 'monthly']}</Badge>
+                        {isTrial && <Badge variant="outline" className="text-[10px]">تجريبي</Badge>}
+                      </div>
+
                     </div>
 
                     {/* Status badges */}
