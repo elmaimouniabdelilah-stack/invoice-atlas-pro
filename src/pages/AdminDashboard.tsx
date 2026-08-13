@@ -16,6 +16,7 @@ import { Badge } from '@/components/ui/badge';
 import AdminShell from '@/components/admin/AdminShell';
 import {
   Plus, Copy, LogOut, Loader2, Trash2, RefreshCw, KeyRound, Monitor, Clock, ShieldCheck,
+  CalendarClock, ArrowUpCircle, Ban,
 } from 'lucide-react';
 
 type PlanType = 'trial' | 'monthly' | 'yearly' | 'lifetime';
@@ -26,6 +27,7 @@ const PLAN_LABELS: Record<PlanType, string> = {
   yearly: 'سنوي',
   lifetime: 'مدى الحياة',
 };
+
 
 interface ActivationCode {
   id: string;
