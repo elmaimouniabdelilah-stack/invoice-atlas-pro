@@ -22,7 +22,7 @@ export const StepScene: React.FC<Props> = ({ index, title, bullets, image }) => 
   const vertical = height > width;
 
   const imgIn = spring({ frame, fps, config: { damping: 20, stiffness: 90 } });
-  const ken = interpolate(frame, [0, durationInFrames], [1.02, 1.1]);
+  const ken = interpolate(frame, [0, durationInFrames], [0.98, 1.04]);
   const shift = interpolate(frame, [0, durationInFrames], [0, vertical ? -18 : -26]);
   const titleIn = spring({ frame: frame - 8, fps, config: { damping: 18, stiffness: 120 } });
   const numIn = spring({ frame, fps, config: { damping: 12, stiffness: 160 } });
@@ -39,7 +39,7 @@ export const StepScene: React.FC<Props> = ({ index, title, bullets, image }) => 
         opacity: imgIn,
         transform: `translateX(${interpolate(imgIn, [0, 1], [vertical ? 0 : -60, 0])}px) translateY(${
           interpolate(imgIn, [0, 1], [vertical ? 40 : 0, 0]) + shift
-        }px)`,
+        }px) scale(${ken})`,
       }}
     >
       <div
@@ -60,7 +60,6 @@ export const StepScene: React.FC<Props> = ({ index, title, bullets, image }) => 
             width: "100%",
             maxHeight: vertical ? height * 0.4 : height * 0.74,
             objectFit: "contain",
-            transform: `scale(${ken})`,
           }}
         />
       </div>
@@ -100,10 +99,10 @@ export const StepScene: React.FC<Props> = ({ index, title, bullets, image }) => 
             justifyContent: "center",
           }}
         >
-          {index}
+          {["١", "٢", "٣"][index - 1]}
         </div>
         <div style={{ color: C.goldSoft, fontSize: vertical ? 32 : 34, letterSpacing: 2 }}>
-          الخطوة {index} من ٣
+          الخطوة {["١", "٢", "٣"][index - 1]} من ٣
         </div>
       </div>
 
