@@ -4,9 +4,6 @@ import {
   FileText, ShieldCheck, Smartphone, Printer, Users, BarChart3,
   Zap, Layers, ArrowLeft, CheckCircle2, Sparkles,
 } from 'lucide-react';
-import videoDesktop from '@/assets/video/steps-desktop.mp4.asset.json';
-import videoMobile from '@/assets/video/steps-mobile.mp4.asset.json';
-import videoPoster from '@/assets/video/steps-poster.jpg.asset.json';
 
 
 
@@ -166,7 +163,7 @@ export default function LandingPage() {
       </section>
 
       {/* VIDEO */}
-      <section id="video" className="mx-auto max-w-6xl px-4 pb-4 pt-6">
+      <section id="video" className="mx-auto max-w-6xl scroll-mt-24 px-4 pb-4 pt-16">
         <div className="mx-auto mb-8 max-w-2xl text-center">
           <h2 className="text-3xl font-bold tracking-tight md:text-4xl">شاهد الشرح في أقل من دقيقة</h2>
           <p className="mt-3 text-muted-foreground">
@@ -182,9 +179,9 @@ export default function LandingPage() {
             playsInline
             muted
             loop
-            preload="none"
-            poster={videoPoster.url}
-            src={videoDesktop.url}
+            preload="metadata"
+            poster="/landing/steps-poster.jpg"
+            src="/landing/steps-desktop.mp4"
           >
             متصفحك لا يدعم تشغيل الفيديو.
           </video>
@@ -198,9 +195,9 @@ export default function LandingPage() {
             playsInline
             muted
             loop
-            preload="none"
-            poster={videoPoster.url}
-            src={videoMobile.url}
+            preload="metadata"
+            poster="/landing/steps-poster.jpg"
+            src="/landing/steps-mobile.mp4"
           >
             متصفحك لا يدعم تشغيل الفيديو.
           </video>
