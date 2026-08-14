@@ -2,7 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import {
   FileText, ShieldCheck, Smartphone, Printer, Users, BarChart3,
-  Zap, Globe, Lock, Layers, ArrowLeft, CheckCircle2, Sparkles,
+  Zap, Layers, ArrowLeft, CheckCircle2, Sparkles,
 } from 'lucide-react';
 
 
