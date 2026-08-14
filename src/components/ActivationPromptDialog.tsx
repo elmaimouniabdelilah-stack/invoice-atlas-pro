@@ -17,11 +17,14 @@ const WHATSAPP_MESSAGE = encodeURIComponent("مرحباً، أريد شراء ا
 
 interface Props {
   open: boolean;
+  trialCode?: string | null;
+  trialExpiresAt?: string | null;
+  trialStatus?: string | null;
   onActivated: () => void;
   onSkip: () => void;
 }
 
-const ActivationPromptDialog = ({ open, onActivated, onSkip }: Props) => {
+const ActivationPromptDialog = ({ open, trialCode, trialExpiresAt, trialStatus, onActivated, onSkip }: Props) => {
   const { t } = useLang();
   const [code, setCode] = useState("");
   const [loading, setLoading] = useState(false);
@@ -83,6 +86,34 @@ const ActivationPromptDialog = ({ open, onActivated, onSkip }: Props) => {
           </div>
         ) : (
           <div className="space-y-4 py-2">
+            {trialCode && (
+              <div className="rounded-xl border border-primary/30 bg-primary/5 p-3 space-y-2 text-center">
+                <p className="text-xs font-semibold text-primary">
+                  كودك التجريبي المجاني (صالح لمرة واحدة · ساعة واحدة)
+                </p>
+                <div className="flex items-center justify-center gap-2" dir="ltr">
+                  <code className="font-mono text-lg font-bold tracking-widest">{trialCode}</code>
+                </div>
+                {trialExpiresAt && (
+                  <p className="text-[11px] text-muted-foreground">
+                    ينتهي في: {new Date(trialExpiresAt).toLocaleString('ar-MA')}
+                  </p>
+                )}
+                {trialStatus && trialStatus !== 'active' ? (
+                  <p className="text-[11px] text-destructive">
+                    {trialStatus === 'used'
+                      ? 'تم استعمال هذا الكود مسبقاً على جهاز آخر'
+                      : trialStatus === 'expired'
+                      ? 'انتهت صلاحية الكود التجريبي'
+                      : 'الكود التجريبي معطّل'}
+                  </p>
+                ) : (
+                  <Button size="sm" variant="secondary" className="w-full" onClick={() => setCode(trialCode)}>
+                    استعمال الكود التجريبي
+                  </Button>
+                )}
+              </div>
+            )}
             <p className="text-sm text-muted-foreground text-center">
               {t('enterActivationCodeAfterSignup')}
             </p>

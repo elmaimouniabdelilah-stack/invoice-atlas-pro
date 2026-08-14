@@ -38,6 +38,7 @@ interface ActivationCode {
   created_at: string;
   expires_at: string | null;
   plan?: PlanType | null;
+  owner_email?: string | null;
   device_count?: number;
 }
 
@@ -490,6 +491,9 @@ export default function AdminDashboard() {
                       </div>
 
                     </div>
+                    {code.owner_email && (
+                      <p className="text-[11px] text-muted-foreground truncate">المشترك: {code.owner_email}</p>
+                    )}
 
                     {/* Status badges */}
                     <div className="flex flex-wrap gap-1.5">
@@ -573,6 +577,7 @@ export default function AdminDashboard() {
                 <TableHeader>
                   <TableRow>
                     <TableHead className="text-right">الكود</TableHead>
+                    <TableHead className="text-right">المشترك</TableHead>
                     <TableHead className="text-right">الاستعمال</TableHead>
                     <TableHead className="text-right">الأجهزة</TableHead>
                     <TableHead className="text-right">الحالة</TableHead>
@@ -592,6 +597,9 @@ export default function AdminDashboard() {
                           </button>
                           <Badge variant="outline" className="text-[10px]">{PLAN_LABELS[code.plan ?? 'monthly']}</Badge>
                         </div>
+                      </TableCell>
+                      <TableCell className="text-xs text-muted-foreground max-w-[180px] truncate">
+                        {code.owner_email ?? '—'}
                       </TableCell>
 
                       <TableCell>
