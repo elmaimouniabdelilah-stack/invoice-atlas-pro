@@ -69,7 +69,7 @@ export const StepScene: React.FC<Props> = ({ index, title, bullets, image }) => 
   const text = (
     <div
       style={{
-        flex: 1,
+        flex: vertical ? "0 0 auto" : 1,
         display: "flex",
         flexDirection: "column",
         justifyContent: "center",
@@ -152,6 +152,7 @@ export const StepScene: React.FC<Props> = ({ index, title, bullets, image }) => 
         display: "flex",
         flexDirection: vertical ? "column" : "row",
         alignItems: "center",
+        justifyContent: "center",
         gap: vertical ? 50 : 70,
         padding: vertical ? "90px 70px" : "90px 120px",
       }}
