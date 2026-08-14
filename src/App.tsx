@@ -41,6 +41,7 @@ const App = () => (
               <PWAInstallPrompt />
               <BrowserRouter>
                 <Routes>
+                  <Route path="/landing" element={<LandingPage />} />
                   <Route path="/auth" element={<AuthPage />} />
                   <Route path="/admin/login" element={<AdminLoginPage />} />
                   <Route path="/admin" element={<AdminDashboard />} />
