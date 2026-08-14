@@ -18,7 +18,7 @@ export default function AppSidebar() {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   const links = [
-    { to: '/', icon: LayoutDashboard, label: t('dashboard') },
+    { to: '/dashboard', icon: LayoutDashboard, label: t('dashboard') },
     { to: '/invoice', icon: FilePlus, label: t('newInvoice') },
     { to: '/clients', icon: Users, label: t('clients') },
     { to: '/products', icon: Package, label: t('products') },
@@ -27,7 +27,7 @@ export default function AppSidebar() {
   ];
 
   const mobileLinks = [
-    { to: '/', icon: LayoutDashboard, label: t('dashboard'), adminShortcut: true },
+    { to: '/dashboard', icon: LayoutDashboard, label: t('dashboard'), adminShortcut: true },
     { to: '/invoice', icon: FilePlus, label: t('newInvoice') },
     { to: '/clients', icon: Users, label: t('clients') },
     { to: '/products', icon: Package, label: t('products') },
