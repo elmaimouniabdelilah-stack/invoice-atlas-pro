@@ -11,9 +11,9 @@ export const ROLE_LABELS: Record<Role, string> = {
 };
 
 export const ROLE_HOME: Record<Role, string> = {
-  super_admin: '/admin/overview',
+  super_admin: '/admin',
   admin: '/admin',
-  moderator: '/admin/moderation',
+  moderator: '/admin/account',
   user: '/admin/account',
 };
 

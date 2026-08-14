@@ -1,7 +1,7 @@
 import { ReactNode } from 'react';
 import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 import {
-  KeyRound, ShieldCheck, LayoutDashboard, Eye, UserCircle, LogOut, Loader2,
+  KeyRound, UserCircle, LogOut, Loader2,
 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
@@ -14,25 +14,20 @@ import { Role, ROLE_HOME, ROLE_LABELS, useRoles } from '@/hooks/use-roles';
 
 const NAV: Record<Role, { to: string; label: string; icon: typeof KeyRound }[]> = {
   super_admin: [
-    { to: '/admin/overview', label: 'نظرة عامة', icon: LayoutDashboard },
     { to: '/admin', label: 'الأكواد', icon: KeyRound },
-    { to: '/admin/roles', label: 'الأدوار', icon: ShieldCheck },
     { to: '/admin/account', label: 'حسابي', icon: UserCircle },
   ],
   admin: [
     { to: '/admin', label: 'الأكواد', icon: KeyRound },
-    { to: '/admin/roles', label: 'الأدوار', icon: ShieldCheck },
     { to: '/admin/account', label: 'حسابي', icon: UserCircle },
   ],
   moderator: [
-    { to: '/admin/moderation', label: 'المتابعة', icon: Eye },
     { to: '/admin/account', label: 'حسابي', icon: UserCircle },
   ],
   user: [
     { to: '/admin/account', label: 'حسابي', icon: UserCircle },
   ],
 };
-
 interface Props {
   title: string;
   subtitle?: string;
