@@ -196,7 +196,7 @@ export default function LandingPage() {
             muted
             loop
             preload="metadata"
-            poster="/landing/steps-poster.jpg"
+            poster="/landing/steps-poster-mobile.jpg"
             src="/landing/steps-mobile.mp4"
           >
             متصفحك لا يدعم تشغيل الفيديو.
