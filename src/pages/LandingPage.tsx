@@ -42,20 +42,24 @@ const FEATURES = [
 const STEPS = [
   {
     n: '١',
-    title: 'سجّل وفعّل',
-    desc: 'أنشئ حسابك وأدخل كود التفعيل — تجريبي لساعة أو اشتراك شهري/سنوي/مدى الحياة.',
+    title: 'اختر القالب وأدخل بيانات شركتك',
+    desc: 'ثلاثة قوالب مغربية، لون رئيسي حسب هويتك، وحقول ICE / IF / RC / CNSS جاهزة — على الحاسوب والهاتف.',
+    img: '/landing/step1.png',
   },
   {
     n: '٢',
-    title: 'أنشئ فاتورتك',
-    desc: 'اختر القالب، عبّئ بيانات البائع والمشتري والأصناف، وشاهد المعاينة الحية فوراً.',
+    title: 'أضف العميل والأصناف مع معاينة حية',
+    desc: 'عبّئ بيانات المشتري والأصناف والكميات والأسعار، وتتحدّث الفاتورة أمامك مباشرة مع احتساب TVA والمجاميع.',
+    img: '/landing/step2.png',
   },
   {
     n: '٣',
-    title: 'صدّر وشارك',
-    desc: 'اطبع PDF أو شارك عبر واتساب والبريد مباشرة، واحفظ نسخة في سجل الفواتير.',
+    title: 'اطبع، صدّر PDF أو شارك',
+    desc: 'فاتورة كاملة في صفحة A4 واحدة، تصدير PDF، مشاركة عبر واتساب أو البريد، وحفظ في سجل الفواتير.',
+    img: '/landing/step3.png',
   },
 ];
+
 
 const PLANS = [
   { name: 'تجريبي', price: 'مجاناً', period: 'ساعة واحدة', features: ['كل المزايا', 'كود لمرة واحدة', 'بدون بطاقة بنكية'], highlight: false },
@@ -162,22 +166,34 @@ export default function LandingPage() {
         <div className="mx-auto max-w-6xl px-4 py-20">
           <div className="mx-auto mb-12 max-w-2xl text-center">
             <h2 className="text-3xl font-bold tracking-tight md:text-4xl">ثلاث خطوات فقط</h2>
-            <p className="mt-3 text-muted-foreground">من التسجيل إلى فاتورتك الأولى في أقل من دقيقتين.</p>
+            <p className="mt-3 text-muted-foreground">من إعداد شركتك إلى فاتورتك الأولى في أقل من دقيقتين — بنفس السلاسة على الهاتف والحاسوب.</p>
           </div>
-          <div className="grid gap-8 md:grid-cols-3">
+          <div className="space-y-14 md:space-y-20">
             {STEPS.map((s, i) => (
-              <div key={s.n} className="relative text-center">
-                <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-2xl bg-primary text-2xl font-bold text-primary-foreground shadow-lg shadow-primary/20">
-                  {s.n}
+              <div key={s.n} className={`grid items-center gap-8 md:grid-cols-2 ${i % 2 === 1 ? 'md:[direction:ltr]' : ''}`}>
+                <div className={i % 2 === 1 ? 'md:[direction:rtl]' : ''}>
+                  <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-primary text-2xl font-bold text-primary-foreground shadow-lg shadow-primary/20">
+                    {s.n}
+                  </div>
+                  <h3 className="mb-2 text-xl font-semibold md:text-2xl">{s.title}</h3>
+                  <p className="max-w-md text-sm leading-relaxed text-muted-foreground md:text-base">{s.desc}</p>
+                  <div className="mt-4 flex items-center gap-3 text-xs text-muted-foreground">
+                    <span className="rounded-full border border-border bg-card px-2.5 py-1">حاسوب</span>
+                    <span className="rounded-full border border-border bg-card px-2.5 py-1">هاتف</span>
+                  </div>
                 </div>
-                {i < STEPS.length - 1 && (
-                  <div className="absolute top-8 right-[55%] hidden h-0.5 w-[80%] bg-gradient-to-l from-primary/40 to-transparent md:block" />
-                )}
-                <h3 className="mb-2 text-lg font-semibold">{s.title}</h3>
-                <p className="mx-auto max-w-xs text-sm text-muted-foreground">{s.desc}</p>
+                <div className={`overflow-hidden rounded-2xl border border-border bg-card shadow-xl shadow-primary/5 ${i % 2 === 1 ? 'md:[direction:rtl]' : ''}`}>
+                  <img
+                    src={s.img}
+                    alt={`الخطوة ${s.n}: ${s.title} — عرض على الحاسوب والهاتف`}
+                    className="w-full"
+                    loading="lazy"
+                  />
+                </div>
               </div>
             ))}
           </div>
+
         </div>
       </section>
 
