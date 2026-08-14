@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Download, X, Share, Smartphone } from "lucide-react";
+import { Download, X, Share, Smartphone, WifiOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useIsMobile } from "@/hooks/use-mobile";
 
@@ -9,11 +9,21 @@ interface BeforeInstallPromptEvent extends Event {
 }
 
 const PWA_DISMISSED_KEY = "pwa-install-dismissed";
+const PWA_DISMISSED_TS_KEY = "pwa-install-dismissed-ts";
+// Re-show the bar after this many days even if previously dismissed.
+const RESHOW_DAYS = 7;
 
 const isIOS = () => /iphone|ipad|ipod/i.test(navigator.userAgent);
 const isInStandaloneMode = () =>
   window.matchMedia("(display-mode: standalone)").matches ||
   (navigator as any).standalone === true;
+
+const wasRecentlyDismissed = (): boolean => {
+  const ts = Number(localStorage.getItem(PWA_DISMISSED_TS_KEY) || 0);
+  if (!ts) return false;
+  const days = (Date.now() - ts) / (1000 * 60 * 60 * 24);
+  return days < RESHOW_DAYS;
+};
 
 const PWAInstallPrompt = () => {
   const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
@@ -22,11 +32,13 @@ const PWAInstallPrompt = () => {
   const isMobile = useIsMobile();
 
   useEffect(() => {
-    if (localStorage.getItem(PWA_DISMISSED_KEY) || isInStandaloneMode()) return;
+    if (isInStandaloneMode()) return;
+    // Respect a fresh dismissal, but resurface after RESHOW_DAYS.
+    if (localStorage.getItem(PWA_DISMISSED_KEY) && wasRecentlyDismissed()) return;
 
-    // For iOS Safari (no beforeinstallprompt)
+    // iOS Safari never fires beforeinstallprompt.
     if (isIOS()) {
-      const timer = setTimeout(() => setVisible(true), 2000);
+      const timer = setTimeout(() => setVisible(true), 2500);
       return () => clearTimeout(timer);
     }
 
@@ -35,7 +47,6 @@ const PWAInstallPrompt = () => {
       setDeferredPrompt(e as BeforeInstallPromptEvent);
       setVisible(true);
     };
-
     window.addEventListener("beforeinstallprompt", handler);
     return () => window.removeEventListener("beforeinstallprompt", handler);
   }, []);
@@ -58,11 +69,12 @@ const PWAInstallPrompt = () => {
     setVisible(false);
     setShowIOSGuide(false);
     localStorage.setItem(PWA_DISMISSED_KEY, "true");
+    localStorage.setItem(PWA_DISMISSED_TS_KEY, String(Date.now()));
   };
 
   if (!visible) return null;
 
-  // iOS install guide overlay
+  // iOS install guide overlay (unchanged full-screen modal).
   if (showIOSGuide) {
     return (
       <div className="fixed inset-0 z-50 flex items-end justify-center bg-background/80 backdrop-blur-sm p-4 safe-area-bottom">
@@ -97,36 +109,42 @@ const PWAInstallPrompt = () => {
     );
   }
 
+  // Slim persistent install bar — shown on all pages.
   return (
-    <div className={`fixed z-50 animate-in slide-in-from-bottom-4 duration-500 ${
-      isMobile 
-        ? "bottom-16 left-3 right-3 safe-area-bottom" 
-        : "bottom-4 left-4 right-4 mx-auto max-w-md"
-    }`}>
-      <div className={`flex items-center gap-3 rounded-xl border border-border bg-card shadow-lg ${
-        isMobile ? "p-3" : "p-4"
-      }`}>
-        <div className={`flex shrink-0 items-center justify-center rounded-lg bg-primary ${
-          isMobile ? "h-9 w-9" : "h-10 w-10"
-        }`}>
-          <Download className={isMobile ? "h-4 w-4 text-primary-foreground" : "h-5 w-5 text-primary-foreground"} />
+    <div
+      className={`fixed z-40 inset-x-0 animate-in slide-in-from-bottom-3 duration-400 ${
+        isMobile ? "bottom-16" : "bottom-0"
+      }`}
+    >
+      <div className="mx-auto flex items-center gap-2.5 border-t border-primary/30 bg-gradient-to-r from-primary/95 to-primary text-primary-foreground px-3 py-2 shadow-[0_-4px_20px_-4px_rgba(0,0,0,0.35)]">
+        <div className="flex shrink-0 items-center gap-2">
+          <div className="flex h-7 w-7 items-center justify-center rounded-full bg-primary-foreground/15">
+            <Download className="h-3.5 w-3.5" />
+          </div>
+          {!isMobile && <WifiOff className="h-3.5 w-3.5 opacity-70" />}
         </div>
-        <div className="flex-1 min-w-0">
-          <p className={`font-semibold text-foreground ${isMobile ? "text-xs" : "text-sm"}`}>
-            {isMobile ? "تثبيت FacturaPro" : "Installer FacturaPro"}
+        <div className="flex-1 min-w-0 leading-tight">
+          <p className="font-semibold truncate text-[12px] sm:text-sm">
+            {isMobile ? "ثبّت FacturaPro على جهازك" : "ثبّت FacturaPro للاستخدام بدون إنترنت"}
           </p>
-          <p className={`text-muted-foreground ${isMobile ? "text-[10px]" : "text-xs"}`}>
-            {isMobile ? "استخدم التطبيق بدون إنترنت" : "Accédez à l'app hors ligne depuis votre bureau"}
+          <p className="truncate text-[10px] sm:text-[11px] text-primary-foreground/75">
+            {isMobile ? "يعمل بدون إنترنت بعد التثبيت" : "وصول مباشر من شاشتك الرئيسية — بدون اتصال"}
           </p>
         </div>
-        <div className="flex items-center gap-1.5 shrink-0">
-          <Button size="sm" onClick={handleInstall} className={isMobile ? "h-7 px-2.5 text-[10px]" : "h-8 px-3 text-xs"}>
-            {isMobile ? "تثبيت" : "Installer"}
-          </Button>
-          <button onClick={handleDismiss} className="p-1 rounded-md text-muted-foreground hover:text-foreground hover:bg-muted transition-colors">
-            <X className="h-4 w-4" />
-          </button>
-        </div>
+        <Button
+          size="sm"
+          onClick={handleInstall}
+          className="h-8 shrink-0 rounded-full bg-primary-foreground px-3 text-[11px] font-bold text-primary hover:bg-primary-foreground/90 sm:text-xs"
+        >
+          {isMobile ? "تثبيت" : "تثبيت الآن"}
+        </Button>
+        <button
+          onClick={handleDismiss}
+          aria-label="إغلاق"
+          className="shrink-0 rounded-full p-1.5 text-primary-foreground/80 transition-colors hover:bg-primary-foreground/15 hover:text-primary-foreground"
+        >
+          <X className="h-4 w-4" />
+        </button>
       </div>
     </div>
   );
