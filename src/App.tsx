@@ -22,6 +22,7 @@ import AdminDashboard from "./pages/AdminDashboard";
 import AdminRolesPage from "./pages/AdminRolesPage";
 import ResetPasswordPage from "./pages/ResetPasswordPage";
 import AuthPage from "./pages/AuthPage";
+import LandingPage from "./pages/LandingPage";
 import AdminOverviewPage from "./pages/admin/OverviewPage";
 import AdminModerationPage from "./pages/admin/ModerationPage";
 import AdminAccountPage from "./pages/admin/AccountPage";
