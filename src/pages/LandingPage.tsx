@@ -4,7 +4,7 @@ import {
   FileText, ShieldCheck, Smartphone, Printer, Users, BarChart3,
   Zap, Globe, Lock, Layers, ArrowLeft, CheckCircle2, Sparkles,
 } from 'lucide-react';
-import DeveloperFooter from '@/components/DeveloperFooter';
+
 
 const FEATURES = [
   {
@@ -277,8 +277,18 @@ export default function LandingPage() {
               </ul>
             </div>
           </div>
-          <div className="mt-10">
-            <DeveloperFooter />
+          <div className="mt-10 flex flex-col items-center gap-2 border-t border-border pt-6 text-center sm:flex-row sm:justify-between">
+            <div className="text-xs text-muted-foreground">
+              © {new Date().getFullYear()} عبدالإله الميموني — مطوّر تطبيقات ومواقع
+            </div>
+            <a
+              href="https://wa.me/212677765847"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-xs font-medium text-[hsl(142,70%,40%)] hover:underline"
+            >
+              +212 677-765847 — لطلب تطوير تطبيق
+            </a>
           </div>
         </div>
       </footer>
