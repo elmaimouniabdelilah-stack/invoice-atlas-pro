@@ -66,7 +66,7 @@ const PLANS = [
 
 const PREVIEWS = [
   { src: '/landing/dashboard.png', title: 'لوحة التحكم الرئيسية', desc: 'إحصائيات شاملة وفواتيرك في مكان واحد' },
-  { src: '/landing/invoice.png', title: 'إنشاء الفاتورة', desc: 'نموذج ذكي ومعاينة حية جانبًا إلى جنب' },
+  { src: '/landing/invoice.png', title: 'الفاتورة على الحاسوب والهاتف', desc: 'فاتورة كاملة بمعايير المغرب — نفس التجربة على الحاسوب والهاتف' },
   { src: '/landing/clients.png', title: 'إدارة العملاء', desc: 'قاعدة عملائك جاهزة لكل فاتورة جديدة' },
 ];
 
