@@ -21,6 +21,22 @@ export default function AuthPage() {
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showActivationDialog, setShowActivationDialog] = useState(false);
+  const [trialCode, setTrialCode] = useState<string | null>(null);
+  const [trialExpiresAt, setTrialExpiresAt] = useState<string | null>(null);
+  const [trialStatus, setTrialStatus] = useState<string | null>(null);
+
+  const ensureTrialCode = async () => {
+    try {
+      const { data } = await supabase.functions.invoke('issue-trial-code');
+      if (data?.code) {
+        setTrialCode(data.code);
+        setTrialExpiresAt(data.expires_at ?? null);
+        setTrialStatus(data.status ?? null);
+      }
+    } catch {
+      /* silent */
+    }
+  };
 
   const handleLogin = async () => {
     if (!email || !password) {
@@ -36,6 +52,7 @@ export default function AuthPage() {
       // Check if activated
       const activated = localStorage.getItem('facturapro-activated') === 'true';
       if (!activated) {
+        await ensureTrialCode();
         setShowActivationDialog(true);
       } else {
         navigate('/dashboard', { replace: true });
@@ -57,7 +74,8 @@ export default function AuthPage() {
       toast({ title: t('signupError'), description: error.message, variant: 'destructive' });
     } else {
       toast({ title: t('signupSuccess') });
-      // Show activation dialog immediately after signup
+      // Issue a one-time 1-hour trial code, then show activation dialog
+      await ensureTrialCode();
       setShowActivationDialog(true);
     }
   };
@@ -168,6 +186,9 @@ export default function AuthPage() {
 
       <ActivationPromptDialog
         open={showActivationDialog}
+        trialCode={trialCode}
+        trialExpiresAt={trialExpiresAt}
+        trialStatus={trialStatus}
         onActivated={handleActivationComplete}
         onSkip={handleSkipActivation}
       />
