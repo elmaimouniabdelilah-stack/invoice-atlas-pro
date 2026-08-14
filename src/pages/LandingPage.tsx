@@ -4,6 +4,10 @@ import {
   FileText, ShieldCheck, Smartphone, Printer, Users, BarChart3,
   Zap, Layers, ArrowLeft, CheckCircle2, Sparkles,
 } from 'lucide-react';
+import videoDesktop from '@/assets/video/steps-desktop.mp4.asset.json';
+import videoMobile from '@/assets/video/steps-mobile.mp4.asset.json';
+import videoPoster from '@/assets/video/steps-poster.jpg.asset.json';
+
 
 
 const FEATURES = [
@@ -161,7 +165,55 @@ export default function LandingPage() {
         </div>
       </section>
 
+      {/* VIDEO */}
+      <section id="video" className="mx-auto max-w-6xl px-4 pb-4 pt-6">
+        <div className="mx-auto mb-8 max-w-2xl text-center">
+          <h2 className="text-3xl font-bold tracking-tight md:text-4xl">شاهد الشرح في أقل من دقيقة</h2>
+          <p className="mt-3 text-muted-foreground">
+            فيديو قصير (٣٣ ثانية) يشرح خطوات إنشاء الفاتورة — نسخة للحاسوب ونسخة للهاتف.
+          </p>
+        </div>
+
+        {/* نسخة الحاسوب */}
+        <div className="mx-auto hidden max-w-4xl overflow-hidden rounded-2xl border border-border bg-card shadow-2xl shadow-primary/10 md:block">
+          <video
+            className="aspect-video w-full"
+            controls
+            playsInline
+            muted
+            loop
+            preload="none"
+            poster={videoPoster.url}
+            src={videoDesktop.url}
+          >
+            متصفحك لا يدعم تشغيل الفيديو.
+          </video>
+        </div>
+
+        {/* نسخة الهاتف */}
+        <div className="mx-auto max-w-[300px] overflow-hidden rounded-[2rem] border-4 border-foreground/80 bg-card shadow-2xl shadow-primary/10 md:hidden">
+          <video
+            className="aspect-[9/16] w-full"
+            controls
+            playsInline
+            muted
+            loop
+            preload="none"
+            poster={videoPoster.url}
+            src={videoMobile.url}
+          >
+            متصفحك لا يدعم تشغيل الفيديو.
+          </video>
+        </div>
+
+        <div className="mt-4 flex items-center justify-center gap-3 text-xs text-muted-foreground">
+          <span className="rounded-full border border-border bg-card px-2.5 py-1">نسخة حاسوب 16:9</span>
+          <span className="rounded-full border border-border bg-card px-2.5 py-1">نسخة هاتف 9:16</span>
+        </div>
+      </section>
+
       {/* HOW IT WORKS */}
+
       <section id="how" className="border-y border-border bg-muted/30">
         <div className="mx-auto max-w-6xl px-4 py-20">
           <div className="mx-auto mb-12 max-w-2xl text-center">
