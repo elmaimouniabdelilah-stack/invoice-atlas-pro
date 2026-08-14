@@ -26,6 +26,13 @@ import AdminAccountPage from "./pages/admin/AccountPage";
 
 const queryClient = new QueryClient();
 
+/** Shows the PWA install bar everywhere except the public landing page. */
+const GatedInstallPrompt = () => {
+  const { pathname } = useLocation();
+  if (pathname === "/") return null;
+  return <PWAInstallPrompt />;
+};
+
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <ThemeProvider>
@@ -35,8 +42,8 @@ const App = () => (
         <LanguageProvider>
           <AuthProvider>
             <InvoiceProvider>
-              <PWAInstallPrompt />
               <BrowserRouter>
+                <GatedInstallPrompt />
                 <Routes>
                   <Route path="/" element={<LandingPage />} />
                   <Route path="/auth" element={<AuthPage />} />
