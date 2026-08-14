@@ -22,6 +22,8 @@ export type Database = {
           id: string
           is_active: boolean
           max_devices: number
+          owner_email: string | null
+          owner_user_id: string | null
           plan: Database["public"]["Enums"]["subscription_plan"]
         }
         Insert: {
@@ -31,6 +33,8 @@ export type Database = {
           id?: string
           is_active?: boolean
           max_devices?: number
+          owner_email?: string | null
+          owner_user_id?: string | null
           plan?: Database["public"]["Enums"]["subscription_plan"]
         }
         Update: {
@@ -40,6 +44,8 @@ export type Database = {
           id?: string
           is_active?: boolean
           max_devices?: number
+          owner_email?: string | null
+          owner_user_id?: string | null
           plan?: Database["public"]["Enums"]["subscription_plan"]
         }
         Relationships: []
