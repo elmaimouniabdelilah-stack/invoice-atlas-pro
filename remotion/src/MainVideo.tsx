@@ -55,18 +55,27 @@ export const MainVideo: React.FC<{ vertical?: boolean }> = () => {
           timing={linearTiming({ durationInFrames: 20 })}
         />
 
-        {STEPS.map((s, i) => (
-          <>
-            <TransitionSeries.Sequence key={`s${i}`} durationInFrames={250}>
-              <StepScene index={i + 1} {...s} />
-            </TransitionSeries.Sequence>
-            <TransitionSeries.Transition
-              key={`t${i}`}
-              presentation={slide({ direction: "from-left" })}
-              timing={linearTiming({ durationInFrames: 20 })}
-            />
-          </>
-        ))}
+        <TransitionSeries.Sequence durationInFrames={250}>
+          <StepScene index={1} {...STEPS[0]} />
+        </TransitionSeries.Sequence>
+        <TransitionSeries.Transition
+          presentation={slide({ direction: "from-left" })}
+          timing={linearTiming({ durationInFrames: 20 })}
+        />
+        <TransitionSeries.Sequence durationInFrames={250}>
+          <StepScene index={2} {...STEPS[1]} />
+        </TransitionSeries.Sequence>
+        <TransitionSeries.Transition
+          presentation={slide({ direction: "from-left" })}
+          timing={linearTiming({ durationInFrames: 20 })}
+        />
+        <TransitionSeries.Sequence durationInFrames={250}>
+          <StepScene index={3} {...STEPS[2]} />
+        </TransitionSeries.Sequence>
+        <TransitionSeries.Transition
+          presentation={fade()}
+          timing={linearTiming({ durationInFrames: 20 })}
+        />
 
         <TransitionSeries.Sequence durationInFrames={180}>
           <Outro />
