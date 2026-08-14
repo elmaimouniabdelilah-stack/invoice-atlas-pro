@@ -67,8 +67,7 @@ const PLANS = [
 const PREVIEWS = [
   { src: '/landing/dashboard.png', title: 'لوحة التحكم الرئيسية', desc: 'إحصائيات شاملة وفواتيرك في مكان واحد' },
   { src: '/landing/invoice.png', title: 'إنشاء الفاتورة', desc: 'نموذج ذكي ومعاينة حية جانبًا إلى جنب' },
-  { src: '/landing/admin.png', title: 'لوحة إدارة الأكواد', desc: 'تحكم كامل في الاشتراكات والأجهزة' },
-  { src: '/landing/overview.png', title: 'نظرة عامة للسوبر أدمن', desc: 'مؤشرات النظام والاشتراكات النشطة' },
+  { src: '/landing/clients.png', title: 'إدارة العملاء', desc: 'قاعدة عملائك جاهزة لكل فاتورة جديدة' },
 ];
 
 export default function LandingPage() {
