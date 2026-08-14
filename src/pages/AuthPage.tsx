@@ -38,7 +38,7 @@ export default function AuthPage() {
       if (!activated) {
         setShowActivationDialog(true);
       } else {
-        navigate('/', { replace: true });
+        navigate('/dashboard', { replace: true });
       }
     }
   };
@@ -64,12 +64,12 @@ export default function AuthPage() {
 
   const handleActivationComplete = () => {
     setShowActivationDialog(false);
-    navigate('/', { replace: true });
+    navigate('/dashboard', { replace: true });
   };
 
   const handleSkipActivation = () => {
     setShowActivationDialog(false);
-    navigate('/', { replace: true });
+    navigate('/dashboard', { replace: true });
   };
 
   return (

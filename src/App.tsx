@@ -41,7 +41,7 @@ const App = () => (
               <PWAInstallPrompt />
               <BrowserRouter>
                 <Routes>
-                  <Route path="/landing" element={<LandingPage />} />
+                  <Route path="/" element={<LandingPage />} />
                   <Route path="/auth" element={<AuthPage />} />
                   <Route path="/admin/login" element={<AdminLoginPage />} />
                   <Route path="/admin" element={<AdminDashboard />} />
@@ -50,7 +50,7 @@ const App = () => (
                   <Route path="/admin/moderation" element={<AdminModerationPage />} />
                   <Route path="/admin/account" element={<AdminAccountPage />} />
                   <Route path="/reset-password" element={<ResetPasswordPage />} />
-                  <Route path="/" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+                  <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
                   <Route path="/invoice" element={<ProtectedRoute><InvoicePage /></ProtectedRoute>} />
                   <Route path="/clients" element={<ProtectedRoute><ClientsPage /></ProtectedRoute>} />
                   <Route path="/products" element={<ProtectedRoute><ProductsPage /></ProtectedRoute>} />
