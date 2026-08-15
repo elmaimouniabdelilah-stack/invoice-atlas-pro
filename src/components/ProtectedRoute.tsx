@@ -48,6 +48,8 @@ export default function ProtectedRoute({ children }: { children: React.ReactNode
   useEffect(() => {
     if (session) {
       checkActivation();
+      const id = setInterval(checkActivation, 60_000);
+      return () => clearInterval(id);
     }
   }, [session, checkActivation]);
 
