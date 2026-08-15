@@ -156,16 +156,18 @@ const ActivationPromptDialog = ({ open, trialCode, trialExpiresAt, trialStatus, 
 
             <Button
               onClick={() => window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${WHATSAPP_MESSAGE}`, "_blank")}
-              variant="outline"
-              className="w-full gap-2"
+              variant={forced ? "default" : "outline"}
+              className="w-full gap-2 bg-[#25D366] text-white hover:bg-[#1eb955]"
             >
               <MessageCircle className="h-4 w-4" />
-              {t('contactWhatsapp')}
+              {forced ? "شراء التطبيق عبر واتساب" : t('contactWhatsapp')}
             </Button>
 
-            <Button variant="ghost" className="w-full text-muted-foreground" onClick={onSkip}>
-              {t('skipForNow')}
-            </Button>
+            {!forced && (
+              <Button variant="ghost" className="w-full text-muted-foreground" onClick={onSkip}>
+                {t('skipForNow')}
+              </Button>
+            )}
           </div>
         )}
       </DialogContent>
