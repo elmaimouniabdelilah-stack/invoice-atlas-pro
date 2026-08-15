@@ -20,11 +20,13 @@ interface Props {
   trialCode?: string | null;
   trialExpiresAt?: string | null;
   trialStatus?: string | null;
+  /** When true, the dialog cannot be dismissed (expired / not activated) */
+  forced?: boolean;
   onActivated: () => void;
   onSkip: () => void;
 }
 
-const ActivationPromptDialog = ({ open, trialCode, trialExpiresAt, trialStatus, onActivated, onSkip }: Props) => {
+const ActivationPromptDialog = ({ open, trialCode, trialExpiresAt, trialStatus, forced, onActivated, onSkip }: Props) => {
   const { t } = useLang();
   const [code, setCode] = useState("");
   const [loading, setLoading] = useState(false);
@@ -72,11 +74,25 @@ const ActivationPromptDialog = ({ open, trialCode, trialExpiresAt, trialStatus, 
   };
 
   return (
-    <Dialog open={open} onOpenChange={(v) => { if (!v) onSkip(); }}>
-      <DialogContent className="sm:max-w-md" dir="rtl">
+    <Dialog open={open} onOpenChange={(v) => { if (!v && !forced) onSkip(); }}>
+      <DialogContent
+        className={`sm:max-w-md ${forced ? "[&>button]:hidden" : ""}`}
+        dir="rtl"
+        onInteractOutside={(e) => { if (forced) e.preventDefault(); }}
+        onEscapeKeyDown={(e) => { if (forced) e.preventDefault(); }}
+      >
         <DialogHeader>
           <DialogTitle className="text-center">{t('activateApp')}</DialogTitle>
         </DialogHeader>
+
+        {forced && !success && (
+          <div className="rounded-xl border border-destructive/30 bg-destructive/10 p-3 text-center space-y-1">
+            <p className="text-sm font-bold text-destructive">انتهت مدة الاستعمال</p>
+            <p className="text-xs text-muted-foreground">
+              توقّف التطبيق مؤقتاً. لمتابعة الاستعمال، أدخل كود التفعيل أو اشترِ النسخة الكاملة عبر واتساب.
+            </p>
+          </div>
+        )}
 
         {success ? (
           <div className="flex flex-col items-center gap-3 py-4">
@@ -140,16 +156,18 @@ const ActivationPromptDialog = ({ open, trialCode, trialExpiresAt, trialStatus, 
 
             <Button
               onClick={() => window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${WHATSAPP_MESSAGE}`, "_blank")}
-              variant="outline"
-              className="w-full gap-2"
+              variant={forced ? "default" : "outline"}
+              className="w-full gap-2 bg-[#25D366] text-white hover:bg-[#1eb955]"
             >
               <MessageCircle className="h-4 w-4" />
-              {t('contactWhatsapp')}
+              {forced ? "شراء التطبيق عبر واتساب" : t('contactWhatsapp')}
             </Button>
 
-            <Button variant="ghost" className="w-full text-muted-foreground" onClick={onSkip}>
-              {t('skipForNow')}
-            </Button>
+            {!forced && (
+              <Button variant="ghost" className="w-full text-muted-foreground" onClick={onSkip}>
+                {t('skipForNow')}
+              </Button>
+            )}
           </div>
         )}
       </DialogContent>
