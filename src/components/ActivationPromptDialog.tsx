@@ -76,9 +76,8 @@ const ActivationPromptDialog = ({ open, trialCode, trialExpiresAt, trialStatus, 
   return (
     <Dialog open={open} onOpenChange={(v) => { if (!v && !forced) onSkip(); }}>
       <DialogContent
-        className="sm:max-w-md"
+        className={`sm:max-w-md ${forced ? "[&>button]:hidden" : ""}`}
         dir="rtl"
-        hideClose={forced}
         onInteractOutside={(e) => { if (forced) e.preventDefault(); }}
         onEscapeKeyDown={(e) => { if (forced) e.preventDefault(); }}
       >
