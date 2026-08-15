@@ -74,11 +74,26 @@ const ActivationPromptDialog = ({ open, trialCode, trialExpiresAt, trialStatus, 
   };
 
   return (
-    <Dialog open={open} onOpenChange={(v) => { if (!v) onSkip(); }}>
-      <DialogContent className="sm:max-w-md" dir="rtl">
+    <Dialog open={open} onOpenChange={(v) => { if (!v && !forced) onSkip(); }}>
+      <DialogContent
+        className="sm:max-w-md"
+        dir="rtl"
+        hideClose={forced}
+        onInteractOutside={(e) => { if (forced) e.preventDefault(); }}
+        onEscapeKeyDown={(e) => { if (forced) e.preventDefault(); }}
+      >
         <DialogHeader>
           <DialogTitle className="text-center">{t('activateApp')}</DialogTitle>
         </DialogHeader>
+
+        {forced && !success && (
+          <div className="rounded-xl border border-destructive/30 bg-destructive/10 p-3 text-center space-y-1">
+            <p className="text-sm font-bold text-destructive">انتهت مدة الاستعمال</p>
+            <p className="text-xs text-muted-foreground">
+              توقّف التطبيق مؤقتاً. لمتابعة الاستعمال، أدخل كود التفعيل أو اشترِ النسخة الكاملة عبر واتساب.
+            </p>
+          </div>
+        )}
 
         {success ? (
           <div className="flex flex-col items-center gap-3 py-4">
