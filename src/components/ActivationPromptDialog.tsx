@@ -64,8 +64,9 @@ const ActivationPromptDialog = ({ open, trialCode, trialExpiresAt, trialStatus, 
       if (data?.success) {
         localStorage.setItem("facturapro-activated", "true");
         setSuccess(true);
-        setTimeout(() => onActivated(), 1500);
+        setTimeout(() => onActivated(), 600);
       }
+
     } catch {
       setError(t('connectionError'));
     } finally {

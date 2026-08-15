@@ -27,16 +27,21 @@ export default function AuthPage() {
 
   const ensureTrialCode = async () => {
     try {
-      const { data } = await supabase.functions.invoke('issue-trial-code');
-      if (data?.code) {
-        setTrialCode(data.code);
-        setTrialExpiresAt(data.expires_at ?? null);
-        setTrialStatus(data.status ?? null);
-      }
+      // Make sure a session exists before calling the protected function
+      const { data: sessionData } = await supabase.auth.getSession();
+      if (!sessionData.session) return false;
+
+      const { data, error } = await supabase.functions.invoke('issue-trial-code');
+      if (error || !data?.code) return false;
+      setTrialCode(data.code);
+      setTrialExpiresAt(data.expires_at ?? null);
+      setTrialStatus(data.status ?? null);
+      return true;
     } catch {
-      /* silent */
+      return false;
     }
   };
+
 
   const handleLogin = async () => {
     if (!email || !password) {
@@ -67,18 +72,32 @@ export default function AuthPage() {
     }
 
     setLoading(true);
-    const { error } = await supabase.auth.signUp({ email, password });
-    setLoading(false);
+    const { data: signUpData, error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: { emailRedirectTo: `${window.location.origin}/dashboard` },
+    });
 
     if (error) {
+      setLoading(false);
       toast({ title: t('signupError'), description: error.message, variant: 'destructive' });
-    } else {
-      toast({ title: t('signupSuccess') });
-      // Issue a one-time 1-hour trial code, then show activation dialog
-      await ensureTrialCode();
-      setShowActivationDialog(true);
+      return;
     }
+
+    // If no session was returned (e.g. confirmation flow), try signing in right away
+    if (!signUpData.session) {
+      await supabase.auth.signInWithPassword({ email, password });
+    }
+
+    const issued = await ensureTrialCode();
+    setLoading(false);
+    toast({ title: t('signupSuccess') });
+    if (!issued) {
+      toast({ title: 'تعذّر توليد الكود التجريبي، يمكنك إدخال كود التفعيل يدوياً', variant: 'destructive' });
+    }
+    setShowActivationDialog(true);
   };
+
 
   const handleActivationComplete = () => {
     setShowActivationDialog(false);
