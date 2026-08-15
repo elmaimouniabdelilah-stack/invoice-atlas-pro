@@ -20,11 +20,13 @@ interface Props {
   trialCode?: string | null;
   trialExpiresAt?: string | null;
   trialStatus?: string | null;
+  /** When true, the dialog cannot be dismissed (expired / not activated) */
+  forced?: boolean;
   onActivated: () => void;
   onSkip: () => void;
 }
 
-const ActivationPromptDialog = ({ open, trialCode, trialExpiresAt, trialStatus, onActivated, onSkip }: Props) => {
+const ActivationPromptDialog = ({ open, trialCode, trialExpiresAt, trialStatus, forced, onActivated, onSkip }: Props) => {
   const { t } = useLang();
   const [code, setCode] = useState("");
   const [loading, setLoading] = useState(false);
