@@ -27,16 +27,21 @@ export default function AuthPage() {
 
   const ensureTrialCode = async () => {
     try {
-      const { data } = await supabase.functions.invoke('issue-trial-code');
-      if (data?.code) {
-        setTrialCode(data.code);
-        setTrialExpiresAt(data.expires_at ?? null);
-        setTrialStatus(data.status ?? null);
-      }
+      // Make sure a session exists before calling the protected function
+      const { data: sessionData } = await supabase.auth.getSession();
+      if (!sessionData.session) return false;
+
+      const { data, error } = await supabase.functions.invoke('issue-trial-code');
+      if (error || !data?.code) return false;
+      setTrialCode(data.code);
+      setTrialExpiresAt(data.expires_at ?? null);
+      setTrialStatus(data.status ?? null);
+      return true;
     } catch {
-      /* silent */
+      return false;
     }
   };
+
 
   const handleLogin = async () => {
     if (!email || !password) {
