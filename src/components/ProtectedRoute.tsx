@@ -73,17 +73,26 @@ export default function ProtectedRoute({ children }: { children: React.ReactNode
     );
   }
 
+  // Not activated (never activated or subscription expired) → block the whole app
+  if (!isActivated) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background p-4">
+        <ActivationPromptDialog
+          open
+          forced
+          onActivated={() => {
+            setIsActivated(true);
+            setShowActivation(false);
+            checkActivation();
+          }}
+          onSkip={() => {}}
+        />
+      </div>
+    );
+  }
+
   return (
     <>
-      <ActivationPromptDialog
-        open={showActivation}
-        onActivated={() => {
-          setIsActivated(true);
-          setShowActivation(false);
-          checkActivation();
-        }}
-        onSkip={() => setShowActivation(false)}
-      />
       {trialExpiresAt && (
         <TrialCountdownBanner
           expiresAt={trialExpiresAt}
