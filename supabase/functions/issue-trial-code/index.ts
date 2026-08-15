@@ -44,6 +44,26 @@ Deno.serve(async (req) => {
         ? new Date(existing.expires_at) < new Date()
         : false;
 
+      // Never used + expired (or about to be) → refresh the hour so the code works
+      if (existing.is_active && (count ?? 0) === 0 && expired) {
+        const fresh = new Date(Date.now() + 60 * 60 * 1000).toISOString();
+        const { data: renewed } = await admin
+          .from("activation_codes")
+          .update({ expires_at: fresh })
+          .eq("id", existing.id)
+          .select("code, expires_at")
+          .single();
+
+        return json({
+          code: renewed?.code ?? existing.code,
+          expires_at: renewed?.expires_at ?? fresh,
+          already_issued: true,
+          used: false,
+          status: "active",
+        });
+      }
+
+
       return json({
         code: existing.code,
         expires_at: existing.expires_at,
